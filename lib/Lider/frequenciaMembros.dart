@@ -186,7 +186,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _recuperarListaMembros();
     _recuperarListaFrequencia();

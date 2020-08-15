@@ -91,7 +91,6 @@ class _DadosCelulaState extends State<DadosCelula> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _recuperarDadosCelula();
   }

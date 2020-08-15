@@ -56,7 +56,6 @@ class _DadosMembroState extends State<DadosMembro> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _recuperarListaMembros();
   }
