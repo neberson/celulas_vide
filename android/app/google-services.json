@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "719862178069",
+    "firebase_url": "https://celulasvideapp.firebaseio.com",
+    "project_id": "celulasvideapp",
+    "storage_bucket": "celulasvideapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719862178069:android:c8a12ebf1306c93b42891c",
+        "android_client_info": {
+          "package_name": "com.celulasvide.celulas_vide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719862178069-ig7q028d6vlk12ercj2badu8ngu9c1cq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.celulasvide.celulas_vide",
+            "certificate_hash": "64c3dd4f47c118b22434f9d95c1bf90ebbc9ebb5"
+          }
+        },
+        {
+          "client_id": "719862178069-qeq6b0noci0v9u9a3f1ivnedi0l0gd3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-MIawK_YtDCsQ6hLthRKJ9LIlUVHRJBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719862178069-qeq6b0noci0v9u9a3f1ivnedi0l0gd3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
