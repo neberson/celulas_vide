@@ -250,41 +250,56 @@ class _DadosMembroState extends State<DadosMembro> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
-              child: ListTile(
-                title: Text(
-                  "Condição do Membro:",
-                  style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                trailing: DropdownButton<String>(
-                    dropdownColor: Color.fromRGBO(81, 37, 103, 1),
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    elevation: 16,
-                    iconSize: 30,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.white,
-                    ),
-                    iconEnabledColor: Colors.white,
-                    value: _encargoSelecionado,
-                    onChanged: (valor) {
-                      setState(() {
-                        _encargoSelecionado = valor;
-                      });
-                    },
-                    items: _encargo.map((String dropDownItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownItem,
-                        child:  Text(
-                          dropDownItem,
-                          style:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+
+            Card(
+                margin: EdgeInsets.only(left: 10, right:10),
+                elevation: 11,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 20,top: 15),
+                      child: Text(
+                        "Condição do membro:",
+                        style: TextStyle(
+                            fontSize: 17
                         ),
-                      );
-                    }).toList()
-                ),
-              ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child:  DropdownButton<String>(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                          elevation: 16,
+                          iconSize: 30,
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          iconEnabledColor: Colors.black,
+                          value: _encargoSelecionado,
+                          onChanged: (valor) {
+                            setState(() {
+                              _encargoSelecionado = valor;
+                            });
+                          },
+                          items: _encargo.map((String dropDownItem) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownItem,
+                              child:  Text(
+                                dropDownItem,
+                                style:
+                                TextStyle(color: Colors.black, fontSize: 17),
+                              ),
+                            );
+                          }).toList()
+                      )
+                      ,
+                    )
+                  ],
+                )
             ),
             Card(
               margin: EdgeInsets.only(left: 10, right:10, top: 20),
