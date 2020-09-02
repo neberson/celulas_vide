@@ -19,7 +19,7 @@ class _HomeLiderState extends State<HomeLider> {
     Categoria(10,"Membros","/TabMembro", icon: FontAwesomeIcons.userFriends),
     Categoria(11,"Noticias","/PerfilLider", icon: FontAwesomeIcons.solidNewspaper),
     Categoria(12,"Presença","/frequenciaMembros", icon: FontAwesomeIcons.bookmark),
-    Categoria(13,"Números da célula","/PerfilLider", icon: FontAwesomeIcons.calculator),
+    Categoria(13,"Números da célula","/ReportsHome", icon: FontAwesomeIcons.calculator),
     //Categoria(14,"Eventos","/PerfilLider", icon: FontAwesomeIcons.list),
     //Categoria(14,"Sair","/logoff", icon: Icons.close)
   ];

@@ -8,6 +8,7 @@ import 'package:celulas_vide/Lider/PerfilLider.dart';
 import 'package:celulas_vide/Lider/TabMembros.dart';
 import 'package:celulas_vide/Lider/frequenciaMembros.dart';
 import 'package:celulas_vide/Tela_login.dart';
+import 'package:celulas_vide/reports/reports_home.dart';
 import 'package:celulas_vide/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,7 +26,8 @@ void main()  {
       MaterialApp(
         theme: ThemeData(
           primaryColor: Color.fromRGBO(81, 37, 0, 1),
-          accentColor: Color.fromRGBO(81, 37, 103, 1)
+          accentColor: Color.fromRGBO(81, 37, 103, 1),
+          backgroundColor: Color.fromRGBO(81, 37, 103, 1),
         ),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -44,7 +46,8 @@ void main()  {
           '/DadosMembro':(context) => DadosMembro(),
           '/DadosCelula': (context) => DadosCelula(),
           '/frequenciaMembros': (context) => frequenciaMembros(),
-          '/TabMembro': (context) => TabMembro()
+          '/TabMembro': (context) => TabMembro(),
+          '/ReportsHome': (context) => ReportsHome()
         },
 
         debugShowCheckedModeBanner: false,
