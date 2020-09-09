@@ -6,6 +6,7 @@ import 'package:celulas_vide/Lider/HomeLider.dart';
 import 'package:celulas_vide/Lider/ListaMembros.dart';
 import 'package:celulas_vide/Lider/PerfilLider.dart';
 import 'package:celulas_vide/Lider/TabMembros.dart';
+import 'package:celulas_vide/Lider/VinculoComDiscipuladoPage.dart';
 import 'package:celulas_vide/Lider/frequenciaMembros.dart';
 import 'package:celulas_vide/Tela_login.dart';
 import 'package:celulas_vide/reports/reports_home.dart';
@@ -48,7 +49,8 @@ void main()  {
           '/DadosCelula': (context) => DadosCelula(),
           '/frequenciaMembros': (context) => frequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
-          '/ReportsHome': (context) => ReportsHome()
+          '/ReportsHome': (context) => ReportsHome(),
+          '/VinculoDiscipulado': (context) => VinculoComDiscipuladoPage()
         },
 
         debugShowCheckedModeBanner: false,
