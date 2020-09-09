@@ -20,7 +20,7 @@ class DadosCelulaBEAN{
 
   Map<String, dynamic> toMap(){
     Map<String, dynamic> map = {
-      "nomeCelula": this._nomeCelula,
+      "DadosCelula":{"nomeCelula": this._nomeCelula,
       "nomeAnfitriao": this._anfitriao,
       "tipoCelula":this._tipoCelula,
       "diaCelula": this._diaCelula,
@@ -34,7 +34,7 @@ class DadosCelulaBEAN{
       "complemento": this._complemento,
       "bairro": this._bairro,
       "cidade": this._cidade,
-      "estado": this._estado
+      "estado": this._estado}
     };
 
     return map;

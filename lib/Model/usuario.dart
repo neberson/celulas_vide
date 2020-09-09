@@ -16,14 +16,15 @@ class Usuario {
   Map<String, dynamic> toMap(){
 
     Map<String, dynamic> map = {
-      "nome": this.nome,
+      "Usuario" : {
+        "nome": this.nome,
       "email": this.email,
       "encargo": this.encargo,
       "urlImagem": this._imagem,
       "discipulador":this.discipulador,
       "pastorRede":this.pastorRede,
       "pastorIgreja":this.pastorIgreja,
-      "igreja": this.igreja
+      "igreja": this.igreja}
     };
 
     return map;
