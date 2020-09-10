@@ -26,6 +26,8 @@ class _PerfilLiderState extends State<PerfilLider> {
   TextEditingController _nomePastorRede = TextEditingController();
   TextEditingController _nomePastorIgreja = TextEditingController();
   TextEditingController _nomeIgreja = TextEditingController();
+  TextEditingController _encargo = TextEditingController();
+
   int circularProgressButton = 0;
 
   Future _recuperarImage(String origemImagem) async {
@@ -80,9 +82,9 @@ class _PerfilLiderState extends State<PerfilLider> {
 
   Future _recuperarUrlImagem(StorageTaskSnapshot snapshot) async {
     String url = await snapshot.ref.getDownloadURL();
-    _atualizarUrlImagemFirestore(url);
     setState(() {
       _urlImagemRecuperada = url;
+      _atualizarLiderFirestore();
     });
   }
 
@@ -96,15 +98,17 @@ class _PerfilLiderState extends State<PerfilLider> {
     Firestore db = Firestore.instance;
 
     DocumentSnapshot snapshot =
-        await db.collection("usuarios").document(_idUsuarioLogado).get();
+        await db.collection("Celula").document(_idUsuarioLogado).get();
 
-    Map<String, dynamic> dados = snapshot.data;
+    Map<String, dynamic> dados = snapshot.data["Usuario"];
     _nomeUsuario.text = dados["nome"];
     _emailUsuario.text = dados["email"];
     _nomeDiscipulador.text = dados["discipulador"];
     _nomePastorRede.text = dados["pastorRede"];
     _nomePastorIgreja.text = dados["pastorIgreja"];
     _nomeIgreja.text = dados["igreja"];
+    _encargo.text = dados["encargo"];
+
     if (dados["urlImagem"] != null) {
       setState(() {
         _urlImagemRecuperada = dados["urlImagem"];
@@ -116,16 +120,16 @@ class _PerfilLiderState extends State<PerfilLider> {
     });
   }
 
-  _atualizarUrlImagemFirestore(String url) {
+  /*_atualizarUrlImagemFirestore(String url) {
     Firestore db = Firestore.instance;
     Map<String, dynamic> dadosAtualizar = {"urlImagem": url};
     db
-        .collection("usuarios")
+        .collection("Celula")
         .document(_idUsuarioLogado)
         .updateData(dadosAtualizar);
-  }
+  }*/
 
-  Future<String> _atualizarNomeFirestore() async {
+  Future<String> _atualizarLiderFirestore() async {
     String _validacao;
 
     setState(() {
@@ -137,19 +141,26 @@ class _PerfilLiderState extends State<PerfilLider> {
     String nomePastorRede = _nomePastorRede.text;
     String nomePastorIgreja = _nomePastorIgreja.text;
     String nomeIgreja = _nomeIgreja.text;
+    String encargo = _encargo.text;
+    String email = _emailUsuario.text;
     Map<String, dynamic> dadosAtualizar = {
-      "nome": nome,
+      "Usuario": {
+        "email": email,
+        "nome": nome,
       "discipulador": nomeDiscipulador,
       "pastorRede": nomePastorRede,
       "pastorIgreja": nomePastorIgreja,
-      "igreja": nomeIgreja
+      "igreja": nomeIgreja,
+      "encargo": encargo,
+      "urlImagem": _urlImagemRecuperada
+      }
     };
 
     if (nome.isEmpty) {
       _validacao = "Preencha o campo Nome!";
     } else {
       db
-          .collection("usuarios")
+          .collection("Celula")
           .document(_idUsuarioLogado)
           .updateData(dadosAtualizar);
 
@@ -545,7 +556,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                                     ),
                                   ),
                             onPressed: () {
-                              _atualizarNomeFirestore().then((valor) {
+                              _atualizarLiderFirestore().then((valor) {
                                 var snackBar = SnackBar(
                                   duration: Duration(seconds: 5),
                                   content: Text(valor),
@@ -564,6 +575,6 @@ class _PerfilLiderState extends State<PerfilLider> {
                   ],
                 ),
               ));
-    ;
+
   }
 }

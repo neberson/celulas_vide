@@ -71,11 +71,11 @@ class frequenciaDAO {
     Firestore db = Firestore.instance;
 
     DocumentSnapshot snapshot =
-    await db.collection("usuarios").document(_idUsuarioLogado).get();
+    await db.collection("Celula").document(_idUsuarioLogado).get();
 
     Map<String, dynamic> dados = snapshot.data;
-    _nomeLider = dados["nome"];
-    _encargoLider = dados["encargo"];
+    _nomeLider = dados["Usuario"]["nome"];
+    _encargoLider = dados["Usuario"]["encargo"];
 
   }
 
@@ -84,7 +84,7 @@ class frequenciaDAO {
     MembrosCelula membroCelula = new MembrosCelula();
     FirebaseUser usuarioAtual = await _auth.currentUser();
     DocumentSnapshot snapshot =
-    await db.collection("membrosCelula").document(usuarioAtual.uid).get();
+    await db.collection("Celula").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
 
     List<Map> membros = List<Map>();
@@ -95,8 +95,8 @@ class frequenciaDAO {
 
     membros.add(membroCelula.toMapFrequencia());
 
-    if (dados != null) {
-      for (Map<dynamic, dynamic> membro in dados["dados"]) {
+    if (dados["Membros"] != null) {
+      for (Map<dynamic, dynamic> membro in dados["Membros"]) {
         membroCelula.nomeMembro = membro["nomeMembro"];
         membroCelula.condicaoMembro = membro["condicaoMembro"];
         membroCelula.status = membro["status"];
@@ -118,8 +118,6 @@ class frequenciaDAO {
     DocumentSnapshot snapshot =
     await db.collection("frequencia").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
-
-
     return dados;
   }
 

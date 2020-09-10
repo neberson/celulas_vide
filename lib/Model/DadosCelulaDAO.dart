@@ -30,9 +30,9 @@ class celulaDAO {
       }else if(celula.proximaMultiplicacao.isEmpty){
         _validacao = "Informe a data da próxima multiplicação!";
       }else{
-          db.collection("dadosCelula")
+          db.collection("Celula")
             .document(usuarioAtual.uid)
-            .setData( celula.toMap());
+            .updateData( celula.toMap());
 
           _validacao = "Dados gravados com sucesso!";
       }
@@ -44,9 +44,9 @@ class celulaDAO {
 
     FirebaseUser usuarioAtual = await _auth.currentUser();
 
-    DocumentSnapshot snapshot = await db.collection("dadosCelula").document(usuarioAtual.uid).get();
+    DocumentSnapshot snapshot = await db.collection("Celula").document(usuarioAtual.uid).get();
 
-    Map<String, dynamic> dados = snapshot.data;
+    Map<String, dynamic> dados = snapshot.data["DadosCelula"];
 
     return dados;
   }

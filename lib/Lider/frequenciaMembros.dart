@@ -87,8 +87,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     });
     Map<dynamic, dynamic> dados =
         await _frequenciaDAO.recuperarMembrosFrequencia();
-    _frequenciasCelula = _frequenciaDAO.recuperarFrequenciaCelula(dados);
-    _frequenciasCulto = _frequenciaDAO.recuperarFrequenciaCulto(dados);
+    if(dados != null) {
+      _frequenciasCelula = _frequenciaDAO.recuperarFrequenciaCelula(dados);
+      _frequenciasCulto = _frequenciaDAO.recuperarFrequenciaCulto(dados);
+    }
     setState(() {
       circularProgressTela = 1;
     });

@@ -45,7 +45,7 @@ class cadastrarUsuario {
       await auth.createUserWithEmailAndPassword(email: user.email, password: user.senha).then((firebaseUser){
         Firestore db =  Firestore.instance;
 
-        db.collection("usuarios")
+        db.collection("Celula")
             .document(firebaseUser.user.uid)
             .setData(
             user.toMap()
