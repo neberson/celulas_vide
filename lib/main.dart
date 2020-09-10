@@ -1,5 +1,6 @@
 
 import 'package:celulas_vide/Controller/loginUsuario.dart';
+import 'package:celulas_vide/Discipulador/PerfilDiscipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Lider/DadosMembro.dart';
 import 'package:celulas_vide/Lider/HomeLider.dart';
@@ -50,7 +51,8 @@ void main()  {
           '/frequenciaMembros': (context) => frequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
           '/ReportsHome': (context) => ReportsHome(),
-          '/VinculoDiscipulado': (context) => VinculoComDiscipuladoPage()
+          '/VinculoDiscipulado': (context) => VinculoComDiscipuladoPage(),
+          '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
         },
 
         debugShowCheckedModeBanner: false,

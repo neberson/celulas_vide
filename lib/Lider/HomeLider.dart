@@ -13,7 +13,7 @@ class HomeLider extends StatefulWidget {
 
 class _HomeLiderState extends State<HomeLider> {
 
-  final List<Categoria> categorias = [
+  final List<Categoria> categoriasLider = [
     Categoria(9,"Perfil do Lider","/PerfilLider", icon: FontAwesomeIcons.user),
     Categoria(10,"Dados da Célula","/DadosCelula", icon: FontAwesomeIcons.globeAsia),
     Categoria(11,"Membros","/TabMembro", icon: FontAwesomeIcons.userFriends),
@@ -24,108 +24,126 @@ class _HomeLiderState extends State<HomeLider> {
     //Categoria(14,"Sair","/logoff", icon: Icons.close)
   ];
 
-  loginUsuario login = new loginUsuario();
+  final List<Categoria> categoriasDiscipulador = [
+    Categoria(9,"Perfil do Discipulador","/PerfilDiscipulador", icon: FontAwesomeIcons.user),
+    Categoria(9,"Dados das Células","/PerfilDiscipulador", icon: FontAwesomeIcons.globeAsia),
+    Categoria(9,"Membros","/PerfilDiscipulador", icon: FontAwesomeIcons.users),
+    Categoria(9,"Eventos","/PerfilDiscipulador", icon: FontAwesomeIcons.calendarAlt),
+  ];
 
-  List<String> _itensMenu = ["Sair"];
+  bool isLider = true;
+
+  loginUsuario login = new loginUsuario();
 
   _escolhaMenuItem(String item){
     switch (item){
       case "Sair":
         login.logoff(context: context);
         break;
+      case "Menu Discipulador":
+        setState(() => isLider = false);
+        break;
+      case "Menu Líder":
+        setState(() => isLider = true);
+        break;
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color.fromRGBO(81, 37, 103, 1),
-        title: Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 1),
-              child: Image.asset(
-                'images/logo_branco_sem_texto.png',
-                fit: BoxFit.contain,
-                height: 50,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Color.fromRGBO(81, 37, 103, 1),
+          title: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 1),
+                child: Image.asset(
+                  'images/logo_branco_sem_texto.png',
+                  fit: BoxFit.contain,
+                  height: 50,
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('CÉLULAS VIDE'),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('CÉLULAS VIDE'),
+              )
+            ],
+          ),
+          elevation: 0,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: _escolhaMenuItem,
+              itemBuilder: (context){
+                return [
+                  PopupMenuItem<String>(
+                    value: isLider ? 'Menu Discipulador' : 'Menu Líder',
+                    child: Text(isLider ? 'Menu Discipulador' : 'Menu Líder'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Sair',
+                    child: Text('Sair'),
+                  )
+                ];
+              },
             )
           ],
         ),
-        elevation: 0,
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: _escolhaMenuItem,
-            itemBuilder: (context){
-              return _itensMenu.map((String item){
-                return PopupMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                );
-              }).toList();
-            },
-          )
-        ],
-      ),
-      body: OrientationBuilder(
-        builder: (context, orientation){
-          return Stack(
-            children: <Widget>[
-              ClipPath(
-                clipper: WaveClipperTwo(),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(81, 37, 103, 1)
+        body: OrientationBuilder(
+          builder: (context, orientation){
+            return Stack(
+              children: <Widget>[
+                ClipPath(
+                  clipper: WaveClipperTwo(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(81, 37, 103, 1)
+                    ),
+                    height: 200,
                   ),
-                  height: 200,
                 ),
-              ),
-              CustomScrollView(
-                physics: BouncingScrollPhysics(),
-                slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
-                      child: Text("Bem vindo ao App CélulasVide, o seu Administrador de Células!", style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16.0
-                      ),),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(16.0),
-                    sliver: SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: orientation == Orientation.portrait? 2 : 3,
-                          childAspectRatio: 1.2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        _buildCategoriaItem,
-                        childCount: categorias.length,
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                        child: Text("Bem vindo ao App CélulasVide, o seu Administrador de Células!", style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.0
+                        ),),
                       ),
                     ),
-                  )
-                ],
-              )
-            ],
-          );
-        },
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16.0),
+                      sliver: SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: orientation == Orientation.portrait? 2 : 3,
+                            childAspectRatio: 1.2,
+                            crossAxisSpacing: 10.0,
+                            mainAxisSpacing: 10.0
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          _buildCategoriaItem,
+                          childCount: isLider ? categoriasLider.length : categoriasDiscipulador.length,
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _buildCategoriaItem(BuildContext context, int index){
-    Categoria categoria = categorias[index];
+    Categoria categoria = isLider ? categoriasLider[index] : categoriasDiscipulador[index];
 
     return MaterialButton(
       elevation: 1.0,
@@ -155,8 +173,5 @@ class _HomeLiderState extends State<HomeLider> {
       ),
     );
   }
-
-
-
 
 }
