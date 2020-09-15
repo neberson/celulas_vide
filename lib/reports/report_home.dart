@@ -1,15 +1,14 @@
-
+import 'package:celulas_vide/reports/report_result.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-class ReportsHome extends StatefulWidget {
+class ReportHome extends StatefulWidget {
   @override
-  _ReportsHomeState createState() => _ReportsHomeState();
+  _ReportHomeState createState() => _ReportHomeState();
 }
 
-class _ReportsHomeState extends State<ReportsHome> {
-
+class _ReportHomeState extends State<ReportHome> {
   DateTime _dateStart;
   DateTime _dateEnd;
   var _cDateStart = TextEditingController();
@@ -44,8 +43,12 @@ class _ReportsHomeState extends State<ReportsHome> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-                    child: Text('Selecione um modelo', style: TextStyle(fontSize: 26),)),
+                    margin: EdgeInsets.only(
+                        left: 16, right: 16, top: 16, bottom: 16),
+                    child: Text(
+                      'Selecione um modelo',
+                      style: TextStyle(fontSize: 26),
+                    )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -53,9 +56,13 @@ class _ReportsHomeState extends State<ReportsHome> {
                       flex: 2,
                       child: Column(
                         children: [
-                          _itemTypeReport('Cadastro \nde Célula', Icons.person_add),
-                          SizedBox(height: 15,),
-                          _itemTypeReport('Nominal membros\nda Célula', Icons.supervisor_account),
+                          _itemTypeReport(
+                              'Cadastro \nde Célula', Icons.person_add),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _itemTypeReport('Nominal membros\nda Célula',
+                              Icons.supervisor_account),
                         ],
                       ),
                     ),
@@ -63,9 +70,13 @@ class _ReportsHomeState extends State<ReportsHome> {
                       flex: 2,
                       child: Column(
                         children: [
-                          _itemTypeReport('Frequencia de\nCélula e Culto', Icons.format_list_numbered),
-                          SizedBox(height: 15,),
-                          _itemTypeReport('Ofertas \nda Célula', Icons.monetization_on)
+                          _itemTypeReport('Frequencia de\nCélula e Culto',
+                              Icons.format_list_numbered),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _itemTypeReport(
+                              'Ofertas \nda Célula', Icons.monetization_on)
                         ],
                       ),
                     )
@@ -92,7 +103,12 @@ class _ReportsHomeState extends State<ReportsHome> {
                   color: Theme.of(context).accentColor,
                   size: 26,
                 ),
-                onPressed: _showDialogDate,
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReportResult(
+                              title: 'Cadastro de Célula',
+                            ))),
               ),
             ),
           ),
@@ -144,41 +160,45 @@ class _ReportsHomeState extends State<ReportsHome> {
                       TextFormField(
                         onTap: () => _showDataPicker(0),
                         controller: _cDateStart,
-                        validator: (text) => text.isEmpty ? 'Informe a data inicial' : null,
+                        validator: (text) =>
+                            text.isEmpty ? 'Informe a data inicial' : null,
                         decoration: InputDecoration(
-                        labelText: 'Data inicial',
-                        labelStyle: TextStyle(color: Theme.of(context).accentColor),
-                        border: OutlineInputBorder(
-                          borderSide:
-                          const BorderSide(color: Colors.white, width: 2.0),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                          const BorderSide(color: Colors.red, width: 2.0),
-                          borderRadius: BorderRadius.circular(25.0),
-                        )
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      TextFormField(
-                        onTap: () => _showDataPicker(1),
-                        controller: _cDateEnd,
-                        validator: (text) => text.isEmpty ? 'Informe a data final' : null,
-                        decoration: InputDecoration(
-                            labelText: 'Data Final',
-                            labelStyle: TextStyle(color: Theme.of(context).accentColor),
+                            labelText: 'Data inicial',
+                            labelStyle:
+                                TextStyle(color: Theme.of(context).accentColor),
                             border: OutlineInputBorder(
-                              borderSide:
-                              const BorderSide(color: Colors.white, width: 2.0),
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 2.0),
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide:
-                              const BorderSide(color: Colors.red, width: 2.0),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 2.0),
                               borderRadius: BorderRadius.circular(25.0),
-                            )
-                        ),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        onTap: () => _showDataPicker(1),
+                        controller: _cDateEnd,
+                        validator: (text) =>
+                            text.isEmpty ? 'Informe a data final' : null,
+                        decoration: InputDecoration(
+                            labelText: 'Data Final',
+                            labelStyle:
+                                TextStyle(color: Theme.of(context).accentColor),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 2.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 2.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            )),
                       ),
                     ],
                   ),
@@ -214,15 +234,13 @@ class _ReportsHomeState extends State<ReportsHome> {
         });
   }
 
-  _onClickGenerate(){
-    if(_formKey.currentState.validate()){
-
-    }
+  _onClickGenerate() {
+    if (_formKey.currentState.validate()) {}
   }
 
   _showDataPicker(int field) async {
     FocusScope.of(context).requestFocus(FocusNode());
-   DateTime date = await showDatePicker(
+    DateTime date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2001),
@@ -232,16 +250,15 @@ class _ReportsHomeState extends State<ReportsHome> {
       builder: (BuildContext context, Widget child) => child,
     );
 
-   if(date != null){
-     if(field == 0){
-       _dateStart = date;
-       _cDateStart.text = DateFormat('dd/MM/yyyy').format(date);
-     }
-     else{
-       _dateEnd = date;
-       _cDateEnd.text = DateFormat('dd/MM/yyyy').format(date);
-     }
-   }
+    if (date != null) {
+      if (field == 0) {
+        _dateStart = date;
+        _cDateStart.text = DateFormat('dd/MM/yyyy').format(date);
+      } else {
+        _dateEnd = date;
+        _cDateEnd.text = DateFormat('dd/MM/yyyy').format(date);
+      }
+    }
   }
 
   @override

@@ -10,7 +10,7 @@ import 'package:celulas_vide/Lider/TabMembros.dart';
 import 'package:celulas_vide/Lider/VinculoComDiscipuladoPage.dart';
 import 'package:celulas_vide/Lider/frequenciaMembros.dart';
 import 'package:celulas_vide/Tela_login.dart';
-import 'package:celulas_vide/reports/reports_home.dart';
+import 'package:celulas_vide/reports/report_home.dart';
 import 'package:celulas_vide/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -50,7 +50,7 @@ void main()  {
           '/DadosCelula': (context) => DadosCelula(),
           '/frequenciaMembros': (context) => frequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
-          '/ReportsHome': (context) => ReportsHome(),
+          '/ReportsHome': (context) => ReportHome(),
           '/VinculoDiscipulado': (context) => VinculoComDiscipuladoPage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
         },
