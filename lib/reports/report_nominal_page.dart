@@ -2,6 +2,7 @@ import 'package:celulas_vide/Model/DadosMembroCelulaBEAN.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
+import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -67,7 +68,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
         ),
         body: isLoading
             ? loading()
-            : TabBarView(children: [
+            : error != null ? stateError(context, error) : TabBarView(children: [
                 _tableAtivos(_listMembrosAtivos),
                 _tableAtivos(_listMembrosInativos)
               ]),
@@ -136,8 +137,8 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                             Text(e.telefoneMembro),
                           ),
                           DataCell(
-                            Text(DateFormat('dd/MM/yyyy')
-                                .format(e.dataNascimentoMembro)),
+                            Text(e.dataNascimentoMembro != null ? DateFormat('dd/MM/yyyy')
+                                .format(e.dataNascimentoMembro) : ''),
                           ),
                         ],
                       ),

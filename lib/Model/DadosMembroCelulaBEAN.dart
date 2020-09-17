@@ -41,7 +41,7 @@ class MembrosCelula {
   MembrosCelula.fromMap(map){
     this.nomeMembro = map['nomeMembro'];
     this.generoMembro = map['generoMembro'];
-    this.dataNascimentoMembro = map['dataNascimentoMebmro'] != '' ? map['dataNascimentoMembro'].toDate() : null;
+    this.dataNascimentoMembro = map['dataNascimentoMembro'] != '' ? map['dataNascimentoMembro'].toDate() : null;
     this.telefoneMembro = map['telefoneMembro'];
     this.enderecoMembro = map['enderecoMembro'];
     this.condicaoMembro = map['condicaoMembro'];
