@@ -1,4 +1,3 @@
-import 'package:celulas_vide/Lider/DadosMembro.dart';
 import 'package:celulas_vide/Model/DadosMembroCelulaDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

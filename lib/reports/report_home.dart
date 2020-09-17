@@ -1,3 +1,4 @@
+import 'package:celulas_vide/reports/report_nominal_page.dart';
 import 'package:celulas_vide/reports/report_result.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -57,12 +58,12 @@ class _ReportHomeState extends State<ReportHome> {
                       child: Column(
                         children: [
                           _itemTypeReport(
-                              'Cadastro \nde Célula', Icons.person_add),
+                              'Cadastro \nde Célula', Icons.person_add, _onClickReportGeral),
                           SizedBox(
                             height: 15,
                           ),
                           _itemTypeReport('Nominal membros\nda Célula',
-                              Icons.supervisor_account),
+                              Icons.supervisor_account, _onClickReportNominal, ),
                         ],
                       ),
                     ),
@@ -71,12 +72,12 @@ class _ReportHomeState extends State<ReportHome> {
                       child: Column(
                         children: [
                           _itemTypeReport('Frequencia de\nCélula e Culto',
-                              Icons.format_list_numbered),
+                              Icons.format_list_numbered, _onClickReportGeral),
                           SizedBox(
                             height: 15,
                           ),
                           _itemTypeReport(
-                              'Ofertas \nda Célula', Icons.monetization_on)
+                              'Ofertas \nda Célula', Icons.monetization_on, _onClickReportGeral)
                         ],
                       ),
                     )
@@ -90,7 +91,18 @@ class _ReportHomeState extends State<ReportHome> {
     );
   }
 
-  _itemTypeReport(String title, icon) {
+  _onClickReportNominal() => Navigator.push(context, MaterialPageRoute(builder: (context) => ReportNominalPage('Relatório membros da Célula')));
+
+  _onClickReportGeral(){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ReportResult(
+              title: 'Cadastro de Célula',
+            )));
+  }
+
+  _itemTypeReport(String title, icon, function) {
     return Center(
       child: Column(
         children: [
@@ -103,12 +115,7 @@ class _ReportHomeState extends State<ReportHome> {
                   color: Theme.of(context).accentColor,
                   size: 26,
                 ),
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ReportResult(
-                              title: 'Cadastro de Célula',
-                            ))),
+                onPressed: function
               ),
             ),
           ),

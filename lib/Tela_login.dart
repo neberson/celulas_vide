@@ -4,7 +4,6 @@ import 'package:celulas_vide/Tela_Cadastrar.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'Lider/HomeLider.dart';
 

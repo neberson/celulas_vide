@@ -1,4 +1,3 @@
-import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Model/DadosCelulaBEAN.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

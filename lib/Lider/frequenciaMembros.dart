@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobx/mobx.dart';
 
 class frequenciaMembros extends StatefulWidget {
   @override
@@ -425,7 +424,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                                   new List<Map>();
                                               _frequenciaCelula
                                                       .MembrosFrequencia
-                                                  .addAll(_membrosCelulaMap.ListtoMapFrequencia(_membrosStore));
+                                                  .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStore));
                                               _frequenciaCelula
                                                       .ofertaFrequencia =
                                                   _valorOferta.numberValue;
@@ -598,7 +597,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                                   .MembrosFrequencia =
                                               new List<Map>();
                                               _frequenciaCulto.MembrosFrequencia
-                                                  .addAll(_membrosCelulaMap.ListtoMapFrequencia(_membrosStoreCulto));
+                                                  .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStoreCulto));
                                               if (_indexListaFrequenciaCulto <
                                                   0) {
                                                 _frequenciasCulto.add(
