@@ -4,9 +4,9 @@ class DadosCelulaBEAN{
   String _tipoCelula;
   String _diaCelula;
   String _horarioCelula;
-  String _dataCelula;
-  String _ultimaMultiplicacao;
-  String _proximaMultiplicacao;
+  DateTime _dataCelula;
+  DateTime _ultimaMultiplicacao;
+  DateTime _proximaMultiplicacao;
   String _CEP;
   String _Logradouro;
   String _numero;
@@ -97,9 +97,9 @@ class DadosCelulaBEAN{
   }
 
 
-  String get dataCelula => _dataCelula;
+  DateTime get dataCelula => _dataCelula;
 
-  set dataCelula(String value) {
+  set dataCelula(DateTime value) {
     _dataCelula = value;
   }
 
@@ -119,15 +119,15 @@ class DadosCelulaBEAN{
     _tipoCelula = value;
   }
 
-  String get ultimaMultiplicacao => _ultimaMultiplicacao;
+  DateTime get ultimaMultiplicacao => _ultimaMultiplicacao;
 
-  String get proximaMultiplicacao => _proximaMultiplicacao;
+  DateTime get proximaMultiplicacao => _proximaMultiplicacao;
 
-  set proximaMultiplicacao(String value) {
+  set proximaMultiplicacao(DateTime value) {
     _proximaMultiplicacao = value;
   }
 
-  set ultimaMultiplicacao(String value) {
+  set ultimaMultiplicacao(DateTime value) {
     _ultimaMultiplicacao = value;
   }
 
