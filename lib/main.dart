@@ -38,9 +38,10 @@ void main()  {
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
-          Locale("pt")
+          const Locale('pt', 'BR')
         ],
         initialRoute: '/',
         routes: {

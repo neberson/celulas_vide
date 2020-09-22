@@ -22,11 +22,11 @@ class celulaDAO {
          print(celula.tipoCelula);
          print(celula.horarioCelula);
         _validacao = "Informe o horário da Célula!";
-      }else if(celula.dataCelula.isEmpty){
+      }else if(celula.dataCelula == null){
         _validacao = "Informe o data que iniciou a Célula!";
-      }else if(celula.ultimaMultiplicacao.isEmpty){
+      }else if(celula.ultimaMultiplicacao == null){
         _validacao = "Informe a data da útilma Multiplicação!";
-      }else if(celula.proximaMultiplicacao.isEmpty){
+      }else if(celula.proximaMultiplicacao == null){
         _validacao = "Informe a data da próxima multiplicação!";
       }else{
           db.collection("Celula")

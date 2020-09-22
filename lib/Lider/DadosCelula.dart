@@ -2,6 +2,7 @@ import 'package:celulas_vide/Model/DadosCelulaBEAN.dart';
 import 'package:celulas_vide/Model/DadosCelulaDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:via_cep/via_cep.dart';
 
@@ -28,10 +29,14 @@ class _DadosCelulaState extends State<DadosCelula> {
   ];
   String _diaCelulaSelecionado = "Segunda-Feira";
   var _horarioCelula = MaskedTextController(mask: '00:00');
-  var _dataInicioCelula = MaskedTextController(mask: '00/00/0000');
-  var _dataUltimaMultiplicacao = MaskedTextController(mask: '00/00/0000');
-  var _dataProximaMultiplicao = MaskedTextController(mask: '00/00/0000');
+  TextEditingController _dataInicioCelula = TextEditingController();
+  TextEditingController _dataUltimaMultiplicacao = TextEditingController();
+  TextEditingController _dataProximaMultiplicao = TextEditingController();
   var _CEP = MaskedTextController(mask: '00000000');
+  var date;
+  var dateInicioCelula;
+  var dateCelulaUltimaMultiplicacao;
+  var dateProximaMultiplicao;
   TextEditingController _nomeCelula = TextEditingController();
   TextEditingController _LOGRADOURO = TextEditingController();
   TextEditingController _NUMERO = TextEditingController();
@@ -75,9 +80,18 @@ class _DadosCelulaState extends State<DadosCelula> {
         circularProgressTela = 1;
       });
       _horarioCelula.text = dados["horarioCelula"];
-      _dataInicioCelula.text = dados["dataInicioCelula"];
-      _dataUltimaMultiplicacao.text = dados["dataUltimaMulplicacao"];
-      _dataProximaMultiplicao.text = dados["dataProximaMultiplicacao"];
+      if(dados["dataInicioCelula"] != null){
+        _dataInicioCelula.text = DateFormat('dd/MM/yyyy').format(dados["dataInicioCelula"].toDate());
+        dateInicioCelula = dados["dataInicioCelula"].toDate();
+      }
+      if(dados["dataUltimaMulplicacao"] != null){
+        _dataUltimaMultiplicacao.text = DateFormat('dd/MM/yyyy').format(dados["dataUltimaMulplicacao"].toDate());
+        dateCelulaUltimaMultiplicacao = dados["dataUltimaMulplicacao"].toDate();
+      }
+      if(dados["dataProximaMultiplicacao"] != null){
+        _dataProximaMultiplicao.text = DateFormat('dd/MM/yyyy').format(dados["dataProximaMultiplicacao"].toDate());
+        dateProximaMultiplicao = dados["dataProximaMultiplicacao"].toDate();
+      }
       _CEP.text = dados["CEP"];
       _LOGRADOURO.text = dados["logradouro"];
       _NUMERO.text = dados["numero"];
@@ -285,6 +299,14 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                showCursor: true,
+                readOnly: true,
+                onTap: (){
+                  showCupertinoPicker((){
+                    _dataInicioCelula.text = DateFormat('dd/MM/yyyy').format(this.date);
+                    this.dateInicioCelula = this.date;
+                  }, dateInicioCelula);
+                },
                 keyboardType: TextInputType.number,
                 controller: _dataInicioCelula,
                 cursorColor: Colors.white,
@@ -313,7 +335,14 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
-                keyboardType: TextInputType.number,
+                onTap: (){
+                  showCupertinoPicker((){
+                    _dataUltimaMultiplicacao.text = DateFormat('dd/MM/yyyy').format(this.date);
+                    this.dateCelulaUltimaMultiplicacao = this.date;
+                  }, dateCelulaUltimaMultiplicacao);
+                },
+                showCursor: true,
+                readOnly: true,
                 controller: _dataUltimaMultiplicacao,
                 cursorColor: Colors.white,
                 style: TextStyle(
@@ -341,6 +370,14 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                onTap: (){
+                  showCupertinoPicker((){
+                    _dataProximaMultiplicao.text = DateFormat('dd/MM/yyyy').format(this.date);
+                    this.dateProximaMultiplicao = this.date;
+                  }, dateProximaMultiplicao);
+                },
+                showCursor: true,
+                readOnly: true,
                 keyboardType: TextInputType.number,
                 controller: _dataProximaMultiplicao,
                 cursorColor: Colors.white,
@@ -606,11 +643,11 @@ class _DadosCelulaState extends State<DadosCelula> {
                           ? ""
                           : _diaCelulaSelecionado.toString();
                       _celula.horarioCelula = _horarioCelula.text;
-                      _celula.dataCelula = _dataInicioCelula.text;
+                      _celula.dataCelula = dateInicioCelula;
                       _celula.ultimaMultiplicacao =
-                          _dataUltimaMultiplicacao.text;
+                          dateCelulaUltimaMultiplicacao;
                       _celula.proximaMultiplicacao =
-                          _dataProximaMultiplicao.text;
+                          dateProximaMultiplicao;
                       _celula.CEP = _CEP.text;
                       _celula.Logradouro = _LOGRADOURO.text;
                       _celula.numero = _NUMERO.text;
@@ -640,5 +677,55 @@ class _DadosCelulaState extends State<DadosCelula> {
         ),
       ),
     );
+
+  }
+
+  showCupertinoPicker(Function() returnDate, DateTime dataAtual){
+    //Focus.of(context).requestFocus(FocusNode());
+    if(dataAtual == null){
+      date = DateTime.now();
+    }else{
+      date = dataAtual;
+    }
+    return showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        context: context,
+        builder: (context){
+          return Container(
+            height: 245,
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.topRight,
+                  child: FlatButton(
+                    child: Text(
+                      'Concluído',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    onPressed: (){
+                      returnDate();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoDatePicker(
+
+                    mode: CupertinoDatePickerMode.date,
+                    use24hFormat: true,
+                    initialDateTime: date,
+                    onDateTimeChanged: (DateTime date){
+                      this.date = date;
+                    },
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+    );
   }
 }
+
+
