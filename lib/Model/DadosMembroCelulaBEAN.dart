@@ -1,5 +1,6 @@
 import 'package:celulas_vide/stores/list_membro_store.dart';
 import 'package:celulas_vide/stores/membro_store.dart';
+import 'package:intl/intl.dart';
 
 class MembrosCelula {
   String nomeMembro;
@@ -79,4 +80,21 @@ class MembrosCelula {
     }
     return membrosMap;
   }
+
+  String getIndex(int index) {
+    switch (index) {
+      case 0:
+        return nomeMembro.toUpperCase();
+      case 1:
+        return generoMembro.toUpperCase();
+      case 2:
+        return condicaoMembro;
+      case 3:
+        return telefoneMembro;
+      case 4:
+        return DateFormat('dd/MM/yyyy').format(dataNascimentoMembro);
+    }
+    return '';
+  }
+
 }

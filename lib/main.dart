@@ -31,6 +31,9 @@ void main()  {
           accentColor: Color.fromRGBO(81, 37, 103, 1),
           backgroundColor: Color.fromRGBO(81, 37, 103, 1),
           primarySwatch: createMaterialColor (Color.fromRGBO(81, 37, 103, 1)),
+          appBarTheme: AppBarTheme(
+            color: Color.fromRGBO(81, 37, 103, 1)
+          )
         ),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:celulas_vide/Model/DadosMembroCelulaBEAN.dart';
+import 'package:celulas_vide/reports/pdf_viewer.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class ReportNominalPage extends StatefulWidget {
   final titleAppBar;
@@ -68,10 +74,12 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
         ),
         body: isLoading
             ? loading()
-            : error != null ? stateError(context, error) : TabBarView(children: [
-                _tableAtivos(_listMembrosAtivos),
-                _tableAtivos(_listMembrosInativos)
-              ]),
+            : error != null
+                ? stateError(context, error)
+                : TabBarView(children: [
+                    _tableAtivos(_listMembrosAtivos),
+                    _tableAtivos(_listMembrosInativos)
+                  ]),
       ),
     );
   }
@@ -137,8 +145,10 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                             Text(e.telefoneMembro),
                           ),
                           DataCell(
-                            Text(e.dataNascimentoMembro != null ? DateFormat('dd/MM/yyyy')
-                                .format(e.dataNascimentoMembro) : ''),
+                            Text(e.dataNascimentoMembro != null
+                                ? DateFormat('dd/MM/yyyy')
+                                    .format(e.dataNascimentoMembro)
+                                : ''),
                           ),
                         ],
                       ),
@@ -149,7 +159,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
           ),
           Padding(
               padding:
-              EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
+                  EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
               child: SizedBox(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
@@ -161,10 +171,95 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                     "Gerar PDF",
                     style: TextStyle(color: Colors.white70, fontSize: 20),
                   ),
-                  onPressed: () {},
+                  onPressed: () => _generatePdf(list),
                 ),
               )),
         ],
+      ),
+    );
+  }
+
+  _generatePdf(List<MembrosCelula> listMembers) async {
+
+    var listColumns = ['Nome', 'Gênero', 'Classificação', 'Telefone', 'Data nascimento'];
+
+    final pdf = pw.Document();
+
+    pdf.addPage(pw.MultiPage(
+      pageFormat:
+          PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      header: (pw.Context context) {
+        if (context.pageNumber == 1) {
+          return null;
+        }
+        return pw.Container(
+          alignment: pw.Alignment.centerRight,
+          margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+          padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+          decoration: const pw.BoxDecoration(
+              border: pw.BoxBorder(
+                  bottom: true, width: 0.5, color: PdfColors.grey)),
+          child: pw.Text(
+            'Relatório Nominal Membros de Célula',
+            style: pw.Theme.of(context)
+                .defaultTextStyle
+                .copyWith(color: PdfColors.grey),
+          ),
+        );
+      },
+      footer: (pw.Context context) {
+        return pw.Container(
+          alignment: pw.Alignment.centerRight,
+          margin: const pw.EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
+          child: pw.Text(
+            'Página ${context.pageNumber} de ${context.pagesCount}',
+            style: pw.Theme.of(context)
+                .defaultTextStyle
+                .copyWith(color: PdfColors.grey),
+          ),
+        );
+      },
+      build: (pw.Context context) => <pw.Widget>[
+        pw.Header(
+            level: 0,
+            child: pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: <pw.Widget>[
+                  pw.Text('Relatório Nominal Membros de Célula',
+                      textScaleFactor: 2),
+                  pw.PdfLogo()
+                ])),
+        pw.Header(
+            level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
+        pw.Padding(padding: const pw.EdgeInsets.all(10)),
+
+        pw.Table.fromTextArray(
+          context: context,
+          headers: List<String>.generate(
+            listColumns.length,
+                (col) => listColumns[col],
+          ),
+          data: List<List<String>>.generate(
+            listMembers.length,
+                (row) => List<String>.generate(
+              listColumns.length,
+                  (col) => listMembers[row].getIndex(col),
+            ),
+          ),
+        ),
+      ],
+    ));
+
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/relatorio_nominal_membros.pdf';
+    print(path);
+    final File file = File(path);
+    await file.writeAsBytes(pdf.save());
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PdfViewerPage(path: path),
       ),
     );
   }
