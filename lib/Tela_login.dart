@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Controller/loginUsuario.dart';
-import 'package:celulas_vide/Model/usuario.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Tela_Cadastrar.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/config.dart';

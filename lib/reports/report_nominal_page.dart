@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:celulas_vide/Model/DadosMembroCelulaBEAN.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
@@ -27,16 +27,21 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
   bool isLoading = true;
   var error;
 
+  Celula celula;
   List<MembrosCelula> _listMembrosAtivos = [];
   List<MembrosCelula> _listMembrosInativos = [];
 
   @override
   void initState() {
-    reportBloc.getMember().then((membros) {
+    reportBloc.getMember().then((celula) {
+
+      print('nome da celula: ${celula.dadosCelula.nomeCelula}');
+
+      this.celula = celula;
       _listMembrosAtivos =
-          membros.where((element) => element.status == 0).toList();
+          celula.membros.where((element) => element.status == 0).toList();
       _listMembrosInativos =
-          membros.where((element) => element.status == 1).toList();
+          celula.membros.where((element) => element.status == 1).toList();
 
       setState(() => isLoading = false);
     }).catchError((onError) {
@@ -233,7 +238,14 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
         pw.Header(
             level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
         pw.Padding(padding: const pw.EdgeInsets.all(10)),
-
+        pw.Text('Nome Célula: ${celula.dadosCelula.nomeCelula}'),
+        pw.Text('Endereço: ${celula.dadosCelula.logradouro}, ${celula.dadosCelula.bairro}, ${celula.dadosCelula.cidade}'),
+        pw.Text('Líder: ${celula.usuario.nome}'),
+        pw.Text('Discipulador: ${celula.usuario.discipulador}'),
+        pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
+        pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
+        pw.Text('Igreja: ${celula.usuario.igreja}'),
+        pw.SizedBox(height: 10),
         pw.Table.fromTextArray(
           context: context,
           headers: List<String>.generate(

@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Lider/HomeLider.dart';
-import 'package:celulas_vide/Model/usuario.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,9 +1,10 @@
-import 'package:celulas_vide/Model/DadosCelulaBEAN.dart';
+
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/DadosCelulaDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:intl/intl.dart';
 import 'package:via_cep/via_cep.dart';
 
 class DadosCelula extends StatefulWidget {
@@ -46,13 +47,11 @@ class _DadosCelulaState extends State<DadosCelula> {
   TextEditingController _ESTADO = TextEditingController();
   TextEditingController _anfitriao = TextEditingController();
 
-  DadosCelulaBEAN _celula = new DadosCelulaBEAN();
   celulaDAO _salvarCelula = new celulaDAO();
 
   _buscarCEP(String cep) async {
     var CEP = new via_cep();
 
-    var result = await CEP.searchCEP(cep, 'json', '');
 
     if (CEP.getResponse() == 200) {
       setState(() {
@@ -634,30 +633,33 @@ class _DadosCelulaState extends State<DadosCelula> {
                       setState(() {
                         circularProgress = 1;
                       });
-                      _celula.anfitriao = _anfitriao.text;
-                      _celula.nomeCelula = _nomeCelula.text;
-                      _celula.tipoCelula = _tipoCelulaSelecionado == null
+
+                      var celula = new DadosCelulaBEAN();
+
+                      celula.anfitriao = _anfitriao.text;
+                      celula.nomeCelula = _nomeCelula.text;
+                      celula.tipoCelula = _tipoCelulaSelecionado == null
                           ? ""
                           : _tipoCelulaSelecionado.toString();
-                      _celula.diaCelula = _diaCelulaSelecionado == null
+                      celula.diaCelula = _diaCelulaSelecionado == null
                           ? ""
                           : _diaCelulaSelecionado.toString();
-                      _celula.horarioCelula = _horarioCelula.text;
-                      _celula.dataCelula = dateInicioCelula;
-                      _celula.ultimaMultiplicacao =
+                      celula.horarioCelula = _horarioCelula.text;
+                      celula.dataCelula = dateInicioCelula;
+                      celula.ultimaMultiplicacao =
                           dateCelulaUltimaMultiplicacao;
-                      _celula.proximaMultiplicacao =
+                      celula.proximaMultiplicacao =
                           dateProximaMultiplicao;
-                      _celula.CEP = _CEP.text;
-                      _celula.Logradouro = _LOGRADOURO.text;
-                      _celula.numero = _NUMERO.text;
-                      _celula.complemento = _COMPLEMENTO.text;
-                      _celula.bairro = _BAIRRO.text;
-                      _celula.cidade = _CIDADE.text;
-                      _celula.estado = _ESTADO.text;
+                      celula.cep = _CEP.text;
+                      celula.logradouro = _LOGRADOURO.text;
+                      celula.numero = _NUMERO.text;
+                      celula.complemento = _COMPLEMENTO.text;
+                      celula.bairro = _BAIRRO.text;
+                      celula.cidade = _CIDADE.text;
+                      celula.estado = _ESTADO.text;
 
                       _salvarCelula
-                          .salvarDados(_celula, context)
+                          .salvarDados(celula, context)
                           .then((valor) {
                         var snackBar = SnackBar(
                           duration: Duration(seconds: 5),

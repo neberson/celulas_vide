@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:celulas_vide/Model/usuario.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -28,6 +28,9 @@ class _PerfilLiderState extends State<PerfilLider> {
   TextEditingController _nomePastorIgreja = TextEditingController();
   TextEditingController _nomeIgreja = TextEditingController();
   TextEditingController _encargo = TextEditingController();
+
+  var _fDiscipulador = FocusNode();
+  var _fPastorRede = FocusNode();
 
   int circularProgressButton = 0;
 
@@ -400,6 +403,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                       child: TextFormField(
                         controller: _nomeUsuario,
                         cursorColor: Colors.white,
+                        textInputAction: TextInputAction.next,
                         style: TextStyle(
                           color: Colors.white,
                           decorationColor: Colors.white,
@@ -420,12 +424,15 @@ class _PerfilLiderState extends State<PerfilLider> {
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
+                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fDiscipulador),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fPastorRede),
                         controller: _nomeDiscipulador,
+                        focusNode: _fDiscipulador,
                         cursorColor: Colors.white,
                         style: TextStyle(
                           color: Colors.white,
@@ -453,6 +460,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                       padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
                         controller: _nomePastorRede,
+                        focusNode: _fPastorRede,
                         cursorColor: Colors.white,
                         style: TextStyle(
                           color: Colors.white,

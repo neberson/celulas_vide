@@ -1,4 +1,4 @@
-import 'package:celulas_vide/Model/DadosMembroCelulaBEAN.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaCelulaBEAN.dart';
 import 'package:celulas_vide/Model/frequenciaDAO.dart';
 import 'package:celulas_vide/stores/list_membro_store.dart';

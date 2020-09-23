@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:celulas_vide/Model/usuario.dart';
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

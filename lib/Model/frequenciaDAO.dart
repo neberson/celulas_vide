@@ -1,9 +1,8 @@
+import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaCelulaBEAN.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'DadosMembroCelulaBEAN.dart';
 
 
 class frequenciaDAO {

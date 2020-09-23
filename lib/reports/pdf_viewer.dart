@@ -26,7 +26,7 @@ class PdfViewerPage extends StatelessWidget {
 
   _onClickShare(){
     var file = File(path);
-    sh.Share.shareFiles([file.path], text: 'Great picture');
+    sh.Share.shareFiles([file.path], text: 'Segue o relatório');
   }
 
 
