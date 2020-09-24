@@ -31,6 +31,8 @@ class _PerfilLiderState extends State<PerfilLider> {
 
   var _fDiscipulador = FocusNode();
   var _fPastorRede = FocusNode();
+  var _fPastorIgreja = FocusNode();
+  var _fNomeIgreja = FocusNode();
 
   int circularProgressButton = 0;
 
@@ -430,6 +432,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Padding(
                       padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fPastorRede),
                         controller: _nomeDiscipulador,
                         focusNode: _fDiscipulador,
@@ -459,6 +462,8 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Padding(
                       padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fPastorIgreja),
                         controller: _nomePastorRede,
                         focusNode: _fPastorRede,
                         cursorColor: Colors.white,
@@ -487,6 +492,9 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Padding(
                       padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fNomeIgreja),
+                        textInputAction: TextInputAction.next,
+                        focusNode: _fPastorIgreja,
                         controller: _nomePastorIgreja,
                         cursorColor: Colors.white,
                         style: TextStyle(
@@ -514,6 +522,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Padding(
                       padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        focusNode: _fNomeIgreja,
                         controller: _nomeIgreja,
                         cursorColor: Colors.white,
                         style: TextStyle(

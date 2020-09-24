@@ -92,7 +92,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
   _tableAtivos(List<MembrosCelula> list) {
     if (list.isEmpty)
       return emptyState(
-          context, 'Nenhum membro ativo por enquanto', Icons.person);
+          context, 'Nenhum membro encontrado com esse status', Icons.person);
 
     var styleTitle =
         TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
@@ -150,7 +150,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                             Text(e.telefoneMembro),
                           ),
                           DataCell(
-                            Text(e.dataNascimentoMembro != null
+                            Text(e.dataNascimentoMembro != ''
                                 ? DateFormat('dd/MM/yyyy')
                                     .format(e.dataNascimentoMembro)
                                 : ''),

@@ -101,6 +101,7 @@ class MembrosCelula {
   bool dizimistaMembro;
   bool frequenciaMembro;
   int status;
+  var dataCadastro;
 
   MembrosCelula();
   Map<String, dynamic> toMap() {
@@ -117,6 +118,7 @@ class MembrosCelula {
       "seminarioMembro": this.seminarioMembro,
       "consolidadoMembro": this.consolidadoMembro,
       "dizimistaMembro": this.dizimistaMembro,
+      "dataCadastro": this.dataCadastro,
       "status": this.status
     };
 
@@ -126,7 +128,7 @@ class MembrosCelula {
   MembrosCelula.fromMap(map){
     this.nomeMembro = map['nomeMembro'];
     this.generoMembro = map['generoMembro'];
-    this.dataNascimentoMembro = map['dataNascimentoMembro'] != '' ? map['dataNascimentoMembro'].toDate() : null;
+    this.dataNascimentoMembro = map['dataNascimentoMembro'] != null ? map['dataNascimentoMembro'].toDate() : '';
     this.telefoneMembro = map['telefoneMembro'];
     this.enderecoMembro = map['enderecoMembro'];
     this.condicaoMembro = map['condicaoMembro'];
@@ -176,7 +178,7 @@ class MembrosCelula {
       case 3:
         return telefoneMembro;
       case 4:
-        return DateFormat('dd/MM/yyyy').format(dataNascimentoMembro);
+        return dataNascimentoMembro != ''? DateFormat('dd/MM/yyyy').format(dataNascimentoMembro) : '';
     }
     return '';
   }
