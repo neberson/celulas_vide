@@ -123,7 +123,7 @@ class frequenciaDAO {
   List<Map> recuperarFrequenciaCelula(Map<dynamic,dynamic> dados){
 
     Frequencia frequencia = new Frequencia();
-    frequencia.MembrosFrequencia = List<Map>();
+    frequencia.membrosFrequencia = List<Map>();
     MembrosCelula membro = new MembrosCelula();
 
     List<Map> frequencias = List<Map>();
@@ -143,7 +143,7 @@ class frequenciaDAO {
           membro.frequenciaMembro = membroLista["frequenciaMembro"];
           membro.condicaoMembro = membroLista["condicaoMembro"];
           membro.status = membroLista["status"];
-          frequencia.MembrosFrequencia.add(membro.toMapFrequencia());
+          frequencia.membrosFrequencia.add(membro.toMapFrequencia());
         }
 
         frequencias.add(frequencia.toMapFrequencia());
@@ -155,7 +155,7 @@ class frequenciaDAO {
   List<Map> recuperarFrequenciaCulto(Map<dynamic,dynamic> dados){
 
     Frequencia frequencia = new Frequencia();
-    frequencia.MembrosFrequencia = List<Map>();
+    frequencia.membrosFrequencia = List<Map>();
     MembrosCelula membro = new MembrosCelula();
 
     List<Map> frequencias = List<Map>();
@@ -172,7 +172,7 @@ class frequenciaDAO {
           membro.frequenciaMembro = membroLista["frequenciaMembro"];
           membro.condicaoMembro = membroLista["condicaoMembro"];
           membro.status = membroLista["status"];
-          frequencia.MembrosFrequencia.add(membro.toMapFrequencia());
+          frequencia.membrosFrequencia.add(membro.toMapFrequencia());
         }
 
         frequencias.add(frequencia.toMapCulto());

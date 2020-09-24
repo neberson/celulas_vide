@@ -52,7 +52,6 @@ class _DadosCelulaState extends State<DadosCelula> {
   _buscarCEP(String cep) async {
     var CEP = new via_cep();
 
-
     if (CEP.getResponse() == 200) {
       setState(() {
         _LOGRADOURO.text = CEP.getLogradouro();
@@ -61,6 +60,9 @@ class _DadosCelulaState extends State<DadosCelula> {
         _CIDADE.text = CEP.getLocalidade();
         _ESTADO.text = CEP.getUF();
       });
+    }
+    else{
+      print('caiu no catch');
     }
   }
 
@@ -431,6 +433,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 maxLength: 8,
                 onChanged: (cep) {
                   if (cep.length == 8) {
+                    print('entrou aqui');
                     _buscarCEP(cep.toString());
                   }
                 },

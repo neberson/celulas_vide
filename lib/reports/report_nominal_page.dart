@@ -35,8 +35,6 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
   void initState() {
     reportBloc.getMember().then((celula) {
 
-      print('nome da celula: ${celula.dadosCelula.nomeCelula}');
-
       this.celula = celula;
       _listMembrosAtivos =
           celula.membros.where((element) => element.status == 0).toList();
@@ -82,14 +80,14 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
             : error != null
                 ? stateError(context, error)
                 : TabBarView(children: [
-                    _tableAtivos(_listMembrosAtivos),
-                    _tableAtivos(_listMembrosInativos)
+                    _tableMembers(_listMembrosAtivos, 0),
+                    _tableMembers(_listMembrosInativos, 1)
                   ]),
       ),
     );
   }
 
-  _tableAtivos(List<MembrosCelula> list) {
+  _tableMembers(List<MembrosCelula> list, int type) {
     if (list.isEmpty)
       return emptyState(
           context, 'Nenhum membro ativo por enquanto', Icons.person);
@@ -176,7 +174,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                     "Gerar PDF",
                     style: TextStyle(color: Colors.white70, fontSize: 20),
                   ),
-                  onPressed: () => _generatePdf(list),
+                  onPressed: () => _generatePdf(list, type),
                 ),
               )),
         ],
@@ -184,9 +182,14 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
     );
   }
 
-  _generatePdf(List<MembrosCelula> listMembers) async {
-
-    var listColumns = ['Nome', 'Gênero', 'Classificação', 'Telefone', 'Data nascimento'];
+  _generatePdf(List<MembrosCelula> listMembers, int type) async {
+    var listColumns = [
+      'Nome',
+      'Gênero',
+      'Classificação',
+      'Telefone',
+      'Data nascimento'
+    ];
 
     final pdf = pw.Document();
 
@@ -236,10 +239,13 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                   pw.PdfLogo()
                 ])),
         pw.Header(
-            level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
+            level: 1,
+            text:
+                '${DateFormat.yMMMMd('pt').format(DateTime.now())} - Membros ${type == 0 ? 'Ativos' : 'Inativos'}'),
         pw.Padding(padding: const pw.EdgeInsets.all(10)),
         pw.Text('Nome Célula: ${celula.dadosCelula.nomeCelula}'),
-        pw.Text('Endereço: ${celula.dadosCelula.logradouro}, ${celula.dadosCelula.bairro}, ${celula.dadosCelula.cidade}'),
+        pw.Text(
+            'Endereço: ${celula.dadosCelula.logradouro}, ${celula.dadosCelula.bairro}, ${celula.dadosCelula.cidade}'),
         pw.Text('Líder: ${celula.usuario.nome}'),
         pw.Text('Discipulador: ${celula.usuario.discipulador}'),
         pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
@@ -250,13 +256,13 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
           context: context,
           headers: List<String>.generate(
             listColumns.length,
-                (col) => listColumns[col],
+            (col) => listColumns[col],
           ),
           data: List<List<String>>.generate(
             listMembers.length,
-                (row) => List<String>.generate(
+            (row) => List<String>.generate(
               listColumns.length,
-                  (col) => listMembers[row].getIndex(col),
+              (col) => listMembers[row].getIndex(col),
             ),
           ),
         ),
@@ -265,7 +271,6 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path = '$dir/relatorio_nominal_membros.pdf';
-    print(path);
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
 

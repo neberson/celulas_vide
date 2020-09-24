@@ -420,10 +420,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                               _frequenciaCelula.dataFrequencia =
                                                   _dataCelula.text;
                                               _frequenciaCelula
-                                                      .MembrosFrequencia =
+                                                      .membrosFrequencia =
                                                   new List<Map>();
                                               _frequenciaCelula
-                                                      .MembrosFrequencia
+                                                      .membrosFrequencia
                                                   .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStore));
                                               _frequenciaCelula
                                                       .ofertaFrequencia =
@@ -594,9 +594,9 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                               _frequenciaCulto.dataFrequencia =
                                                   _dataCulto.text;
                                               _frequenciaCulto
-                                                  .MembrosFrequencia =
+                                                  .membrosFrequencia =
                                               new List<Map>();
-                                              _frequenciaCulto.MembrosFrequencia
+                                              _frequenciaCulto.membrosFrequencia
                                                   .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStoreCulto));
                                               if (_indexListaFrequenciaCulto <
                                                   0) {

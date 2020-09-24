@@ -1,5 +1,4 @@
 
-import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Discipulador/PerfilDiscipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Lider/DadosMembro.dart';
@@ -19,10 +18,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main()  {
 
   WidgetsFlutterBinding.ensureInitialized();
-
-
-  loginUsuario login = new loginUsuario();
-
 
   runApp(
       MaterialApp(

@@ -58,12 +58,37 @@ class _ReportHomeState extends State<ReportHome> {
                       child: Column(
                         children: [
                           _itemTypeReport(
-                              'Cadastro \nde Célula', Icons.person_add, _onClickReportGeral),
+                              'Cadastro\nde Célula', Icons.person_add, 'Cadastro de Célula'),
                           SizedBox(
                             height: 15,
                           ),
-                          _itemTypeReport('Nominal membros\nda Célula',
-                              Icons.supervisor_account, _onClickReportNominal, ),
+                          Center(
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[200],
+                                    child: IconButton(
+                                        icon: Icon(
+                                          Icons.supervisor_account,
+                                          color: Theme.of(context).accentColor,
+                                          size: 26,
+                                        ),
+                                        onPressed: _onClickReportNominal
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Nominal membros\nda Célula',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.black, fontSize: 15),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -72,12 +97,12 @@ class _ReportHomeState extends State<ReportHome> {
                       child: Column(
                         children: [
                           _itemTypeReport('Frequencia de\nCélula e Culto',
-                              Icons.format_list_numbered, _onClickReportGeral),
+                              Icons.format_list_numbered, ' Frequencia de Céula e Culto'),
                           SizedBox(
                             height: 15,
                           ),
                           _itemTypeReport(
-                              'Ofertas \nda Célula', Icons.monetization_on, _onClickReportGeral)
+                              'Ofertas\nda Célula', Icons.monetization_on, 'Ofertas da Célula')
                         ],
                       ),
                     )
@@ -93,16 +118,29 @@ class _ReportHomeState extends State<ReportHome> {
 
   _onClickReportNominal() => Navigator.push(context, MaterialPageRoute(builder: (context) => ReportNominalPage('Relatório membros da Célula')));
 
-  _onClickReportGeral(){
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ReportResult(
-              title: 'Cadastro de Célula',
-            )));
+  _onClickReportGeral(String title) async {
+
+   var result =  await _showDialogDate();
+
+   _cDateStart.clear();
+   _cDateEnd.clear();
+
+    if(result != null){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ReportResult(
+                title: title,
+                dateStart: _dateStart,
+                dateEnd: _dateEnd,
+              )));
+      _cDateStart.clear();
+      _cDateEnd.clear();
+    }
+
   }
 
-  _itemTypeReport(String title, icon, function) {
+  _itemTypeReport(String title, icon, titleAppBar) {
     return Center(
       child: Column(
         children: [
@@ -115,7 +153,7 @@ class _ReportHomeState extends State<ReportHome> {
                   color: Theme.of(context).accentColor,
                   size: 26,
                 ),
-                onPressed: function
+                onPressed: () => _onClickReportGeral(titleAppBar)
               ),
             ),
           ),
@@ -219,11 +257,7 @@ class _ReportHomeState extends State<ReportHome> {
                             color: Theme.of(context).accentColor,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _cDateStart.clear();
-                          _cDateEnd.clear();
-                        }),
+                        onPressed: () => Navigator.pop(context)),
                   ),
                   Container(
                     child: FlatButton(
@@ -242,7 +276,7 @@ class _ReportHomeState extends State<ReportHome> {
   }
 
   _onClickGenerate() {
-    if (_formKey.currentState.validate()) {}
+    if (_formKey.currentState.validate()) Navigator.pop(context, true);
   }
 
   _showDataPicker(int field) async {
@@ -251,7 +285,7 @@ class _ReportHomeState extends State<ReportHome> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2001),
-      lastDate: DateTime(2030),
+      lastDate: DateTime.now(),
       initialDatePickerMode: DatePickerMode.day,
       initialEntryMode: DatePickerEntryMode.calendar,
       builder: (BuildContext context, Widget child) => child,
