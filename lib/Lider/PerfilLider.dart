@@ -430,6 +430,7 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Padding(
                       padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
                       child: TextFormField(
+                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fPastorRede),
                         controller: _nomeDiscipulador,
                         focusNode: _fDiscipulador,

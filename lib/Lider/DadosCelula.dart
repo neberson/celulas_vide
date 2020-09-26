@@ -47,10 +47,24 @@ class _DadosCelulaState extends State<DadosCelula> {
   TextEditingController _ESTADO = TextEditingController();
   TextEditingController _anfitriao = TextEditingController();
 
+  var _fNomeAnfitriao = FocusNode();
+  var _fDInicioCelula = FocusNode();
+  var _fDUltimaMultiplicacao = FocusNode();
+  var _fDProximaMulplicacao = FocusNode();
+  var _fCep = FocusNode();
+  var _fRua = FocusNode();
+  var _fNumero = FocusNode();
+  var _fComplemento = FocusNode();
+  var _fBairro = FocusNode();
+  var _fCidade = FocusNode();
+  var _fEstado = FocusNode();
+  var _fHorario = FocusNode();
+
   celulaDAO _salvarCelula = new celulaDAO();
 
   _buscarCEP(String cep) async {
     var CEP = new via_cep();
+    print(CEP.getLocalidade());
 
     if (CEP.getResponse() == 200) {
       setState(() {
@@ -60,9 +74,6 @@ class _DadosCelulaState extends State<DadosCelula> {
         _CIDADE.text = CEP.getLocalidade();
         _ESTADO.text = CEP.getUF();
       });
-    }
-    else{
-      print('caiu no catch');
     }
   }
 
@@ -146,6 +157,8 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.all(15),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fNomeAnfitriao),
                 controller: _nomeCelula,
                 cursorColor: Colors.white,
                 style: TextStyle(
@@ -173,6 +186,7 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fNomeAnfitriao,
                 controller: _anfitriao,
                 cursorColor: Colors.white,
                 style: TextStyle(
@@ -218,6 +232,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                     onChanged: (valor) {
                       setState(() {
                         _tipoCelulaSelecionado = valor;
+                        FocusScope.of(context).dispose();
                       });
                     },
                     items: _tipoCelula.map((String dropDownItem) {
@@ -255,6 +270,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                       setState(() {
                         _diaCelulaSelecionado = valor;
                       });
+                      FocusScope.of(context).requestFocus(_fHorario);
                     },
                     items: _diaCelula.map((String dropDownItem) {
                       return DropdownMenuItem<String>(
@@ -272,6 +288,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fHorario,
+                onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fDInicioCelula),
+                textInputAction: TextInputAction.next,
                 controller: _horarioCelula,
                 cursorColor: Colors.white,
                 keyboardType: TextInputType.number,
@@ -300,12 +319,14 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fDInicioCelula,
                 showCursor: true,
                 readOnly: true,
                 onTap: (){
                   showCupertinoPicker((){
                     _dataInicioCelula.text = DateFormat('dd/MM/yyyy').format(this.date);
                     this.dateInicioCelula = this.date;
+                    FocusScope.of(context).requestFocus(_fDUltimaMultiplicacao);
                   }, dateInicioCelula);
                 },
                 keyboardType: TextInputType.number,
@@ -336,10 +357,12 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fDUltimaMultiplicacao,
                 onTap: (){
                   showCupertinoPicker((){
                     _dataUltimaMultiplicacao.text = DateFormat('dd/MM/yyyy').format(this.date);
                     this.dateCelulaUltimaMultiplicacao = this.date;
+                    FocusScope.of(context).requestFocus(_fDProximaMulplicacao);
                   }, dateCelulaUltimaMultiplicacao);
                 },
                 showCursor: true,
@@ -371,10 +394,12 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fDProximaMulplicacao,
                 onTap: (){
                   showCupertinoPicker((){
                     _dataProximaMultiplicao.text = DateFormat('dd/MM/yyyy').format(this.date);
                     this.dateProximaMultiplicao = this.date;
+                    FocusScope.of(context).requestFocus(_fCep);
                   }, dateProximaMultiplicao);
                 },
                 showCursor: true,
@@ -407,6 +432,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fCep,
+                onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fRua),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 controller: _CEP,
                 cursorColor: Colors.white,
@@ -433,7 +461,6 @@ class _DadosCelulaState extends State<DadosCelula> {
                 maxLength: 8,
                 onChanged: (cep) {
                   if (cep.length == 8) {
-                    print('entrou aqui');
                     _buscarCEP(cep.toString());
                   }
                 },
@@ -442,6 +469,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fRua,
+                onFieldSubmitted: (text)=> FocusScope.of(context).requestFocus(_fNumero),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _LOGRADOURO,
                 cursorColor: Colors.white,
@@ -470,6 +500,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fNumero,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fComplemento),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 controller: _NUMERO,
                 cursorColor: Colors.white,
@@ -498,6 +531,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fComplemento,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fBairro),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _COMPLEMENTO,
                 cursorColor: Colors.white,
@@ -526,6 +562,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fBairro,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fCidade),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _BAIRRO,
                 cursorColor: Colors.white,
@@ -554,6 +593,9 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fCidade,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fEstado),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _CIDADE,
                 cursorColor: Colors.white,
@@ -582,6 +624,7 @@ class _DadosCelulaState extends State<DadosCelula> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fEstado,
                 keyboardType: TextInputType.text,
                 controller: _ESTADO,
                 cursorColor: Colors.white,

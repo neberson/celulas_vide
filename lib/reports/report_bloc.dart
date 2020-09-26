@@ -3,7 +3,6 @@ import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaCelulaModel.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportBloc {
   Future<Celula> getMember() async {

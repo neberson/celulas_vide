@@ -1,8 +1,9 @@
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/DadosMembroCelulaDAO.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-
+import 'package:intl/intl.dart';
 
 class DadosMembro extends StatefulWidget {
 
@@ -25,11 +26,15 @@ class _DadosMembroState extends State<DadosMembro> {
   bool _consolidado = false;
   bool _dizimista = false;
   String _generoSelecionado = "m";
-  var _dataNascimento = new MaskedTextController(mask: '00/00/0000');
+  TextEditingController _dataNascimento = TextEditingController();
   var _telefone = new MaskedTextController(mask: '(00)00000-0000');
   MembrosCelula _membro = new MembrosCelula();
   membrosDAO _membroDAO = new membrosDAO();
   List<Map> _membros = List<Map>();
+  var _fTelefone = FocusNode();
+  var _fEndereco = FocusNode();
+  var date;
+  var dateNascimento;
 
   _recuperarListaMembros() async {
     _membros = await _membroDAO.recuperarMembros();
@@ -47,7 +52,14 @@ class _DadosMembroState extends State<DadosMembro> {
         _consolidado = _membros[_args]["consolidadoMembro"];
         _dizimista = _membros[_args]["dizimistaMembro"];
         _generoSelecionado = _membros[_args]["generoMembro"];
-        _dataNascimento.text = _membros[_args]["dataNascimentoMembro"];
+        if(_membros[_args]["dataNascimentoMembro"] != null) {
+        setState(() {
+          _dataNascimento.text = DateFormat('dd/MM/yyyy').format(_membros[_args]["dataNascimentoMembro"].toDate());
+
+            this.dateNascimento = _membros[_args]["dataNascimentoMembro"].toDate();
+
+        });
+        }
         _telefone.text = _membros[_args]["telefoneMembro"];
       });
     }
@@ -169,7 +181,18 @@ class _DadosMembroState extends State<DadosMembro> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
-                keyboardType: TextInputType.number,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fTelefone),
+                textInputAction: TextInputAction.next,
+                showCursor: true,
+                readOnly: true,
+                onTap: (){
+                  showCupertinoPicker((){
+                    _dataNascimento.text = DateFormat('dd/MM/yyyy').format(this.date);
+                    dateNascimento = this.date;
+                    print(this.date);
+                    print(dateNascimento);
+                  }, dateNascimento);
+                },
                 controller: _dataNascimento,
                 cursorColor: Colors.white,
                 style: TextStyle(
@@ -197,6 +220,9 @@ class _DadosMembroState extends State<DadosMembro> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                focusNode: _fTelefone,
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fEndereco),
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 controller: _telefone,
                 cursorColor: Colors.white,
@@ -225,6 +251,8 @@ class _DadosMembroState extends State<DadosMembro> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: TextFormField(
+                onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(),
+                focusNode: _fEndereco,
                 controller: _endereco,
                 cursorColor: Colors.white,
                 style: TextStyle(
@@ -437,7 +465,7 @@ class _DadosMembroState extends State<DadosMembro> {
                       if(_args == null){
                         _membro.nomeMembro = _nome.text;
                         _membro.generoMembro = _generoSelecionado;
-                        _membro.dataNascimentoMembro = _dataNascimento.text;
+                        _membro.dataNascimentoMembro = dateNascimento;
                         _membro.telefoneMembro = _telefone.text;
                         _membro.enderecoMembro = _endereco.text;
                         _membro.condicaoMembro = _encargoSelecionado;
@@ -447,6 +475,7 @@ class _DadosMembroState extends State<DadosMembro> {
                         _membro.seminarioMembro = _seminario;
                         _membro.consolidadoMembro = _consolidado;
                         _membro.dizimistaMembro = _dizimista;
+                        _membro.dataCadastro = DateTime.now();
                         _membro.status = 0;
                         _membros.add(_membro.toMap());
                         indice = _membros.length-1;
@@ -461,7 +490,7 @@ class _DadosMembroState extends State<DadosMembro> {
                         _membros[_args]["consolidadoMembro"] = _consolidado;
                         _membros[_args]["dizimistaMembro"] = _dizimista;
                         _membros[_args]["generoMembro"] =_generoSelecionado;
-                        _membros[_args]["dataNascimentoMembro"] = _dataNascimento.text;
+                        _membros[_args]["dataNascimentoMembro"] = dateNascimento;
                         _membros[_args]["telefoneMembro"] = _telefone.text;
                         indice = _args;
                       }
@@ -495,119 +524,54 @@ class _DadosMembroState extends State<DadosMembro> {
     );
   }
 
-
- /* Widget MembroVisitante(){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Dados do Membro"),
-        backgroundColor: Color.fromRGBO(81, 37, 103, 1),
-        elevation: 11,
-      ),
-      /*floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Color.fromRGBO(50, 205, 50, 1),
-        icon: Icon(Icons.save),
-        label: Text("Salvar Dados"),
-        onPressed: (){
-        },
-      ),*/
-      body: Container(
-        decoration: BoxDecoration(
-            color: Color.fromRGBO(81, 37, 103, 1)
-        ),
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: ListView(
-          children: <Widget>[
-            Card(
-              margin: EdgeInsets.only(left: 10, right:10, top: 20),
-              elevation: 11,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-              child: Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-
-                    hint: Text("Condição do Membro"),
-                    isExpanded: true,
-                    iconSize: 50,
-                    items: _encargo.map((String dropDownItem){
-                      return DropdownMenuItem<String>(
-                        value: dropDownItem,
-                        child: Text(dropDownItem),
-                      );
-                    }).toList(),
-                    onChanged: (String valor){
-                      setState(() {
-                        _encargoSelecionado = valor;
-                      });
-                    },
-                    value: _encargoSelecionado,
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.only(left: 10, right:10, bottom: 20, top: 20),
-              elevation: 11,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: "Nome",
-                    hintStyle: TextStyle(color: Colors.black26),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0)
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.only(left: 10, right:10, bottom: 20),
-              elevation: 11,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: "Telefone",
-                    hintStyle: TextStyle(color: Colors.black26),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0)
-                ),
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 25,left: 20,right: 20, bottom: 20),
-                child: SizedBox(
-                  height: 50,
-                  child: RaisedButton(
-                    shape:  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                    color: Colors.pink,
+  showCupertinoPicker(Function() returnDate, DateTime dataAtual){
+    //Focus.of(context).requestFocus(FocusNode());
+    if(dataAtual == null){
+      print("Chegou aqui");
+      date = DateTime.now();
+      print(this.date);
+    }else{
+      date = dataAtual;
+    }
+    return showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        context: context,
+        builder: (context){
+          return Container(
+            height: 245,
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.topRight,
+                  child: FlatButton(
                     child: Text(
-                      "Salvar",
-                      style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 20
-                      ),
+                      'Concluído',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                     onPressed: (){
-                      print("Dados do membro foi salvo");
+                      returnDate();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoDatePicker(
+
+                    mode: CupertinoDatePickerMode.date,
+                    use24hFormat: true,
+                    initialDateTime: date,
+                    onDateTimeChanged: (DateTime date){
+                      this.date = date;
+                      print(this.date);
                     },
                   ),
                 )
+              ],
             ),
-
-
-          ],
-        ),
-      ),
+          );
+        }
     );
-  }*/
+  }
+
 }

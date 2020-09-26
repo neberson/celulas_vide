@@ -1,4 +1,6 @@
 
+import 'package:intl/intl.dart';
+
 class FrequenciaCelulaModel{
 
   DateTime dataCelula;
@@ -17,6 +19,16 @@ class FrequenciaCelulaModel{
       membrosCelula.add(MembroFrequencia.fromMap(v));
     });
     this.quantidadeVisitantes = map['quantidadeVisitantes'];
+  }
+
+  String getIndex(int index) {
+    switch (index) {
+      case 0:
+        return DateFormat('dd/MM/yyyy').format(dataCelula);
+      case 1:
+        return ofertaCelula.toStringAsFixed(2).replaceAll('.', ',');
+    }
+    return '';
   }
 
 }
