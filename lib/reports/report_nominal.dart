@@ -189,7 +189,7 @@ class _ReportNominalState extends State<ReportNominal> {
         '${DateFormat.yMMMMd('pt').format(DateTime.now())} - Membros ${type == 0 ? 'Ativos' : 'Inativos'}';
 
     String path = await generatePdf(listMembers, listColumns,
-        'Relatório Nominal Membros de Célula', subtitle, celula);
+        'Relatório Nominal Membros de Célula', subtitle, celula, 'relatorio_nominal_membros.pdf');
 
     Navigator.of(context).push(
       MaterialPageRoute(

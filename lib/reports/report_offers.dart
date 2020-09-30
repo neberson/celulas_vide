@@ -207,7 +207,7 @@ class _ReportOffersState extends State<ReportOffers> {
     String subtitle = DateFormat.yMMMMd('pt').format(DateTime.now());
 
     String path = await generatePdf(listRows, listColumns,
-        'Relatório Ofertas da Célula', subtitle, celula, listFooter: listFooter);
+        'Relatório Ofertas da Célula', subtitle, celula, 'relatorio_ofertas_celula.pdf', listFooter: listFooter);
 
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -7,7 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 
-Future<String> generatePdf(listRows, listColumns, title, subtitle, Celula celula, {listFooter}) async {
+Future<String> generatePdf(listRows, listColumns, title, subtitle, Celula celula, fileName, {listFooter}) async {
 
   final pdf = pw.Document();
 
@@ -105,7 +105,7 @@ Future<String> generatePdf(listRows, listColumns, title, subtitle, Celula celula
   ));
 
   final String dir = (await getApplicationDocumentsDirectory()).path;
-  final String path = '$dir/relatorio_nominal_membros.pdf';
+  final String path = '$dir/$fileName';
   final File file = File(path);
   await file.writeAsBytes(pdf.save());
 

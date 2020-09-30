@@ -101,7 +101,7 @@ class MembrosCelula {
   bool dizimistaMembro;
   bool frequenciaMembro;
   int status;
-  var dataCadastro;
+  DateTime dataCadastro;
 
   MembrosCelula();
   Map<String, dynamic> toMap() {
@@ -133,7 +133,7 @@ class MembrosCelula {
     this.enderecoMembro = map['enderecoMembro'];
     this.condicaoMembro = map['condicaoMembro'];
     this.cursaoMembro = map['cursaoMembro'];
-    this.ctlMembro = map['cltMembro'];
+    this.ctlMembro = map['ctlMembro'];
     this.encontroMembro = map['encontroMembro'];
     this.seminarioMembro = map['seminarioMembro'];
     this.consolidadoMembro = map['consolidadoMembro'];
