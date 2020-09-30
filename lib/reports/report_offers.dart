@@ -9,17 +9,17 @@ import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ReportResult extends StatefulWidget {
+class ReportOffers extends StatefulWidget {
   final title;
   DateTime dateStart;
   DateTime dateEnd;
-  ReportResult({this.title, this.dateStart, this.dateEnd});
+  ReportOffers({this.title, this.dateStart, this.dateEnd});
 
   @override
-  _ReportResultState createState() => _ReportResultState();
+  _ReportOffersState createState() => _ReportOffersState();
 }
 
-class _ReportResultState extends State<ReportResult> {
+class _ReportOffersState extends State<ReportOffers> {
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;
@@ -37,7 +37,7 @@ class _ReportResultState extends State<ReportResult> {
 
       _filterDates();
 
-      reportBloc.getMember().then((celula) {
+      reportBloc.getCelula().then((celula) {
         this.celula = celula;
         setState(() => isLoading = false);
       }).catchError((onError) {
@@ -155,7 +155,7 @@ class _ReportResultState extends State<ReportResult> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Valor total por peíodo: ',
+                  'Valor total por período: ',
                   style: TextStyle(fontSize: 17),
                 ),
                 Text(
@@ -193,7 +193,7 @@ class _ReportResultState extends State<ReportResult> {
     ];
 
     var footer1 = {
-      'key': 'Valor médio por peíodo: ',
+      'key': 'Valor médio por período: ',
       'value': 'R\$ ${media.toStringAsFixed(2).replaceAll('.', ',')}'
     };
 

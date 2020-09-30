@@ -1,4 +1,3 @@
-
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/pdf_generate.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
@@ -9,15 +8,15 @@ import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ReportNominalPage extends StatefulWidget {
+class ReportNominal extends StatefulWidget {
   final titleAppBar;
-  ReportNominalPage(this.titleAppBar);
+  ReportNominal(this.titleAppBar);
 
   @override
-  _ReportNominalPageState createState() => _ReportNominalPageState();
+  _ReportNominalState createState() => _ReportNominalState();
 }
 
-class _ReportNominalPageState extends State<ReportNominalPage> {
+class _ReportNominalState extends State<ReportNominal> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final reportBloc = ReportBloc();
@@ -30,8 +29,7 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
 
   @override
   void initState() {
-    reportBloc.getMember().then((celula) {
-
+    reportBloc.getCelula().then((celula) {
       this.celula = celula;
       _listMembrosAtivos =
           celula.membros.where((element) => element.status == 0).toList();
@@ -145,15 +143,14 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
                             Text(e.telefoneMembro),
                           ),
                           DataCell(
-                            Text(e.dataNascimentoMembro != ''
+                            Text(e.dataNascimentoMembro != null
                                 ? DateFormat('dd/MM/yyyy')
                                     .format(e.dataNascimentoMembro)
                                 : ''),
                           ),
                         ],
                       ),
-                    )
-                    .toList(),
+                    ).toList(),
               ),
             ),
           ),
@@ -180,7 +177,6 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
   }
 
   _onClickGenerate(listMembers, int type) async {
-
     var listColumns = [
       'Nome',
       'Gênero',
@@ -189,9 +185,11 @@ class _ReportNominalPageState extends State<ReportNominalPage> {
       'Data nascimento'
     ];
 
-    String subtitle = '${DateFormat.yMMMMd('pt').format(DateTime.now())} - Membros ${type == 0 ? 'Ativos' : 'Inativos'}';
+    String subtitle =
+        '${DateFormat.yMMMMd('pt').format(DateTime.now())} - Membros ${type == 0 ? 'Ativos' : 'Inativos'}';
 
-    String path = await generatePdf(listMembers, listColumns, 'Relatório Nominal Membros de Célula', subtitle, celula);
+    String path = await generatePdf(listMembers, listColumns,
+        'Relatório Nominal Membros de Célula', subtitle, celula);
 
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -5,7 +5,7 @@ import 'package:celulas_vide/repository/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReportBloc {
-  Future<Celula> getMember() async {
+  Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await

@@ -89,7 +89,7 @@ class DadosCelulaBEAN{
 class MembrosCelula {
   String nomeMembro;
   String generoMembro;
-  var dataNascimentoMembro;
+  DateTime dataNascimentoMembro;
   String telefoneMembro;
   String enderecoMembro;
   String condicaoMembro;
@@ -128,7 +128,7 @@ class MembrosCelula {
   MembrosCelula.fromMap(map){
     this.nomeMembro = map['nomeMembro'];
     this.generoMembro = map['generoMembro'];
-    this.dataNascimentoMembro = map['dataNascimentoMembro'] != null ? map['dataNascimentoMembro'].toDate() : '';
+    this.dataNascimentoMembro = map['dataNascimentoMembro'] != null ? map['dataNascimentoMembro'].toDate() : null;
     this.telefoneMembro = map['telefoneMembro'];
     this.enderecoMembro = map['enderecoMembro'];
     this.condicaoMembro = map['condicaoMembro'];
@@ -138,6 +138,7 @@ class MembrosCelula {
     this.seminarioMembro = map['seminarioMembro'];
     this.consolidadoMembro = map['consolidadoMembro'];
     this.dizimistaMembro = map['dizimistaMembro'];
+    this.dataCadastro = map['dataCadastro'].toDate();
     this.status = map['status'];
   }
 
@@ -178,7 +179,7 @@ class MembrosCelula {
       case 3:
         return telefoneMembro;
       case 4:
-        return dataNascimentoMembro != ''? DateFormat('dd/MM/yyyy').format(dataNascimentoMembro) : '';
+        return dataNascimentoMembro != null ? DateFormat('dd/MM/yyyy').format(dataNascimentoMembro) : '';
     }
     return '';
   }
