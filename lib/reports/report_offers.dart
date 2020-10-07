@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/Model/FrequenciaCelulaModel.dart';
+import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/reports/pdf_generate.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
@@ -23,8 +23,8 @@ class _ReportOffersState extends State<ReportOffers> {
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;
-  List<FrequenciaCelulaModel> _listAllFrequency = [];
-  List<FrequenciaCelulaModel> _listFrequencyFiltered = [];
+  List<FrequenciaCelula> _listAllFrequency = [];
+  List<FrequenciaCelula> _listFrequencyFiltered = [];
   double valueTotal = 0;
   double media;
 
@@ -32,8 +32,8 @@ class _ReportOffersState extends State<ReportOffers> {
 
   @override
   void initState() {
-    reportBloc.getFrequenciaMembros().then((list) {
-      _listAllFrequency = List.from(list);
+    reportBloc.getFrequencia().then((frequencia) {
+      _listAllFrequency = List.from(frequencia.frequenciaCelula);
 
       _filterDates();
 
@@ -41,7 +41,7 @@ class _ReportOffersState extends State<ReportOffers> {
         this.celula = celula;
         setState(() => isLoading = false);
       }).catchError((onError) {
-        print('error getting frequencia membros: ${onError.toString()}');
+        print('error getting celula: ${onError.toString()}');
         setState(() {
           error =
               'Não foi possível obter a frequencia dos membros, tente novamente.';
@@ -89,7 +89,7 @@ class _ReportOffersState extends State<ReportOffers> {
   _table() {
     if (_listFrequencyFiltered.isEmpty)
       return emptyState(
-          context, 'Nenhum membro encontrado com esse status', Icons.person);
+          context, 'Nenhum registro de célula neste período', Icons.person);
 
     var styleTitle =
         TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
