@@ -14,10 +14,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class ReportRegistrationCell extends StatefulWidget {
-  final title;
+
   DateTime dateStart;
   DateTime dateEnd;
-  ReportRegistrationCell({this.title, this.dateStart, this.dateEnd});
+  ReportRegistrationCell({this.dateStart, this.dateEnd});
 
   @override
   _ReportRegistrationCellState createState() => _ReportRegistrationCellState();
@@ -105,7 +105,7 @@ class _ReportRegistrationCellState extends State<ReportRegistrationCell> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
-        title: Text(widget.title),
+        title: Text('Cadastro de Célula'),
       ),
       body: isLoading
           ? loading()

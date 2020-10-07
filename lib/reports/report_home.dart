@@ -1,3 +1,4 @@
+import 'package:celulas_vide/reports/report_frequence.dart';
 import 'package:celulas_vide/reports/report_nominal.dart';
 import 'package:celulas_vide/reports/report_offers.dart';
 import 'package:celulas_vide/reports/report_registration_cell.dart';
@@ -65,12 +66,12 @@ class _ReportHomeState extends State<ReportHome> {
                                   child: CircleAvatar(
                                     backgroundColor: Colors.grey[200],
                                     child: IconButton(
-                                        icon: Icon(
-                                          Icons.person_add,
-                                          color: Theme.of(context).accentColor,
-                                          size: 26,
-                                        ),
-                                        onPressed: () => _onClickReportCellRegistration('Cadastro de Célula')
+                                      icon: Icon(
+                                        Icons.person_add,
+                                        color: Theme.of(context).accentColor,
+                                        size: 26,
+                                      ),
+                                      onPressed: _onClickReportCellRegistration,
                                     ),
                                   ),
                                 ),
@@ -80,7 +81,8 @@ class _ReportHomeState extends State<ReportHome> {
                                 Text(
                                   'Cadastro\nde Célula',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
                                 )
                               ],
                             ),
@@ -100,8 +102,7 @@ class _ReportHomeState extends State<ReportHome> {
                                           color: Theme.of(context).accentColor,
                                           size: 26,
                                         ),
-                                        onPressed: _onClickReportNominal
-                                    ),
+                                        onPressed: _onClickReportNominal),
                                   ),
                                 ),
                                 SizedBox(
@@ -110,7 +111,8 @@ class _ReportHomeState extends State<ReportHome> {
                                 Text(
                                   'Nominal membros\nda Célula',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
                                 )
                               ],
                             ),
@@ -134,10 +136,7 @@ class _ReportHomeState extends State<ReportHome> {
                                           color: Theme.of(context).accentColor,
                                           size: 26,
                                         ),
-                                        onPressed: () {
-
-                                        }
-                                    ),
+                                        onPressed: _onClickReportFrequence),
                                   ),
                                 ),
                                 SizedBox(
@@ -146,7 +145,8 @@ class _ReportHomeState extends State<ReportHome> {
                                 Text(
                                   'Frequencia de\nCélula e Culto',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
                                 )
                               ],
                             ),
@@ -154,8 +154,8 @@ class _ReportHomeState extends State<ReportHome> {
                           SizedBox(
                             height: 15,
                           ),
-                          _itemTypeReport(
-                              'Ofertas\nda Célula', Icons.monetization_on, 'Ofertas da Célula')
+                          _itemTypeReport('Ofertas\nda Célula',
+                              Icons.monetization_on, 'Ofertas da Célula')
                         ],
                       ),
                     )
@@ -169,50 +169,67 @@ class _ReportHomeState extends State<ReportHome> {
     );
   }
 
-  _onClickReportCellRegistration(String title) async {
-
-    var result =  await _showDialogDate();
+  _onClickReportFrequence() async {
+    var result = await _showDialogDate();
 
     _cDateStart.clear();
     _cDateEnd.clear();
 
-    if(result != null){
+    if (result != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ReportFrequence(
+                dateStart: _dateStart,
+                dateEnd: _dateEnd,
+              )));
+      _cDateStart.clear();
+      _cDateEnd.clear();
+    }
+  }
+
+  _onClickReportCellRegistration() async {
+    var result = await _showDialogDate();
+
+    _cDateStart.clear();
+    _cDateEnd.clear();
+
+    if (result != null) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ReportRegistrationCell(
-                title: title,
-                dateStart: _dateStart,
-                dateEnd: _dateEnd,
-              )));
+                    dateStart: _dateStart,
+                    dateEnd: _dateEnd,
+                  )));
       _cDateStart.clear();
       _cDateEnd.clear();
     }
-
   }
 
-  _onClickReportNominal() => Navigator.push(context, MaterialPageRoute(builder: (context) => ReportNominal('Relatório membros da Célula')));
+  _onClickReportNominal() => Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ReportNominal('Relatório membros da Célula')));
 
   _onClickReportOffers(String title) async {
+    var result = await _showDialogDate();
 
-   var result =  await _showDialogDate();
+    _cDateStart.clear();
+    _cDateEnd.clear();
 
-   _cDateStart.clear();
-   _cDateEnd.clear();
-
-    if(result != null){
+    if (result != null) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ReportOffers(
-                title: title,
-                dateStart: _dateStart,
-                dateEnd: _dateEnd,
-              )));
+                    title: title,
+                    dateStart: _dateStart,
+                    dateEnd: _dateEnd,
+                  )));
       _cDateStart.clear();
       _cDateEnd.clear();
     }
-
   }
 
   _itemTypeReport(String title, icon, titleAppBar) {
@@ -223,13 +240,12 @@ class _ReportHomeState extends State<ReportHome> {
             child: CircleAvatar(
               backgroundColor: Colors.grey[200],
               child: IconButton(
-                icon: Icon(
-                  icon,
-                  color: Theme.of(context).accentColor,
-                  size: 26,
-                ),
-                onPressed: () => _onClickReportOffers(titleAppBar)
-              ),
+                  icon: Icon(
+                    icon,
+                    color: Theme.of(context).accentColor,
+                    size: 26,
+                  ),
+                  onPressed: () => _onClickReportOffers(titleAppBar)),
             ),
           ),
           SizedBox(
