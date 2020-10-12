@@ -23,6 +23,7 @@ class ReportFrequence extends StatefulWidget {
 }
 
 class _ReportFrequenceState extends State<ReportFrequence> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;
@@ -45,9 +46,13 @@ class _ReportFrequenceState extends State<ReportFrequence> {
 
   List<List> dataTableCelula = [];
   List<List> dataTableCulto = [];
+  List<String> tableHeadersCelula;
+  List<String> tableHeadersCulto;
 
   int totalFA = 0;
   int totalMb = 0;
+
+  var styleTitle = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
 
   @override
   void initState() {
@@ -212,6 +217,54 @@ class _ReportFrequenceState extends State<ReportFrequence> {
         DataCell(Center(child: Text('-'))),
       ],
     ));
+
+    //create table to generate pdf
+    tableHeadersCelula = [
+      'Data',
+      'Batizados',
+      'Frequentadores\nAssíduos',
+      'Visitantes',
+      'Total Geral\n(MB+FA+V)',
+      'Percentual de\nPresença (MB+FA)'
+    ];
+
+    for (int i = 0; i < listaFrequenciaCelula.length; i++) {
+      var list = [
+        DateFormat('dd/MM/yyy').format(listaFrequenciaCelula[i].dataCelula),
+        listBatizados[i].toString(),
+        listFA[i].toString(),
+        listVisitantes[i].toString(),
+        listTotal[i].toString(),
+        '${listTotalPercent[i].toStringAsFixed(2).replaceAll('.', ',')}%'
+      ];
+
+      dataTableCelula.add(list);
+    }
+
+    var list2 = [
+      'Frequencia\nMedia Mensal',
+      (somaBatizados / listBatizados.length)
+          .toStringAsFixed(2)
+          .replaceAll('.', ','),
+      (somaFA / listFA.length).toStringAsFixed(2).replaceAll('.', ','),
+      (somaVisitantes / listVisitantes.length)
+          .toStringAsFixed(2)
+          .replaceAll('.', ','),
+      (somaTotal / listTotal.length).toStringAsFixed(2).replaceAll('.', ','),
+      '${(somaPercentualPresenca / listTotalPercent.length).toStringAsFixed(2).replaceAll('.', ',')}%'
+    ];
+
+    dataTableCelula.add(list2);
+    var list3 = [
+      'Total\nAcumulado',
+      somaBatizados.toString(),
+      somaFA.toString(),
+      somaVisitantes.toString(),
+      somaTotal.toString(),
+      '-'
+    ];
+
+    dataTableCelula.add(list3);
   }
 
   _createDataRowCulto() {
@@ -279,52 +332,101 @@ class _ReportFrequenceState extends State<ReportFrequence> {
         DataCell(Center(child: Text('-'))),
       ],
     ));
+
+    //create table to generate pdf
+    tableHeadersCulto = [
+      'Data',
+      'Batizados',
+      'Frequentadores\nAssíduos',
+      'Total Geral\n(MB+FA)',
+      'Percentual de\nPresença (MB+FA)'
+    ];
+
+    for (int i = 0; i < listaFrequenciaCulto.length; i++) {
+      var list = [
+        DateFormat('dd/MM/yyy').format(listaFrequenciaCulto[i].dataCulto),
+        listBatizados[i].toString(),
+        listFA[i].toString(),
+        listTotal[i].toString(),
+        '${listTotalPercent[i].toStringAsFixed(2).replaceAll('.', ',')}%'
+      ];
+
+      dataTableCulto.add(list);
+    }
+
+    var list2 = [
+      'Frequencia\nMedia Mensal',
+      (somaBatizados / listBatizados.length)
+          .toStringAsFixed(2)
+          .replaceAll('.', ','),
+      (somaFA / listFA.length).toStringAsFixed(2).replaceAll('.', ','),
+      (somaTotal / listTotal.length).toStringAsFixed(2).replaceAll('.', ','),
+      '${(somaPercentualPresenca / listTotalPercent.length).toStringAsFixed(2).replaceAll('.', ',')}%'
+    ];
+
+    dataTableCulto.add(list2);
+    var list3 = [
+      'Total\nAcumulado',
+      somaBatizados.toString(),
+      somaFA.toString(),
+      somaTotal.toString(),
+      '-'
+    ];
+
+    dataTableCulto.add(list3);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        title: Text('Frequência de Célula e Culto'),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar(
+            backgroundColor: Theme.of(context).backgroundColor,
+            title: Text('Relatório de Frequência'),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  child: Text('Célula'),
+                ),
+                Tab(
+                  child: Text('Culto'),
+                )
+              ],
+            )),
+        body: isLoading
+            ? loading()
+            : error != null
+                ? stateError(context, error)
+                : TabBarView(children: [_tableCelula(), _tableCulto()]),
       ),
-      body: isLoading
-          ? loading()
-          : error != null
-              ? stateError(context, error)
-              : _table(),
     );
   }
 
-  _table() {
+  _titleDate() {
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+      child: Center(
+        child: Text(
+          'Resultados de ${DateFormat('dd/MM/yyyy').format(widget.dateStart)} a ${DateFormat('dd/MM/yyyy').format(widget.dateEnd)}',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 17),
+        ),
+      ),
+    );
+  }
+
+  _tableCelula() {
     if (listaFrequenciaCelula.isEmpty)
       return emptyState(
           context, 'Nenhum resultado neste período', Icons.person);
-
-    var styleTitle =
-        TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Center(
-              child: Text(
-                'Resultados de ${DateFormat('dd/MM/yyyy').format(widget.dateStart)} a ${DateFormat('dd/MM/yyyy').format(widget.dateEnd)}',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 17),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 8, right: 16, top: 16),
-            child: Text(
-              'Frequência de Célula',
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
+          _titleDate(),
           Container(
             color: Theme.of(context).accentColor.withAlpha(80),
             margin: EdgeInsets.only(left: 8, right: 8),
@@ -369,13 +471,35 @@ class _ReportFrequenceState extends State<ReportFrequence> {
               ], rows: listDataRowCelula),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: 8, right: 16, top: 16),
-            child: Text(
-              'Frequência de Culto',
-              style: TextStyle(fontSize: 16),
+          Padding(
+            padding: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                  color: Colors.pink,
+                  child: Text("Gerar PDF",
+                      style: TextStyle(color: Colors.white70, fontSize: 20)),
+                  onPressed: () => _onClickGenerate(0)),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  _tableCulto() {
+    if (listaFrequenciaCulto.isEmpty)
+      return emptyState(
+          context, 'Nenhum resultado neste período', Icons.person);
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _titleDate(),
           Container(
             color: Theme.of(context).accentColor.withAlpha(80),
             margin: EdgeInsets.only(left: 8, right: 8),
@@ -415,56 +539,28 @@ class _ReportFrequenceState extends State<ReportFrequence> {
             ),
           ),
           Padding(
-              padding:
-                  EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
-              child: SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    color: Colors.pink,
-                    child: Text(
-                      "Gerar PDF",
-                      style: TextStyle(color: Colors.white70, fontSize: 20),
-                    ),
-                    onPressed: _onClickGenerate),
-              )),
+            padding: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                  color: Colors.pink,
+                  child: Text(
+                    "Gerar PDF",
+                    style: TextStyle(color: Colors.white70, fontSize: 20),
+                  ),
+                  onPressed: () => _onClickGenerate(1)),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  _onClickGenerate() async {
+  _onClickGenerate(int type) async {
     final pdf = pw.Document();
-
-    const tableHeaders = [
-      'Data',
-      'Batizados',
-      'Frequentadores\nAssíduos',
-      'Visitantes',
-      'Total Geral\n(MB+FA+V)',
-      'Percentual de\nPresença (MB+FA)'
-    ];
-
-    List<List> dataTable = [];
-
-    for (int i = 0; i < listaFrequenciaCelula.length; i++) {
-      var list = [
-        DateFormat('dd/MM/yyy').format(listaFrequenciaCelula[i].dataCelula),
-        'teste',
-        'teste',
-        'teste',
-        'tete',
-        'algum'
-      ];
-      dataTable.add(list);
-    }
-
-    var list2 = ['Frequencia\nMedia Mensal', 'teste', 'teste', 'teste', 'teste', 'continua'];
-    dataTable.add(list2);
-    var lits3 = ['Frequencia\nMedia Mensal', 'teste', 'teste', 'teste', 'teste', '-'];
-    dataTable.add(lits3);
 
     pdf.addPage(pw.MultiPage(
       pageFormat:
@@ -479,8 +575,7 @@ class _ReportFrequenceState extends State<ReportFrequence> {
           margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
           padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
           decoration: const pw.BoxDecoration(
-              border: pw.BoxBorder(
-                  bottom: true, width: 0.5, color: PdfColors.grey)),
+              border: pw.BoxBorder(bottom: true, color: PdfColors.grey)),
           child: pw.Text(
             'Relatório Frequência de Célula e Culto',
             style: pw.Theme.of(context)
@@ -507,7 +602,9 @@ class _ReportFrequenceState extends State<ReportFrequence> {
             child: pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: <pw.Widget>[
-                  pw.Text('Relatório Frequência de Célula e Culto', textScaleFactor: 2),
+                  pw.Text(
+                      'Relatório Frequência de ${type == 0 ? 'Célula' : 'Culto'}',
+                      textScaleFactor: 2),
                   pw.PdfLogo()
                 ])),
         pw.Header(
@@ -523,18 +620,21 @@ class _ReportFrequenceState extends State<ReportFrequence> {
         pw.Text('Igreja: ${celula.usuario.igreja}'),
         pw.SizedBox(height: 10),
         pw.Table.fromTextArray(
-          headers: tableHeaders,
+          headers: type == 0 ? tableHeadersCelula : tableHeadersCulto,
           context: context,
           border: null,
-          data: dataTable,
+          data: type == 0 ? dataTableCelula : dataTableCulto,
           cellAlignments: {
             1: pw.Alignment.center,
             2: pw.Alignment.center,
+            3: pw.Alignment.center,
+            4: pw.Alignment.center,
           },
           headerAlignment: pw.Alignment.centerLeft,
           headerStyle: pw.TextStyle(
             color: PdfColors.white,
             fontWeight: pw.FontWeight.bold,
+            height: 10,
           ),
           headerDecoration: pw.BoxDecoration(
             color: PdfColors.cyan,
