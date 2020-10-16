@@ -1,5 +1,5 @@
 
-import 'package:celulas_vide/Discipulador/PerfilDiscipulador.dart';
+import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Lider/DadosMembro.dart';
 import 'package:celulas_vide/Lider/HomeLider.dart';

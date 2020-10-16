@@ -192,7 +192,7 @@ class Usuario {
   String senha;
   String confirmarSenha;
   String encargo;
-  String imagem;
+  String urlImagem;
   String discipulador;
   String pastorRede;
   String pastorIgreja;
@@ -206,7 +206,7 @@ class Usuario {
         "nome": this.nome,
         "email": this.email,
         "encargo": this.encargo,
-        "urlImagem": this.imagem,
+        "urlImagem": this.urlImagem,
         "discipulador": this.discipulador,
         "pastorRede": this.pastorRede,
         "pastorIgreja": this.pastorIgreja,
@@ -221,7 +221,7 @@ class Usuario {
     this.nome = map['nome'];
     this.email = map['email'];
     this.encargo = map['encargo'];
-    this.imagem = map['urlImagem'] ?? null;
+    this.urlImagem = map['urlImagem'] ?? '';
     this.discipulador = map['discipulador'];
     this.pastorRede = map['pastorRede'];
     this.pastorIgreja = map['pastorIgreja'];
