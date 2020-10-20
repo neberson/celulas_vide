@@ -15,6 +15,8 @@ class PerfilDiscipulador extends StatefulWidget {
 
 class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+
   final discBloc = DiscipuladorBloc();
   final discState = DiscipuladorState();
 
@@ -23,7 +25,6 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
   bool isLoading = true;
 
   TextEditingController _cNomeUsuario = TextEditingController();
-  TextEditingController _cEmailUsuario = TextEditingController();
   TextEditingController _cPastorRede = TextEditingController();
   TextEditingController _cPastorIgreja = TextEditingController();
   TextEditingController _cNomeIgreja = TextEditingController();
@@ -47,8 +48,6 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
     _cPastorIgreja.text = celula.usuario.pastorIgreja;
     _cNomeIgreja.text = celula.usuario.igreja;
   }
-
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

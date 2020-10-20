@@ -9,8 +9,9 @@ class Celula{
   List<MembrosCelula> membros;
   DadosCelulaBEAN dadosCelula;
   List<CelulaMonitorada> celulasMonitoradas;
+  List<Convite> convitesLider;
 
-  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas});
+  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas, this.convitesLider});
 
   Celula.fromMap(map){
     this.usuario = Usuario.fromMap(map['Usuario']);
@@ -25,6 +26,10 @@ class Celula{
     celulasMonitoradas = [];
     if(map.containsKey('CelulasMonitoradas'))
       map['CelulasMonitoradas'].forEach((element) => celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
+
+    convitesLider = [];
+    if(map.containsKey('ConvitesLider'))
+      map['ConvitesLider'].forEach((element) => convitesLider.add(Convite.fromMap(element)));
 
   }
 }
@@ -269,3 +274,33 @@ class CelulaMonitorada{
   }
 
 }
+
+class Convite{
+
+  String idUsuario;
+  String nomeIntegrante;
+  int status;
+  DateTime createdAt;
+
+  Convite({this.idUsuario, this.nomeIntegrante, this.status, this.createdAt});
+
+  Convite.fromMap(map){
+    this.idUsuario = map['id_usuario'];
+    this.nomeIntegrante = map['nome_integrante'];
+    this.status = map['status'];
+    this.createdAt = map['created_at'].toDate();
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+
+    data['id_usuario'] = this.idUsuario;
+    data['nomeIntegrante'] = this.nomeIntegrante;
+    data['status'] = this.status;
+    data['created_at'] = this.createdAt;
+
+    return data;
+  }
+
+}
+
