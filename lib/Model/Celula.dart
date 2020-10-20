@@ -295,7 +295,7 @@ class Convite{
     final Map<String, dynamic> data = Map<String, dynamic>();
 
     data['id_usuario'] = this.idUsuario;
-    data['nomeIntegrante'] = this.nomeIntegrante;
+    data['nome_integrante'] = this.nomeIntegrante;
     data['status'] = this.status;
     data['created_at'] = this.createdAt;
 
