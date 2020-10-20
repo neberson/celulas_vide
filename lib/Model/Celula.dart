@@ -8,18 +8,24 @@ class Celula{
   Usuario usuario;
   List<MembrosCelula> membros;
   DadosCelulaBEAN dadosCelula;
+  List<CelulaMonitorada> celulasMonitoradas;
 
-  Celula({this.usuario, this.membros, this.dadosCelula});
+  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas});
 
   Celula.fromMap(map){
     this.usuario = Usuario.fromMap(map['Usuario']);
     membros = List<MembrosCelula>();
-    if(map.containsKey('Membros')){
+
+    if(map.containsKey('Membros'))
       map['Membros'].forEach((element) => membros.add(MembrosCelula.fromMap(element)));
-    }
-    if(map.containsKey('DadosCelula')){
+
+    if(map.containsKey('DadosCelula'))
       this.dadosCelula = DadosCelulaBEAN.fromMap(map['DadosCelula']);
-    }
+
+    celulasMonitoradas = [];
+    if(map.containsKey('CelulasMonitoradas'))
+      map['CelulasMonitoradas'].forEach((element) => celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
+
   }
 }
 
@@ -198,7 +204,18 @@ class Usuario {
   String pastorIgreja;
   String igreja;
 
-  Usuario();
+
+  Usuario(
+      {this.nome,
+      this.email,
+      this.senha,
+      this.confirmarSenha,
+      this.encargo,
+      this.urlImagem,
+      this.discipulador,
+      this.pastorRede,
+      this.pastorIgreja,
+      this.igreja});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
@@ -222,10 +239,33 @@ class Usuario {
     this.email = map['email'];
     this.encargo = map['encargo'];
     this.urlImagem = map['urlImagem'] ?? '';
-    this.discipulador = map['discipulador'];
-    this.pastorRede = map['pastorRede'];
-    this.pastorIgreja = map['pastorIgreja'];
-    this.igreja = map['igreja'];
+    this.discipulador = map['discipulador'] ?? '';
+    this.pastorRede = map['pastorRede'] ?? '';
+    this.pastorIgreja = map['pastorIgreja'] ?? '';
+    this.igreja = map['igreja'] ?? '';
+  }
+
+}
+
+class CelulaMonitorada{
+
+  String idCelula;
+  String nomeLider;
+
+  CelulaMonitorada({this.idCelula, this.nomeLider});
+
+  CelulaMonitorada.fromMap(map){
+    this.idCelula = map['id_celula'];
+    this.nomeLider = map['nome_lider'];
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+
+    data['id_celula'] = this.idCelula;
+    data['nome_lider'] = this.nomeLider;
+
+    return data;
   }
 
 }

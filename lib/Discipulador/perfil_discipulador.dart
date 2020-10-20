@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:celulas_vide/Discipulador/discipulador_bloc.dart';
 import 'package:celulas_vide/Discipulador/discipulador_state.dart';
 import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/setup/connection.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -23,49 +24,31 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
 
   TextEditingController _cNomeUsuario = TextEditingController();
   TextEditingController _cEmailUsuario = TextEditingController();
-  TextEditingController _cTotalCelulas = TextEditingController();
-  TextEditingController _cMembrosBatizados = TextEditingController();
-  TextEditingController _cFreqAss = TextEditingController();
-  TextEditingController _cTotalMbFa = TextEditingController();
   TextEditingController _cPastorRede = TextEditingController();
   TextEditingController _cPastorIgreja = TextEditingController();
   TextEditingController _cNomeIgreja = TextEditingController();
-
-  // Future _uploadImagem() {
-  //   FirebaseStorage storage = FirebaseStorage.instance;
-  //   StorageReference pastaRaiz = storage.ref();
-  //   StorageReference arquivo =
-  //       pastaRaiz.child("perfil").child(_idUsuarioLogado + ".jpg");
-  //
-  //   StorageUploadTask task = arquivo.putFile(_imagem);
-  //
-  //   task.events.listen((StorageTaskEvent) {
-  //     if (StorageTaskEvent.type == StorageTaskEventType.progress) {
-  //       setState(() {
-  //         _subindoImagem = true;
-  //       });
-  //     } else if (StorageTaskEvent.type == StorageTaskEventType.success) {
-  //       setState(() {
-  //         _subindoImagem = false;
-  //       });
-  //     }
-  //   });
-  //
-  //   task.onComplete.then((StorageTaskSnapshot snapshot) {
-  //     _recuperarUrlImagem(snapshot);
-  //   });
-  // }
 
   @override
   void initState() {
     discBloc.getCelula().then((cel) {
       celula = cel;
       discState.changeUrl(celula.usuario.urlImagem);
+      _setFields();
       setState(() => isLoading = false);
     });
 
+
     super.initState();
   }
+
+  _setFields(){
+    _cNomeUsuario.text = celula.usuario.nome;
+    _cPastorRede.text = celula.usuario.pastorRede;
+    _cPastorIgreja.text = celula.usuario.pastorIgreja;
+    _cNomeIgreja.text = celula.usuario.igreja;
+  }
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +58,6 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
           title: Text("Perfil do Discipulador"),
           backgroundColor: Color.fromRGBO(81, 37, 103, 1),
           elevation: 0,
-          actions: [
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  discState.changeLoadingPhoto();
-                })
-          ],
         ),
         body: isLoading ? loading() : _body());
   }
@@ -91,29 +67,30 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
       decoration: BoxDecoration(color: Color.fromRGBO(81, 37, 103, 1)),
       height: MediaQuery.of(context).size.height,
       width: double.infinity,
-      child: ListView(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 20),
-            height: 230,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    stops: [
-                  0.5,
-                  0.9
-                ],
-                    colors: [
-                  Color.fromRGBO(81, 37, 103, 1),
-                  Color.fromRGBO(169, 88, 159, 1)
-                ])),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Observer(
-                  builder: (_) {
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              height: 230,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      stops: [
+                    0.5,
+                    0.9
+                  ],
+                      colors: [
+                    Color.fromRGBO(81, 37, 103, 1),
+                    Color.fromRGBO(169, 88, 159, 1)
+                  ])),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Observer(builder: (_) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -134,206 +111,137 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
                               ),
                       ],
                     );
-                  }
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Text(
-                        "Câmera",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                  }),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlatButton(
+                        child: Text(
+                          "Câmera",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                        onPressed: () => _onClickGetPhoto(0),
                       ),
-                      onPressed: () => _onClickGetPhoto(0),
-                    ),
-                    FlatButton(
-                      child: Text(
-                        "Galeria",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
-                      ),
-                      onPressed: () => _onClickGetPhoto(1),
-                    )
-                  ],
-                ),
-                //Text(_emailUsuario.text, style: TextStyle(fontSize: 22.0, color: Colors.white),),
-              ],
+                      FlatButton(
+                        child: Text(
+                          "Galeria",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                        onPressed: () => _onClickGetPhoto(1),
+                      )
+                    ],
+                  ),
+                  //Text(_emailUsuario.text, style: TextStyle(fontSize: 22.0, color: Colors.white),),
+                ],
+              ),
             ),
-          ),
-          Container(
-            // height: 50,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(169, 88, 159, 1),
-                    child: ListTile(
-                      title: Text(
-                        celula.membros.where((element) => element.condicaoMembro == 'Membro Batizado').toList().length.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                      ),
-                      subtitle: Text(
-                        "Membros Batizados",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
-                      ),
-                    ),
-                  ),
+            Container(
+              color: Color.fromRGBO(169, 88, 159, 1),
+              child: ListTile(
+                title: Text(celula.celulasMonitoradas.length.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.0),
                 ),
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(81, 37, 103, 1),
-                    child: ListTile(
-                      title: Text(
-                        celula.membros.where((element) => element.condicaoMembro == 'Frenquentador Assiduo').toList().length.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                      ),
-                      subtitle: Text(
-                        "Frequentadores",
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(color: Color.fromRGBO(169, 88, 159, 1)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            // height: 50,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(81, 37, 103, 1),
-                    child: ListTile(
-                      title: Text(
-                        celula.membros.length.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                      ),
-                      subtitle: Text(
-                        "Total de Membros",
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(color: Color.fromRGBO(169, 88, 159, 1)),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(169, 88, 159, 1),
-                    child: ListTile(
-                      title: Text(
-                        "2",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                      ),
-                      subtitle: Text(
-                        "Total de Células",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 16, left: 45, right: 15, bottom: 15),
-            child: TextFormField(
-              controller: _cEmailUsuario,
-              enabled: false,
-              cursorColor: Colors.white,
-              style: TextStyle(
-                  color: Colors.white,
-                  decorationColor: Colors.white,
-                  fontSize: 18),
-              decoration: InputDecoration(
-                labelText: "E-mail",
-                labelStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                subtitle: Text(
+                  "Total de Células",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-          ),
-          _textField('Nome', _cNomeUsuario),
-          _textField('Pastor de Rede', _cPastorRede),
-          _textField('Pastor de Igreja', _cPastorIgreja),
-          _textField('Nome da Igreja', _cNomeIgreja),
-          Divider(),
-          Observer(builder: (_) {
-            return Padding(
-                padding:
-                    EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
-                child: SizedBox(
-                  height: 50,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    color: Colors.pink,
-                    child: !discState.loadingSave
-                        ? Text(
-                            "Salvar",
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 20),
-                          )
-                        : SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white70),
-                              strokeWidth: 3.0,
+            Padding(
+              padding: EdgeInsets.only(top: 16, left: 45, right: 15, bottom: 15),
+              child: Text(celula.usuario.email, style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),),
+            ),
+            _textField('Nome', _cNomeUsuario, validator: _validateName),
+            _textField('Pastor de Rede', _cPastorRede),
+            _textField('Pastor de Igreja', _cPastorIgreja),
+            _textField('Nome da Igreja', _cNomeIgreja),
+            Divider(),
+            Observer(builder: (_) {
+              return Padding(
+                  padding:
+                      EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(40))),
+                      color: Colors.pink,
+                      child: !discState.loadingSave
+                          ? Text(
+                              "Salvar",
+                              style:
+                                  TextStyle(color: Colors.white70, fontSize: 20),
+                            )
+                          : SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white70),
+                                strokeWidth: 3.0,
+                              ),
                             ),
-                          ),
-                    onPressed: _onClickSave,
-                  ),
-                ));
-          }),
-        ],
+                      onPressed: _onClickSave,
+                    ),
+                  ));
+            }),
+          ],
+        ),
       ),
     );
   }
 
-  _onClickSave() {}
+  _onClickSave() async {
 
+    if(_formKey.currentState.validate()){
+
+      var usuario = Usuario(
+        nome: _cNomeUsuario.text,
+        pastorRede: _cPastorRede.text,
+        pastorIgreja: _cPastorIgreja.text,
+        igreja: _cNomeIgreja.text
+      );
+
+      if(!await isConnected())
+        _showMessage('Sem conexão com internet. Tente novamente', isError: true);
+      else{
+
+        discState.changeLoadingSave();
+        discBloc.updateProfileUser(usuario).then((value) {
+
+          discState.changeLoadingSave();
+          _showMessage('Dados salvos com sucesso');
+
+        }).catchError((onError){
+          print('Erro saving profile ${onError.toString()}');
+          discState.changeLoadingSave();
+          _showMessage('Nao foi possível salvar os dados, tente novamente', isError: true);
+        });
+
+      }
+
+    }
+
+
+  }
 
   _onClickGetPhoto(int type) async {
-
-    final pickedFile = await ImagePicker().getImage(source: type == 0 ? ImageSource.camera : ImageSource.gallery);
+    final pickedFile = await ImagePicker()
+        .getImage(source: type == 0 ? ImageSource.camera : ImageSource.gallery);
 
     if (pickedFile != null) {
       discState.changeLoadingPhoto();
@@ -350,27 +258,14 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
     }
   }
 
-  _listTileHeader(title, subtitle) {
-    return ListTile(
-      title: Text(
-        "4",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
-      ),
-      subtitle: Text(
-        "Membros Batizados",
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
-      ),
-    );
-  }
+  String _validateName(String text) => text.trim().isEmpty ? 'Informe o nome.' : null;
 
-  _textField(label, controller) {
+  _textField(label, controller, {validator}) {
     return Padding(
       padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
       child: TextFormField(
         controller: controller,
+        validator: validator,
         cursorColor: Colors.white,
         style: TextStyle(
           color: Colors.white,
@@ -381,6 +276,7 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
           labelStyle: TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           fillColor: Colors.white,
+          errorStyle: TextStyle(color: Colors.white),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white, width: 2.0),
             borderRadius: BorderRadius.circular(25.0),
@@ -401,5 +297,4 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: isError ? Colors.red : Colors.green[700],
       ));
-
 }
