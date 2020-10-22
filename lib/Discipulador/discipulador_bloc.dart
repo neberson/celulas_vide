@@ -41,7 +41,6 @@ class DiscipuladorBloc {
   }
 
   Future updateProfileUser(Usuario usuario) async {
-
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
@@ -54,4 +53,39 @@ class DiscipuladorBloc {
       'Usuario.igreja': usuario.igreja
     });
   }
+
+  Future acceptInvitation(List<Convite> convitesLider, CelulaMonitorada celulaMonitorada) async {
+
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore
+        .instance.collection('Celula')
+        .document(currentUser.uid)
+        .updateData({
+          'ConvitesLider': convitesLider.map((e) => e.toMap()).toList(),
+          'CelulasMonitoradas': FieldValue.arrayUnion([celulaMonitorada.toMap()])
+        });
+
+    await Firestore.instance.collection('Celula').document(celulaMonitorada.idCelula)
+          .updateData({'Usuario.idDiscipulador': currentUser.uid});
+
+  }
+
+  Future refuseInvitation(List<Convite> convitesLider, List<CelulaMonitorada> celulasMonitoradas, String idLider) async {
+
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore
+        .instance.collection('Celula')
+        .document(currentUser.uid)
+        .updateData({
+      'ConvitesLider': convitesLider.map((e) => e.toMap()).toList(),
+      'CelulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
+    });
+
+    await Firestore.instance.collection('Celula').document(idLider)
+        .updateData({'Usuario.idDiscipulador': null});
+
+  }
+
 }

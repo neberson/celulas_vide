@@ -256,19 +256,22 @@ class CelulaMonitorada{
 
   String idCelula;
   String nomeLider;
+  DateTime createdAt;
 
-  CelulaMonitorada({this.idCelula, this.nomeLider});
+  CelulaMonitorada({this.idCelula, this.nomeLider, this.createdAt});
 
   CelulaMonitorada.fromMap(map){
-    this.idCelula = map['id_celula'];
-    this.nomeLider = map['nome_lider'];
+    this.idCelula = map['idCelula'];
+    this.nomeLider = map['nomeLider'];
+    this.createdAt = map['createdAt'].toDate();
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = Map<String, dynamic>();
 
-    data['id_celula'] = this.idCelula;
-    data['nome_lider'] = this.nomeLider;
+    data['idCelula'] = this.idCelula;
+    data['nomeLider'] = this.nomeLider;
+    data['createdAt'] = this.createdAt;
 
     return data;
   }
@@ -281,23 +284,26 @@ class Convite{
   String nomeIntegrante;
   int status;
   DateTime createdAt;
+  DateTime updatedAt;
 
-  Convite({this.idUsuario, this.nomeIntegrante, this.status, this.createdAt});
+  Convite({this.idUsuario, this.nomeIntegrante, this.status, this.createdAt, this.updatedAt});
 
   Convite.fromMap(map){
-    this.idUsuario = map['id_usuario'];
-    this.nomeIntegrante = map['nome_integrante'];
+    this.idUsuario = map['idUsuario'];
+    this.nomeIntegrante = map['nomeIntegrante'];
     this.status = map['status'];
-    this.createdAt = map['created_at'].toDate();
+    this.createdAt = map['createdAt'].toDate();
+    this.updatedAt = map['updatedAt'] != null ? map['updatedAt'].toDate() : null;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = Map<String, dynamic>();
 
-    data['id_usuario'] = this.idUsuario;
-    data['nome_integrante'] = this.nomeIntegrante;
+    data['idUsuario'] = this.idUsuario;
+    data['nomeIntegrante'] = this.nomeIntegrante;
     data['status'] = this.status;
-    data['created_at'] = this.createdAt;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
 
     return data;
   }
