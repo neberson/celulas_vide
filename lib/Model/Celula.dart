@@ -9,9 +9,10 @@ class Celula{
   List<MembrosCelula> membros;
   DadosCelulaBEAN dadosCelula;
   List<CelulaMonitorada> celulasMonitoradas;
-  List<Convite> convitesLider;
+  List<Convite> convitesRecebidos;
+  Convite conviteRealizado;
 
-  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas, this.convitesLider});
+  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas, this.convitesRecebidos, this.conviteRealizado});
 
   Celula.fromMap(map){
     this.usuario = Usuario.fromMap(map['Usuario']);
@@ -24,12 +25,15 @@ class Celula{
       this.dadosCelula = DadosCelulaBEAN.fromMap(map['DadosCelula']);
 
     celulasMonitoradas = [];
-    if(map.containsKey('CelulasMonitoradas'))
-      map['CelulasMonitoradas'].forEach((element) => celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
+    if(map.containsKey('celulasMonitoradas'))
+      map['celulasMonitoradas'].forEach((element) => celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
 
-    convitesLider = [];
-    if(map.containsKey('ConvitesLider'))
-      map['ConvitesLider'].forEach((element) => convitesLider.add(Convite.fromMap(element)));
+    convitesRecebidos = [];
+    if(map.containsKey('convitesRecebidos'))
+      map['convitesRecebidos'].forEach((element) => convitesRecebidos.add(Convite.fromMap(element)));
+
+    if(map.containsKey('conviteRealizado') && map['conviteRealizado'] != null)
+      this.conviteRealizado = Convite.fromMap(map['conviteRealizado']);
 
   }
 }
@@ -198,6 +202,7 @@ class MembrosCelula {
 }
 
 class Usuario {
+  String idUsuario;
   String nome;
   String email;
   String senha;
@@ -208,7 +213,7 @@ class Usuario {
   String pastorRede;
   String pastorIgreja;
   String igreja;
-
+  String emailConvidado;
 
   Usuario(
       {this.nome,
@@ -220,11 +225,13 @@ class Usuario {
       this.discipulador,
       this.pastorRede,
       this.pastorIgreja,
-      this.igreja});
+      this.igreja,
+      this.emailConvidado});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "Usuario": {
+        "idUsuario": this.idUsuario,
         "nome": this.nome,
         "email": this.email,
         "encargo": this.encargo,
@@ -232,7 +239,8 @@ class Usuario {
         "discipulador": this.discipulador,
         "pastorRede": this.pastorRede,
         "pastorIgreja": this.pastorIgreja,
-        "igreja": this.igreja
+        "igreja": this.igreja,
+        "emailConvidado": this.emailConvidado
       }
     };
 
@@ -240,6 +248,7 @@ class Usuario {
   }
 
   Usuario.fromMap(map){
+    this.idUsuario = map['idUsuario'];
     this.nome = map['nome'];
     this.email = map['email'];
     this.encargo = map['encargo'];

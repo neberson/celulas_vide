@@ -4,10 +4,11 @@ import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/setup/connection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DiscipuladorBloc {
+
   Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
@@ -54,7 +55,7 @@ class DiscipuladorBloc {
     });
   }
 
-  Future acceptInvitation(List<Convite> convitesLider, CelulaMonitorada celulaMonitorada) async {
+  Future aceitarConvite(List<Convite> convitesLider, CelulaMonitorada celulaMonitorada) async {
 
     var currentUser = await getCurrentUserFirebase();
 
@@ -62,16 +63,16 @@ class DiscipuladorBloc {
         .instance.collection('Celula')
         .document(currentUser.uid)
         .updateData({
-          'ConvitesLider': convitesLider.map((e) => e.toMap()).toList(),
-          'CelulasMonitoradas': FieldValue.arrayUnion([celulaMonitorada.toMap()])
+          'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
+          'celulasMonitoradas': FieldValue.arrayUnion([celulaMonitorada.toMap()])
         });
 
     await Firestore.instance.collection('Celula').document(celulaMonitorada.idCelula)
-          .updateData({'Usuario.idDiscipulador': currentUser.uid});
+          .updateData({'conviteRealizado.status': 1, 'conviteRealizado.updatedAt' : DateTime.now()});
 
   }
 
-  Future refuseInvitation(List<Convite> convitesLider, List<CelulaMonitorada> celulasMonitoradas, String idLider) async {
+  Future recusarConvite(List<Convite> convitesLider, List<CelulaMonitorada> celulasMonitoradas, String idLider) async {
 
     var currentUser = await getCurrentUserFirebase();
 
@@ -79,12 +80,29 @@ class DiscipuladorBloc {
         .instance.collection('Celula')
         .document(currentUser.uid)
         .updateData({
-      'ConvitesLider': convitesLider.map((e) => e.toMap()).toList(),
-      'CelulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
+      'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
+      'celulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
     });
 
     await Firestore.instance.collection('Celula').document(idLider)
-        .updateData({'Usuario.idDiscipulador': null});
+        .updateData({'conviteRealizado.status': 2, 'conviteRealizado.updatedAt' : DateTime.now()});
+
+  }
+
+  desvincular(List<Convite> convitesRecebidos, List<CelulaMonitorada> celulasMonitoradas, idUsuario) async {
+
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore
+        .instance.collection('Celula')
+        .document(currentUser.uid)
+        .updateData({
+      'convitesRecebidos': convitesRecebidos.map((e) => e.toMap()).toList(),
+      'celulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
+    });
+
+    await Firestore.instance.collection('Celula').document(idUsuario)
+        .updateData({'conviteRealizado': null});
 
   }
 

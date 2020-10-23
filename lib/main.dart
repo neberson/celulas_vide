@@ -3,11 +3,11 @@ import 'package:celulas_vide/Discipulador/convites_page.dart';
 import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Lider/DadosMembro.dart';
+import 'package:celulas_vide/Lider/GerenciarConvitePage.dart';
 import 'package:celulas_vide/Lider/HomeLider.dart';
 import 'package:celulas_vide/Lider/ListaMembros.dart';
 import 'package:celulas_vide/Lider/PerfilLider.dart';
 import 'package:celulas_vide/Lider/TabMembros.dart';
-import 'package:celulas_vide/Lider/VinculoComDiscipuladoPage.dart';
 import 'package:celulas_vide/Lider/frequenciaMembros.dart';
 import 'package:celulas_vide/Tela_login.dart';
 import 'package:celulas_vide/reports/report_home.dart';
@@ -51,7 +51,7 @@ void main()  {
           '/frequenciaMembros': (context) => frequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
           '/ReportsHome': (context) => ReportHome(),
-          '/VinculoDiscipulado': (context) => VinculoComDiscipuladoPage(),
+          '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
           '/ConvitesDiscipulador': (context) => ConvitesDiscipulador(),
         },

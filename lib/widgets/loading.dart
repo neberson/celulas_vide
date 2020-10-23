@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 
-loading () => Center(
+loading ({Color colorElement = Colors.black}) => Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(colorElement),),
           height: 50.0,
           width: 50.0,
         ),
@@ -15,7 +15,7 @@ loading () => Center(
         ),
         Text(
           "Carregando dados...",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: colorElement),
         )
       ],
     ));

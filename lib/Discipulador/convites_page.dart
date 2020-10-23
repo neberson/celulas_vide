@@ -1,6 +1,7 @@
 import 'package:celulas_vide/Discipulador/discipulador_bloc.dart';
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/setup/connection.dart';
+import 'package:celulas_vide/widgets/dialog_decision.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
@@ -64,7 +65,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
   }
 
   _listViewConvites(int type) {
-    var listConvites = celula.convitesLider
+    var listConvites = celula.convitesRecebidos
         .where((element) => element.status == type)
         .toList();
 
@@ -111,7 +112,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
                           Icons.close_rounded,
                           color: Theme.of(context).primaryColor,
                         ),
-                        onPressed: () => _onClickRefuse(c, index, 2),
+                        onPressed: () => _onClickRefuse(c, 2),
                         label: Text(
                           'Recusar',
                           style:
@@ -133,7 +134,26 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
                     ],
                   ),
                 )
-              : SizedBox()
+              :  ButtonBarTheme(
+            data: ButtonBarThemeData(),
+            child: ButtonBar(
+              alignment: MainAxisAlignment.start,
+              children: <Widget>[
+                FlatButton.icon(
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () => _onClickDesvincular(c, index, 2),
+                  label: Text(
+                    'Desvincular',
+                    style:
+                    TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -142,8 +162,8 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
   void _onClickAccept(Convite convite, int index, int status) async {
     var date = DateTime.now();
 
-    celula.convitesLider[index].status = status;
-    celula.convitesLider[index].updatedAt = date;
+    celula.convitesRecebidos[index].status = status;
+    celula.convitesRecebidos[index].updatedAt = date;
 
     var celulaMonitorada = CelulaMonitorada(
         idCelula: convite.idUsuario,
@@ -152,40 +172,84 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
 
     if (!await isConnected())
       _showMessage('Sem conexão com internet', isError: true);
+    else{
+      discBloc
+          .aceitarConvite(celula.convitesRecebidos, celulaMonitorada)
+          .then((value) {
+        _showMessage('Convite aceito com sucesso');
 
-    discBloc
-        .acceptInvitation(celula.convitesLider, celulaMonitorada)
-        .then((value) {
-      _showMessage('Convite aceito com sucesso');
-
-      setState(() {});
-    }).catchError((onError) {
-      print('error aceept invitation ${onError.toString()}');
-      _showMessage('Não foi possível realizar esta operação, tente novamente',
-          isError: true);
-    });
+        setState(() {});
+      }).catchError((onError) {
+        print('error aceept invitation ${onError.toString()}');
+        _showMessage('Não foi possível realizar esta operação, tente novamente',
+            isError: true);
+      });
+    }
   }
 
-  void _onClickRefuse(Convite convite, int index, int status) async {
+  void _onClickRefuse(Convite convite, int status) async {
 
-    celula.convitesLider.removeWhere((element) => element.idUsuario == convite.idUsuario);
-    celula.celulasMonitoradas.removeWhere((element) => element.idCelula == convite.idUsuario);
+    var result = await showDialogDecision(context,
+        title: 'Confirmação',
+        message:
+        'Esta operação não pode ser desfeita. Deseja realmente recusar este convite ?',
+        icon: Icons.warning,
+        colorIcon: Colors.red);
 
-    if (!await isConnected())
-    _showMessage('Sem conexão com internet', isError: true);
+    if(result != null){
+      if (!await isConnected())
+        _showMessage('Sem conexão com internet', isError: true);
+      else{
 
-    discBloc
-        .refuseInvitation(celula.convitesLider, celula.celulasMonitoradas, convite.idUsuario)
-        .then((value) {
-    _showMessage('Convite recusado com sucesso');
+        celula.convitesRecebidos.removeWhere((element) => element.idUsuario == convite.idUsuario);
+        celula.celulasMonitoradas.removeWhere((element) => element.idCelula == convite.idUsuario);
 
-    setState(() {});
-    }).catchError((onError) {
-    print('error aceept invitation ${onError.toString()}');
-    _showMessage('Não foi possível realizar esta operação, tente novamente',
-    isError: true);
-    });
+        discBloc
+            .recusarConvite(celula.convitesRecebidos, celula.celulasMonitoradas, convite.idUsuario)
+            .then((value) {
+          _showMessage('Convite recusado com sucesso');
 
+          setState(() {});
+        }).catchError((onError) {
+          print('error aceept invitation ${onError.toString()}');
+          _showMessage('Não foi possível realizar esta operação, tente novamente',
+              isError: true);
+        });
+      }
+    }
+  }
+
+  _onClickDesvincular(Convite c, int index, int i) async {
+
+    var result = await showDialogDecision(context,
+        title: 'Confirmação',
+        message:
+        'Esta operação não pode ser desfeita. Deseja realmente recusar este convite ?',
+        icon: Icons.warning,
+        colorIcon: Colors.red);
+
+    if(result != null){
+
+      if (!await isConnected())
+        _showMessage('Sem conexão com internet', isError: true);
+      else{
+
+        celula.convitesRecebidos.removeWhere((element) => element.idUsuario == c.idUsuario);
+        celula.celulasMonitoradas.removeWhere((element) => element.idCelula == c.idUsuario);
+
+        discBloc
+            .desvincular(celula.convitesRecebidos, celula.celulasMonitoradas, c.idUsuario)
+            .then((value) {
+          _showMessage('Convite recusado com sucesso');
+
+          setState(() {});
+        }).catchError((onError) {
+          print('error aceept invitation ${onError.toString()}');
+          _showMessage('Não foi possível realizar esta operação, tente novamente',
+              isError: true);
+        });
+      }
+    }
   }
 
   _showMessage(String message, {bool isError = false}) =>
@@ -195,4 +259,6 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: isError ? Colors.red : Colors.green[700],
       ));
+
+
 }
