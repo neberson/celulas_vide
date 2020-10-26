@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class Celula{
 
   Usuario usuario;
-  List<MembrosCelula> membros;
+  List<MembroCelula> membros;
   DadosCelulaBEAN dadosCelula;
   List<CelulaMonitorada> celulasMonitoradas;
   List<Convite> convitesRecebidos;
@@ -16,10 +16,10 @@ class Celula{
 
   Celula.fromMap(map){
     this.usuario = Usuario.fromMap(map['Usuario']);
-    membros = List<MembrosCelula>();
+    membros = List<MembroCelula>();
 
     if(map.containsKey('Membros'))
-      map['Membros'].forEach((element) => membros.add(MembrosCelula.fromMap(element)));
+      map['Membros'].forEach((element) => membros.add(MembroCelula.fromMap(element)));
 
     if(map.containsKey('DadosCelula'))
       this.dadosCelula = DadosCelulaBEAN.fromMap(map['DadosCelula']);
@@ -101,7 +101,7 @@ class DadosCelulaBEAN{
 
 }
 
-class MembrosCelula {
+class MembroCelula {
   String nomeMembro;
   String generoMembro;
   DateTime dataNascimentoMembro;
@@ -118,7 +118,7 @@ class MembrosCelula {
   int status;
   DateTime dataCadastro;
 
-  MembrosCelula();
+  MembroCelula();
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "nomeMembro": this.nomeMembro,
@@ -140,7 +140,7 @@ class MembrosCelula {
     return map;
   }
 
-  MembrosCelula.fromMap(map){
+  MembroCelula.fromMap(map){
     this.nomeMembro = map['nomeMembro'];
     this.generoMembro = map['generoMembro'];
     this.dataNascimentoMembro = map['dataNascimentoMembro'] != null ? map['dataNascimentoMembro'].toDate() : null;

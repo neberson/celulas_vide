@@ -27,8 +27,7 @@ class _HomeLiderState extends State<HomeLider> {
   final List<Categoria> categoriasDiscipulador = [
     Categoria(9,"Perfil do Discipulador","/PerfilDiscipulador", icon: FontAwesomeIcons.user),
     Categoria(9,"Dados das Células","/PerfilDiscipulador", icon: FontAwesomeIcons.globeAsia),
-    Categoria(9,"Membros","/PerfilDiscipulador", icon: FontAwesomeIcons.users),
-    Categoria(9,"Eventos","/PerfilDiscipulador", icon: FontAwesomeIcons.calendarAlt),
+    Categoria(9,"Membros","/MembrosDiscipulador", icon: FontAwesomeIcons.users),
     Categoria(9,"Convites","/ConvitesDiscipulador", icon: FontAwesomeIcons.envelope),
   ];
 

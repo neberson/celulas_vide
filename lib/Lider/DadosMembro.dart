@@ -28,7 +28,7 @@ class _DadosMembroState extends State<DadosMembro> {
   String _generoSelecionado = "m";
   TextEditingController _dataNascimento = TextEditingController();
   var _telefone = new MaskedTextController(mask: '(00)00000-0000');
-  MembrosCelula _membro = new MembrosCelula();
+  MembroCelula _membro = new MembroCelula();
   membrosDAO _membroDAO = new membrosDAO();
   List<Map> _membros = List<Map>();
   var _fTelefone = FocusNode();

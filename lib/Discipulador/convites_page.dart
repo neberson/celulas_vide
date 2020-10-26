@@ -17,7 +17,7 @@ class ConvitesDiscipulador extends StatefulWidget {
 class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
   bool isLoading = true;
   var error;
-  Celula celula;
+  Celula usuarioDiscipulador;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final discBloc = DiscipuladorBloc();
@@ -25,7 +25,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
   @override
   void initState() {
     discBloc.getCelula().then((celula) {
-      this.celula = celula;
+      this.usuarioDiscipulador = celula;
       setState(() => isLoading = false);
     }).catchError((onError) {
       print('error getting celula: ${onError.toString()}');
@@ -65,7 +65,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
   }
 
   _listViewConvites(int type) {
-    var listConvites = celula.convitesRecebidos
+    var listConvites = usuarioDiscipulador.convitesRecebidos
         .where((element) => element.status == type)
         .toList();
 
@@ -124,7 +124,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
                           Icons.check_circle_outline,
                           color: Theme.of(context).primaryColor,
                         ),
-                        onPressed: () => _onClickAccept(c, index, 1),
+                        onPressed: () => _onClickAccept(c, 1),
                         label: Text(
                           'Aceitar',
                           style:
@@ -159,22 +159,25 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
     );
   }
 
-  void _onClickAccept(Convite convite, int index, int status) async {
+  void _onClickAccept(Convite convite, int status) async {
+
     var date = DateTime.now();
 
-    celula.convitesRecebidos[index].status = status;
-    celula.convitesRecebidos[index].updatedAt = date;
+    usuarioDiscipulador.convitesRecebidos.firstWhere((element) => element.idUsuario == convite.idUsuario).status = status;
+    usuarioDiscipulador.convitesRecebidos.firstWhere((element) => element.idUsuario == convite.idUsuario).updatedAt = date;
 
     var celulaMonitorada = CelulaMonitorada(
         idCelula: convite.idUsuario,
         nomeLider: convite.nomeIntegrante,
         createdAt: date);
 
+    usuarioDiscipulador.celulasMonitoradas.add(celulaMonitorada);
+
     if (!await isConnected())
       _showMessage('Sem conexão com internet', isError: true);
     else{
       discBloc
-          .aceitarConvite(celula.convitesRecebidos, celulaMonitorada)
+          .aceitarConvite(usuarioDiscipulador.convitesRecebidos, usuarioDiscipulador.celulasMonitoradas, celulaMonitorada.idCelula)
           .then((value) {
         _showMessage('Convite aceito com sucesso');
 
@@ -201,11 +204,11 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
         _showMessage('Sem conexão com internet', isError: true);
       else{
 
-        celula.convitesRecebidos.removeWhere((element) => element.idUsuario == convite.idUsuario);
-        celula.celulasMonitoradas.removeWhere((element) => element.idCelula == convite.idUsuario);
+        usuarioDiscipulador.convitesRecebidos.removeWhere((element) => element.idUsuario == convite.idUsuario);
+        usuarioDiscipulador.celulasMonitoradas.removeWhere((element) => element.idCelula == convite.idUsuario);
 
         discBloc
-            .recusarConvite(celula.convitesRecebidos, celula.celulasMonitoradas, convite.idUsuario)
+            .recusarConvite(usuarioDiscipulador.convitesRecebidos, usuarioDiscipulador.celulasMonitoradas, convite.idUsuario)
             .then((value) {
           _showMessage('Convite recusado com sucesso');
 
@@ -234,11 +237,11 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
         _showMessage('Sem conexão com internet', isError: true);
       else{
 
-        celula.convitesRecebidos.removeWhere((element) => element.idUsuario == c.idUsuario);
-        celula.celulasMonitoradas.removeWhere((element) => element.idCelula == c.idUsuario);
+        usuarioDiscipulador.convitesRecebidos.removeWhere((element) => element.idUsuario == c.idUsuario);
+        usuarioDiscipulador.celulasMonitoradas.removeWhere((element) => element.idCelula == c.idUsuario);
 
         discBloc
-            .desvincular(celula.convitesRecebidos, celula.celulasMonitoradas, c.idUsuario)
+            .desvincular(usuarioDiscipulador.convitesRecebidos, usuarioDiscipulador.celulasMonitoradas, c.idUsuario)
             .then((value) {
           _showMessage('Convite recusado com sucesso');
 

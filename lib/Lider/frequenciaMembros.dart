@@ -40,7 +40,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   List<Map> _frequenciasCulto = List<Map>();
   ListMembroStore _membrosStore = new ListMembroStore();
   ListMembroStore _membrosStoreCulto = new ListMembroStore();
-  MembrosCelula _membrosCelulaMap = new MembrosCelula();
+  MembroCelula _membrosCelulaMap = new MembroCelula();
 
   _recuperarListaMembros() async {
     setState(() {

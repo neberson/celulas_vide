@@ -24,8 +24,8 @@ class _ReportNominalState extends State<ReportNominal> {
   var error;
 
   Celula celula;
-  List<MembrosCelula> _listMembrosAtivos = [];
-  List<MembrosCelula> _listMembrosInativos = [];
+  List<MembroCelula> _listMembrosAtivos = [];
+  List<MembroCelula> _listMembrosInativos = [];
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _ReportNominalState extends State<ReportNominal> {
     );
   }
 
-  _tableMembers(List<MembrosCelula> list, int type) {
+  _tableMembers(List<MembroCelula> list, int type) {
     if (list.isEmpty)
       return emptyState(
           context, 'Nenhum membro encontrado com esse status', Icons.person);

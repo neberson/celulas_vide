@@ -1,4 +1,5 @@
 
+import 'package:celulas_vide/Discipulador/MembrosDiscipulador.dart';
 import 'package:celulas_vide/Discipulador/convites_page.dart';
 import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
@@ -54,6 +55,7 @@ void main()  {
           '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
           '/ConvitesDiscipulador': (context) => ConvitesDiscipulador(),
+          '/MembrosDiscipulador': (context) => MembrosDiscipulador(),
         },
 
         debugShowCheckedModeBanner: false,

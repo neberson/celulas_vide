@@ -80,7 +80,7 @@ class frequenciaDAO {
 
   Future<List<Map>> recuperarMembros() async {
     await _recuperarDadosUsuario();
-    MembrosCelula membroCelula = new MembrosCelula();
+    MembroCelula membroCelula = new MembroCelula();
     FirebaseUser usuarioAtual = await _auth.currentUser();
     DocumentSnapshot snapshot =
     await db.collection("Celula").document(usuarioAtual.uid).get();
@@ -124,7 +124,7 @@ class frequenciaDAO {
 
     Frequencia frequencia = new Frequencia();
     frequencia.membrosFrequencia = List<Map>();
-    MembrosCelula membro = new MembrosCelula();
+    MembroCelula membro = new MembroCelula();
 
     List<Map> frequencias = List<Map>();
 
@@ -137,7 +137,7 @@ class frequenciaDAO {
 
         for(Map<dynamic, dynamic> membroLista in dado["membrosCelula"] ){
 
-          membro = new MembrosCelula();
+          membro = new MembroCelula();
 
           membro.nomeMembro = membroLista["nomeMembro"];
           membro.frequenciaMembro = membroLista["frequenciaMembro"];
@@ -156,7 +156,7 @@ class frequenciaDAO {
 
     Frequencia frequencia = new Frequencia();
     frequencia.membrosFrequencia = List<Map>();
-    MembrosCelula membro = new MembrosCelula();
+    MembroCelula membro = new MembroCelula();
 
     List<Map> frequencias = List<Map>();
 
@@ -166,7 +166,7 @@ class frequenciaDAO {
         frequencia.dataFrequencia = dado["dataCulto"];
         for(Map<dynamic, dynamic> membroLista in dado["membrosCulto"] ){
 
-          membro = new MembrosCelula();
+          membro = new MembroCelula();
 
           membro.nomeMembro = membroLista["nomeMembro"];
           membro.frequenciaMembro = membroLista["frequenciaMembro"];

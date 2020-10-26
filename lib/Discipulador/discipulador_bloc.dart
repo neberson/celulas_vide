@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class DiscipuladorBloc {
-
   Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
@@ -18,6 +17,21 @@ class DiscipuladorBloc {
         .get();
 
     return Celula.fromMap(doc.data);
+  }
+
+  Future<List<Celula>> getMembrosByDiscipulador() async {
+    var currentUser = await getCurrentUserFirebase();
+
+    var docMembros = await Firestore.instance
+        .collection('Celula')
+        .where('Usuario.encargo', isEqualTo: 'Lider')
+        .where('conviteRealizado.idUsuario', isEqualTo: currentUser.uid)
+        .getDocuments();
+
+    List<Celula> celulas = [];
+    celulas = docMembros.documents.map((e) => Celula.fromMap(e.data)).toList();
+
+    return celulas;
   }
 
   Future savePhoto(File file) async {
@@ -55,55 +69,60 @@ class DiscipuladorBloc {
     });
   }
 
-  Future aceitarConvite(List<Convite> convitesLider, CelulaMonitorada celulaMonitorada) async {
-
+  Future aceitarConvite(List<Convite> convitesLider,
+      List<CelulaMonitorada> celulasMonitoradas, String idNewConvite) async {
     var currentUser = await getCurrentUserFirebase();
 
-    await Firestore
-        .instance.collection('Celula')
-        .document(currentUser.uid)
-        .updateData({
-          'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
-          'celulasMonitoradas': FieldValue.arrayUnion([celulaMonitorada.toMap()])
-        });
-
-    await Firestore.instance.collection('Celula').document(celulaMonitorada.idCelula)
-          .updateData({'conviteRealizado.status': 1, 'conviteRealizado.updatedAt' : DateTime.now()});
-
-  }
-
-  Future recusarConvite(List<Convite> convitesLider, List<CelulaMonitorada> celulasMonitoradas, String idLider) async {
-
-    var currentUser = await getCurrentUserFirebase();
-
-    await Firestore
-        .instance.collection('Celula')
+    await Firestore.instance
+        .collection('Celula')
         .document(currentUser.uid)
         .updateData({
       'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
       'celulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
     });
 
-    await Firestore.instance.collection('Celula').document(idLider)
-        .updateData({'conviteRealizado.status': 2, 'conviteRealizado.updatedAt' : DateTime.now()});
-
+    await Firestore.instance
+        .collection('Celula')
+        .document(idNewConvite)
+        .updateData({
+      'conviteRealizado.status': 1,
+      'conviteRealizado.updatedAt': DateTime.now()
+    });
   }
 
-  desvincular(List<Convite> convitesRecebidos, List<CelulaMonitorada> celulasMonitoradas, idUsuario) async {
-
+  Future recusarConvite(List<Convite> convitesLider,
+      List<CelulaMonitorada> celulasMonitoradas, String idLider) async {
     var currentUser = await getCurrentUserFirebase();
 
-    await Firestore
-        .instance.collection('Celula')
+    await Firestore.instance
+        .collection('Celula')
+        .document(currentUser.uid)
+        .updateData({
+      'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
+      'celulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
+    });
+
+    await Firestore.instance.collection('Celula').document(idLider).updateData({
+      'conviteRealizado.status': 2,
+      'conviteRealizado.updatedAt': DateTime.now()
+    });
+  }
+
+  desvincular(List<Convite> convitesRecebidos,
+      List<CelulaMonitorada> celulasMonitoradas, idUsuario) async {
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore.instance
+        .collection('Celula')
         .document(currentUser.uid)
         .updateData({
       'convitesRecebidos': convitesRecebidos.map((e) => e.toMap()).toList(),
       'celulasMonitoradas': celulasMonitoradas.map((e) => e.toMap()).toList()
     });
 
-    await Firestore.instance.collection('Celula').document(idUsuario)
+    await Firestore.instance
+        .collection('Celula')
+        .document(idUsuario)
         .updateData({'conviteRealizado': null});
-
   }
-
 }

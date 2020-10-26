@@ -27,7 +27,7 @@ class _ReportRegistrationCellState extends State<ReportRegistrationCell> {
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;
-  List<MembrosCelula> _listMembersFiltered = [];
+  List<MembroCelula> _listMembersFiltered = [];
 
   Celula celula;
 
