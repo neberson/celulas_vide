@@ -13,17 +13,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class ReportRegistrationCell extends StatefulWidget {
+class RelatorioCadastroCelulaLider extends StatefulWidget {
 
   DateTime dateStart;
   DateTime dateEnd;
-  ReportRegistrationCell({this.dateStart, this.dateEnd});
+
+  RelatorioCadastroCelulaLider({this.dateStart, this.dateEnd});
 
   @override
-  _ReportRegistrationCellState createState() => _ReportRegistrationCellState();
+  _RelatorioCadastroCelulaLiderState createState() => _RelatorioCadastroCelulaLiderState();
 }
 
-class _ReportRegistrationCellState extends State<ReportRegistrationCell> {
+class _RelatorioCadastroCelulaLiderState extends State<RelatorioCadastroCelulaLider> {
+
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;

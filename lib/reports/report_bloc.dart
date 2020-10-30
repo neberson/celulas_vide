@@ -14,6 +14,21 @@ class ReportBloc {
     return Celula.fromMap(doc.data);
   }
 
+  Future<List<Celula>> getCelulasByDiscipulador() async {
+    var currentUser = await getCurrentUserFirebase();
+
+    var docMembros = await Firestore.instance
+        .collection('Celula')
+        .where('Usuario.encargo', isEqualTo: 'Lider')
+        .where('conviteRealizado.idUsuario', isEqualTo: currentUser.uid)
+        .getDocuments();
+
+    List<Celula> celulas = [];
+    celulas = docMembros.documents.map((e) => Celula.fromMap(e.data)).toList();
+
+    return celulas;
+  }
+
   Future<FrequenciaModel> getFrequencia() async {
 
     var currentUser = await getCurrentUserFirebase();

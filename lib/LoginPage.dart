@@ -1,4 +1,5 @@
 import 'package:celulas_vide/Controller/loginUsuario.dart';
+import 'package:celulas_vide/Discipulador/HomeDiscipulador.dart';
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Tela_Cadastrar.dart';
 import 'package:celulas_vide/repository/services.dart';
@@ -48,6 +49,9 @@ class _LoginPageState extends State<LoginPage>
       switch (celula.usuario.encargo) {
         case 'Lider':
           page = HomeLider();
+          break;
+        case 'Discipulador':
+          page = HomeDiscipulador();
           break;
       }
 
@@ -306,16 +310,18 @@ class _LoginPageState extends State<LoginPage>
   }
 
   _loadingSplash() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-            margin: EdgeInsets.only(top: 32),
-            child: Image.asset("images/logo-01.png")),
-        Container(
-            margin: EdgeInsets.only(bottom: 64),
-            child: CircularProgressIndicator())
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.only(top: 32),
+              child: Image.asset("images/logo-01.png")),
+          Container(
+              margin: EdgeInsets.only(bottom: 64),
+              child: CircularProgressIndicator())
+        ],
+      ),
     );
   }
 }

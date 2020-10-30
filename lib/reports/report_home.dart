@@ -1,18 +1,15 @@
+import 'package:celulas_vide/reports/relatorio_cadastro_celula_discipulador.dart';
 import 'package:celulas_vide/reports/report_frequence.dart';
 import 'package:celulas_vide/reports/report_nominal.dart';
 import 'package:celulas_vide/reports/report_offers.dart';
-import 'package:celulas_vide/reports/report_registration_cell.dart';
+import 'package:celulas_vide/reports/relatorio_cadastro_celula_lider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class ReportHome extends StatefulWidget {
-
-  static const reportHomeRoute = '/extractArguments';
-
-  final int typeMember;
-
-  ReportHome({this.typeMember});
+  final String encargo;
+  ReportHome({this.encargo});
 
   @override
   _ReportHomeState createState() => _ReportHomeState();
@@ -26,13 +23,7 @@ class _ReportHomeState extends State<ReportHome> {
 
   final _formKey = GlobalKey<FormState>();
 
-  int typeMember;
-
-  @override
-  void initState() {
-    final args = ModalRoute.of(context).settings.arguments;
-    super.initState();
-  }
+  String get encargo => widget.encargo;
 
   @override
   Widget build(BuildContext context) {
@@ -195,9 +186,9 @@ class _ReportHomeState extends State<ReportHome> {
           context,
           MaterialPageRoute(
               builder: (context) => ReportFrequence(
-                dateStart: _dateStart,
-                dateEnd: _dateEnd,
-              )));
+                    dateStart: _dateStart,
+                    dateEnd: _dateEnd,
+                  )));
       _cDateStart.clear();
       _cDateEnd.clear();
     }
@@ -210,13 +201,30 @@ class _ReportHomeState extends State<ReportHome> {
     _cDateEnd.clear();
 
     if (result != null) {
-      Navigator.push(
+
+      if(encargo == 'Lider'){
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ReportRegistrationCell(
-                    dateStart: _dateStart,
-                    dateEnd: _dateEnd,
-                  )));
+            builder: (context) => RelatorioCadastroCelulaLider(
+              dateStart: _dateStart,
+              dateEnd: _dateEnd,
+            ),
+          ),
+        );
+      }
+      else if(encargo == 'Discipulador'){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RelatorioCadastroCelulaDiscipulador(
+              dateStart: _dateStart,
+              dateEnd: _dateEnd,
+            ),
+          ),
+        );
+      }
+
       _cDateStart.clear();
       _cDateEnd.clear();
     }

@@ -1,5 +1,7 @@
 
+import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Model/CategoriaMenu.dart';
+import 'package:celulas_vide/reports/report_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +20,8 @@ class HomeLider extends StatefulWidget {
 
 class _HomeLiderState extends State<HomeLider> {
 
+  final _loginUsuario = LoginUsuario();
+
   final List<Categoria> categoriasLider = [
     Categoria("Perfil do Lider", "/PerfilLider", icone: FontAwesomeIcons.user),
     Categoria("Dados da Célula", "/DadosCelula",
@@ -30,7 +34,6 @@ class _HomeLiderState extends State<HomeLider> {
     Categoria("Números da célula", "/ReportsHome",
         icone: FontAwesomeIcons.calculator),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,19 @@ class _HomeLiderState extends State<HomeLider> {
             ],
           ),
           elevation: 0,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: _escolhaMenuItem,
+              itemBuilder: (context){
+                return [
+                  PopupMenuItem<String>(
+                    value: 'Sair',
+                    child: Text('Sair'),
+                  )
+                ];
+              },
+            )
+          ],
         ),
         body: OrientationBuilder(
           builder: (context, orientation) {
@@ -110,11 +126,16 @@ class _HomeLiderState extends State<HomeLider> {
     );
   }
 
-  Widget _buildCategoriaItem(Categoria categoria) {
+  _escolhaMenuItem(String item) async {
+    _loginUsuario.logoff();
+    Navigator.pushReplacementNamed(context, '/');
+  }
+
+  _buildCategoriaItem(Categoria categoria) {
     return MaterialButton(
       elevation: 1.0,
       highlightElevation: 1.0,
-      onPressed: () => Navigator.pushNamed(context, categoria.rota),
+      onPressed: () => _onClickCategoria(categoria),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -134,4 +155,14 @@ class _HomeLiderState extends State<HomeLider> {
       ),
     );
   }
+
+  _onClickCategoria(Categoria categoria){
+
+    if(categoria.rota == '/ReportsHome')
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportHome(encargo: 'Lider',)));
+    else
+      Navigator.pushNamed(context, categoria.rota);
+
+  }
+
 }

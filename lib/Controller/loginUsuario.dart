@@ -70,11 +70,6 @@ class LoginUsuario {
     return _authValidation;
   }
 
-  logoff({BuildContext context}){
-    auth.signOut();
-    Navigator.pushNamed(context, '/Login');
-  }
-
-
+  Future logoff() async => await auth.signOut();
 
 }

@@ -41,7 +41,6 @@ void main()  {
         initialRoute: '/',
         routes: {
           '/': (context) => LoginPage(),
-          '/HomeLider': (context) => HomeLider(),
           '/PerfilLider': (context) => PerfilLider(),
           '/ListaMembros': (context) => ListaMembros(),
           '/DadosMembro':(context) => DadosMembro(),
