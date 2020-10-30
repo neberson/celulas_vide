@@ -7,6 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class ReportHome extends StatefulWidget {
+
+  static const reportHomeRoute = '/extractArguments';
+
+  final int typeMember;
+
+  ReportHome({this.typeMember});
+
   @override
   _ReportHomeState createState() => _ReportHomeState();
 }
@@ -18,6 +25,14 @@ class _ReportHomeState extends State<ReportHome> {
   var _cDateEnd = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  int typeMember;
+
+  @override
+  void initState() {
+    final args = ModalRoute.of(context).settings.arguments;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

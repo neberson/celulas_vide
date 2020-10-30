@@ -10,9 +10,7 @@ import 'package:celulas_vide/Lider/ListaMembros.dart';
 import 'package:celulas_vide/Lider/PerfilLider.dart';
 import 'package:celulas_vide/Lider/TabMembros.dart';
 import 'package:celulas_vide/Lider/frequenciaMembros.dart';
-import 'package:celulas_vide/Tela_login.dart';
-import 'package:celulas_vide/reports/report_home.dart';
-import 'package:celulas_vide/splashScreen.dart';
+import 'package:celulas_vide/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -42,8 +40,7 @@ void main()  {
         ],
         initialRoute: '/',
         routes: {
-          '/': (context) => splash(),
-          '/Login': (context) => Tela_login(),
+          '/': (context) => LoginPage(),
           '/HomeLider': (context) => HomeLider(),
           '/PerfilLider': (context) => PerfilLider(),
           '/ListaMembros': (context) => ListaMembros(),
@@ -51,7 +48,6 @@ void main()  {
           '/DadosCelula': (context) => DadosCelula(),
           '/frequenciaMembros': (context) => frequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
-          '/ReportsHome': (context) => ReportHome(),
           '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
           '/ConvitesDiscipulador': (context) => ConvitesDiscipulador(),

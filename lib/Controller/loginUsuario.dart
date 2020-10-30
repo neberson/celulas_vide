@@ -1,22 +1,16 @@
-import 'package:celulas_vide/Lider/HomeLider.dart';
+
 import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/repository/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class loginUsuario {
+
+class LoginUsuario {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
 
-  Future verificarConexao(BuildContext context) async {
-    FirebaseUser usuarioAtual = await auth.currentUser();
-
-    if(usuarioAtual != null){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeLider()));
-    }else {
-      print("deslogado");
-    }
-  }
+  Future getCurrentUser() async => await auth.currentUser();
 
   Future<bool> usuarioLogado(BuildContext context) async {
     FirebaseUser usuarioAtual = await auth.currentUser();
@@ -26,6 +20,15 @@ class loginUsuario {
     }else {
       return false;
     }
+  }
+
+  Future<Celula> getCelula() async {
+    var currentUser = await getCurrentUserFirebase();
+
+    var doc = await
+    Firestore.instance.collection('Celula').document(currentUser.uid).get();
+
+    return Celula.fromMap(doc.data);
   }
 
  Future<String> logarUsuario(Usuario user, BuildContext context)  async {
