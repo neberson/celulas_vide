@@ -14,96 +14,85 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class RelatorioCadastroCelulaDiscipulador extends StatefulWidget {
-
   DateTime dateStart;
   DateTime dateEnd;
 
   RelatorioCadastroCelulaDiscipulador({this.dateStart, this.dateEnd});
 
   @override
-  _RelatorioCadastroCelulaDiscipuladorState createState() => _RelatorioCadastroCelulaDiscipuladorState();
+  _RelatorioCadastroCelulaDiscipuladorState createState() =>
+      _RelatorioCadastroCelulaDiscipuladorState();
 }
 
-class _RelatorioCadastroCelulaDiscipuladorState extends State<RelatorioCadastroCelulaDiscipulador> {
-
+class _RelatorioCadastroCelulaDiscipuladorState
+    extends State<RelatorioCadastroCelulaDiscipulador> {
   final reportBloc = ReportBloc();
   bool isLoading = true;
   var error;
-  List<MembroCelula> _listMembersFiltered = [];
+  bool haveDate = true;
 
   List<Celula> listaCelulas = [];
 
-  int totalFA = 0;
-  int totalMb = 0;
-  int totalEncontroComDeus = 0;
-  int totalCursoMaturidade = 0;
-  int totalCtl = 0;
-  int totalSeminario = 0;
-  int totalConsolidado = 0;
-  int totalDizimistas = 0;
-  int totalDesativados = 0;
-  int totalLiderTreinamento = 0;
-  int totalAnteriores = 0;
-  double porcentagemCrescimento = 0;
+  List<double> listaPorcentagemAnterior = [];
+
+  var styleTitle = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
 
   @override
   void initState() {
     reportBloc.getCelulasByDiscipulador().then((celulas) {
-       listaCelulas = List.from(celulas);
+      listaCelulas = List.from(celulas);
       _filterDates();
       setState(() => isLoading = false);
-    }).catchError((onError) {
-      print('error getting frequencia membros: ${onError.toString()}');
-      setState(() {
-        error =
-            'Não foi possível obter a frequencia dos membros, tente novamente.';
-        isLoading = false;
-      });
     });
+
+    //     .catchError((onError) {
+    //   print('error getting frequencia membros: ${onError.toString()}');
+    //   setState(() {
+    //     error =
+    //         'Não foi possível obter a frequencia dos membros, tente novamente.';
+    //     isLoading = false;
+    //   });
+    // });
 
     super.initState();
   }
 
   _filterDates() {
-
     listaCelulas.forEach((cel) {
-      cel.membros.forEach((element) {
-        if (element.dataCadastro.isAfter(widget.dateStart) &&
-            element.dataCadastro.isBefore(widget.dateEnd)) {
-          _listMembersFiltered.add(element);
+      for (int i = 0; i < cel.membros.length; i++) {
+        if (cel.membros[i].dataCadastro.isAfter(widget.dateStart) &&
+            cel.membros[i].dataCadastro.isBefore(widget.dateEnd)) {
+          haveDate = true;
 
-          if (element.condicaoMembro == 'Frenquentador Assiduo')
-            totalFA++;
-          else if (element.condicaoMembro == 'Membro Batizado')
-            totalMb++;
+          if (cel.membros[i].condicaoMembro == 'Frenquentador Assiduo')
+            cel.modeloRelatorioCadastro.totalFA++;
+          else if (cel.membros[i].condicaoMembro == 'Membro Batizado')
+            cel.modeloRelatorioCadastro.totalMb++;
           else
-            totalLiderTreinamento++;
+            cel.modeloRelatorioCadastro.totalLiderTreinamento++;
 
-          if (element.encontroMembro) totalEncontroComDeus++;
+          if (cel.membros[i].encontroMembro)
+            cel.modeloRelatorioCadastro.totalEncontroComDeus++;
 
-          if (element.cursaoMembro) totalCursoMaturidade++;
+          if (cel.membros[i].cursaoMembro)
+            cel.modeloRelatorioCadastro.totalCursoMaturidade++;
 
-          if (element.ctlMembro) totalCtl++;
+          if (cel.membros[i].ctlMembro) cel.modeloRelatorioCadastro.totalCtl++;
 
-          if (element.seminarioMembro) totalSeminario++;
+          if (cel.membros[i].seminarioMembro)
+            cel.modeloRelatorioCadastro.totalSeminario++;
 
-          if (element.consolidadoMembro) totalConsolidado++;
+          if (cel.membros[i].consolidadoMembro)
+            cel.modeloRelatorioCadastro.totalConsolidado++;
 
-          if (element.dizimistaMembro) totalDizimistas++;
+          if (cel.membros[i].dizimistaMembro)
+            cel.modeloRelatorioCadastro.totalDizimistas++;
 
-          if (element.status == 1) totalDesativados++;
+          if (cel.membros[i].status == 1)
+            cel.modeloRelatorioCadastro.totalDesativados++;
         }
-
-        if (element.dataCadastro.isBefore(widget.dateStart)) totalAnteriores++;
-      });
-
-      if(totalAnteriores != 0) {
-        var aux = _listMembersFiltered.length - totalAnteriores;
-        var aux2 = aux / totalAnteriores;
-        porcentagemCrescimento = aux2 * 100;
       }
     });
-
   }
 
   @override
@@ -121,13 +110,39 @@ class _RelatorioCadastroCelulaDiscipuladorState extends State<RelatorioCadastroC
     );
   }
 
-  _table() {
-    if (_listMembersFiltered.isEmpty)
-      return emptyState(
-          context, 'Nenhum membro encontrado com esse status', Icons.person);
+  fetchColumns() {
+    List<DataColumn> columns = [];
 
-    var styleTitle =
-        TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
+    var firstColumn = DataColumn(
+      label: Text(
+        'NOME DA CÉLULA',
+        style: styleTitle,
+      ),
+    );
+
+    columns.add(firstColumn);
+
+    listaCelulas.forEach((element) {
+      var dataColumn = DataColumn(
+        label: Text(
+          element.dadosCelula.nomeCelula,
+          style: styleTitle,
+        ),
+      );
+
+      columns.add(dataColumn);
+    });
+
+    // columns.add(DataColumn(label: Text('')));
+    // columns.add(DataColumn(label: Text('')));
+
+    return columns;
+  }
+
+  _table() {
+    if (!haveDate)
+      return emptyState(
+          context, 'Nenhum membro encontrado com essa data', Icons.person);
 
     return SingleChildScrollView(
       child: Column(
@@ -145,60 +160,10 @@ class _RelatorioCadastroCelulaDiscipuladorState extends State<RelatorioCadastroC
             margin: EdgeInsets.only(left: 8, right: 8, top: 16),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: DataTable(columns: [
-                DataColumn(
-                  label: Text(
-                    'DESCRIÇÃO',
-                    style: styleTitle,
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'QUANTIDADE',
-                    style: styleTitle,
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'PERCENTUAL',
-                    style: styleTitle,
-                  ),
-                ),
-              ], rows: [
-                _dataRow('Total de Membros',
-                    _listMembersFiltered.length.toString(), '100%'),
-                _dataRow('Frequentadores Assíduos',
-                    totalFA.toString(), _calcPercent(totalFA)),
-                _dataRow('Batizados', totalMb.toString(),
-                    _calcPercent(totalMb)),
-                _dataRow(
-                    'Passaram pelo\nEncontro com Deus',
-                    totalEncontroComDeus.toString(),
-                    _calcPercent(totalEncontroComDeus)),
-                _dataRow(
-                    'Total com Curso de\nMaturidade no Espírito Concluído',
-                    totalCursoMaturidade.toString(),
-                    _calcPercent(totalCursoMaturidade)),
-                _dataRow('Total com\nCTL Concluído', totalCtl.toString(),
-                    _calcPercent(totalCtl)),
-                _dataRow('Total com Seminário\nConcluído',
-                    totalSeminario.toString(), _calcPercent(totalSeminario)),
-                _dataRow('Consolidados', totalConsolidado.toString(),
-                    _calcPercent(totalConsolidado)),
-                _dataRow('Dizimistas', totalDizimistas.toString(),
-                    _calcPercent(totalDizimistas)),
-                _dataRow('Desativados', totalDesativados.toString(),
-                    _calcPercent(totalDesativados)),
-                _dataRow(
-                    'Líderes em\nTreinamento',
-                    totalLiderTreinamento.toString(),
-                    _calcPercent(totalLiderTreinamento)),
-                _dataRow('Total de Membros (MB+FA)\ndos meses anteriores',
-                    totalAnteriores.toString(), _calcPercent(totalAnteriores)),
-                _dataRow(
-                    'Crescimento em Relação\nao período anterior',
-                    totalAnteriores == 0 ? '0' : (_listMembersFiltered.length - totalAnteriores).toString(),
-                    '${porcentagemCrescimento.toStringAsFixed(2).replaceAll('.', ',')}%'),
+              child: DataTable(columns: fetchColumns(), rows: [
+                _dataRowLider('NOME DO LÍDER'),
+                _dataRowDescricao(),
+                _dataRow('Total (MB+FA)')
               ]),
             ),
           ),
@@ -209,196 +174,258 @@ class _RelatorioCadastroCelulaDiscipuladorState extends State<RelatorioCadastroC
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    color: Colors.pink,
-                    child: Text(
-                      "Gerar PDF",
-                      style: TextStyle(color: Colors.white70, fontSize: 20),
-                    ),
-                    onPressed: () => _onClickGenerate(_listMembersFiltered)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                  color: Colors.pink,
+                  child: Text(
+                    "Gerar PDF",
+                    style: TextStyle(color: Colors.white70, fontSize: 20),
+                  ),
+                  onPressed: null,
+                ),
               )),
         ],
       ),
     );
   }
 
-  String _calcPercent(int value) =>
-      '${((100 / _listMembersFiltered.length) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
+  // String _calcPercent(int value) =>
+  //     '${((100 / _listMembersFiltered.length) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
 
-  _dataRow(String title, String quant, String percent) {
+  _dataRow(String title) {
+    List<DataCell> cells = [];
+
+    var firstCell = DataCell(Text(
+      title,
+      style: styleTitle,
+    ));
+
+    cells.add(firstCell);
+
+    listaCelulas.forEach((element) {
+      var dataCell = DataCell(Center(
+          child: Text(
+        (element.modeloRelatorioCadastro.totalMb +
+                element.modeloRelatorioCadastro.totalFA)
+            .toString(),
+      )));
+      cells.add(dataCell);
+    });
+
+    // cells.add(DataCell(Center(child: Text(''))));
+    // cells.add(DataCell(Center(child: Text(''))));
+
+    return DataRow(cells: cells);
+  }
+
+  _dataRowLider(String title) {
+    List<DataCell> cells = [];
+
+    var firstCell = DataCell(Text(
+      title,
+      style: styleTitle,
+    ));
+
+    cells.add(firstCell);
+
+    listaCelulas.forEach((element) {
+      var dataCell = DataCell(Center(
+          child: Text(
+        element.usuario.nome,
+        style: styleTitle,
+      )));
+      cells.add(dataCell);
+    });
+
+    // cells.add(DataCell(Center(child: Text(''))));
+    // cells.add(DataCell(Center(child: Text(''))));
+
     return DataRow(
-      cells: [
-        DataCell(
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ),
-        DataCell(
-          Text(quant),
-        ),
-        DataCell(
-          Text(percent),
-        ),
-      ],
+      cells: cells,
+    );
+  }
+
+  _dataRowDescricao() {
+    List<DataCell> cells = [];
+
+    var firstCell = DataCell(Text(
+      'DESCRIÇÃO',
+      style: styleTitle,
+    ));
+
+    cells.add(firstCell);
+
+    listaCelulas.forEach((element) {
+      var dataCell = DataCell(Center(
+          child: Text(
+        'QUANTIDADE',
+        style: styleTitle,
+      )));
+      cells.add(dataCell);
+    });
+
+    // cells.add(DataCell(Center(child: Text('TOTAL', style: styleTitle,))));
+    // cells.add(DataCell(Center(child: Text('PERCENTUAL', style: styleTitle,))));
+
+    return DataRow(
+      cells: cells,
     );
   }
 
   _onClickGenerate(listRows) async {
-    final pdf = pw.Document();
-
-    const tableHeaders = ['Descrição', 'Quantidade', 'Percentual'];
-
-    var dataTable = [
-      ['Total de Membros', _listMembersFiltered.length.toString(), '100%'],
-      [
-        'Frequentadores Assíduos',
-        totalFA.toString(),
-        _calcPercent(totalFA)
-      ],
-      ['Batizados', totalMb.toString(), _calcPercent(totalMb)],
-      [
-        'Passaram pelo Encontro com Deus',
-        totalEncontroComDeus.toString(),
-        _calcPercent(totalEncontroComDeus)
-      ],
-      [
-        'Total com Curso de Maturidade no Espírito Concluído',
-        totalCursoMaturidade.toString(),
-        _calcPercent(totalCursoMaturidade)
-      ],
-      ['Total com CTL Concluído', totalCtl.toString(), _calcPercent(totalCtl)],
-      [
-        'Total com Seminário Concluído',
-        totalSeminario.toString(),
-        _calcPercent(totalSeminario)
-      ],
-      [
-        'Consolidados',
-        totalConsolidado.toString(),
-        _calcPercent(totalConsolidado)
-      ],
-      [
-        'Dizimistas',
-        totalDizimistas.toString(),
-        _calcPercent(totalDizimistas)
-      ],
-      [
-        'Desativados',
-        totalDesativados.toString(),
-        _calcPercent(totalDesativados)
-      ],
-      [
-        'Líderes em Treinamento',
-        totalLiderTreinamento.toString(),
-        _calcPercent(totalLiderTreinamento)
-      ],
-      [
-        'Total de Membros (MB+FA) dos meses anteriores',
-        totalAnteriores.toString(),
-        _calcPercent(totalAnteriores)
-      ],
-      [
-        'Crescimento em Relação ao período anterior',
-        (_listMembersFiltered.length - totalAnteriores).toString(),
-        '${porcentagemCrescimento.toStringAsFixed(2).replaceAll('.', ',')}%'
-      ]
-    ];
-
-    pdf.addPage(pw.MultiPage(
-      pageFormat:
-          PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      header: (pw.Context context) {
-        if (context.pageNumber == 1) {
-          return null;
-        }
-        return pw.Container(
-          alignment: pw.Alignment.centerRight,
-          margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-          padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-          decoration: const pw.BoxDecoration(
-              border: pw.BoxBorder(
-                  bottom: true, width: 0.5, color: PdfColors.grey)),
-          child: pw.Text(
-            'Relatório Cadastro de Célula',
-            style: pw.Theme.of(context)
-                .defaultTextStyle
-                .copyWith(color: PdfColors.grey),
-          ),
-        );
-      },
-      footer: (pw.Context context) {
-        return pw.Container(
-          alignment: pw.Alignment.centerRight,
-          margin: const pw.EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
-          child: pw.Text(
-            'Página ${context.pageNumber} de ${context.pagesCount}',
-            style: pw.Theme.of(context)
-                .defaultTextStyle
-                .copyWith(color: PdfColors.grey),
-          ),
-        );
-      },
-      build: (pw.Context context) => <pw.Widget>[
-        pw.Header(
-            level: 0,
-            child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: <pw.Widget>[
-                  pw.Text('Relatório Cadastro de Célula', textScaleFactor: 2),
-                  pw.PdfLogo()
-                ])),
-        pw.Header(
-            level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
-        pw.Padding(padding: const pw.EdgeInsets.all(10)),
-        pw.Text('Nome Célula: ${celula.dadosCelula.nomeCelula}'),
-        pw.Text(
-            'Endereço: ${celula.dadosCelula.logradouro}, ${celula.dadosCelula.bairro}, ${celula.dadosCelula.cidade}'),
-        pw.Text('Líder: ${celula.usuario.nome}'),
-        pw.Text('Discipulador: ${celula.usuario.discipulador}'),
-        pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
-        pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
-        pw.Text('Igreja: ${celula.usuario.igreja}'),
-        pw.SizedBox(height: 10),
-        pw.Table.fromTextArray(
-          headers: tableHeaders,
-          context: context,
-          border: null,
-          data: dataTable,
-          cellAlignments: {
-            1: pw.Alignment.center,
-            2: pw.Alignment.center,
-          },
-          headerAlignment: pw.Alignment.centerLeft,
-          headerStyle: pw.TextStyle(
-            color: PdfColors.white,
-            fontWeight: pw.FontWeight.bold,
-          ),
-          headerDecoration: pw.BoxDecoration(
-            color: PdfColors.cyan,
-          ),
-          rowDecoration: pw.BoxDecoration(
-            border: pw.BoxBorder(
-              bottom: true,
-              color: PdfColors.cyan,
-              width: .5,
-            ),
-          ),
-        ),
-      ],
-    ));
-
-    final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/relatorio_cadastro_celula.pdf';
-    final File file = File(path);
-    await file.writeAsBytes(pdf.save());
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PdfViewerPage(path: path),
-      ),
-    );
+    // final pdf = pw.Document();
+    //
+    // const tableHeaders = ['Descrição', 'Quantidade', 'Percentual'];
+    //
+    // var dataTable = [
+    //   ['Total de Membros', _listMembersFiltered.length.toString(), '100%'],
+    //   [
+    //     'Frequentadores Assíduos',
+    //     totalFA.toString(),
+    //     _calcPercent(totalFA)
+    //   ],
+    //   ['Batizados', totalMb.toString(), _calcPercent(totalMb)],
+    //   [
+    //     'Passaram pelo Encontro com Deus',
+    //     totalEncontroComDeus.toString(),
+    //     _calcPercent(totalEncontroComDeus)
+    //   ],
+    //   [
+    //     'Total com Curso de Maturidade no Espírito Concluído',
+    //     totalCursoMaturidade.toString(),
+    //     _calcPercent(totalCursoMaturidade)
+    //   ],
+    //   ['Total com CTL Concluído', totalCtl.toString(), _calcPercent(totalCtl)],
+    //   [
+    //     'Total com Seminário Concluído',
+    //     totalSeminario.toString(),
+    //     _calcPercent(totalSeminario)
+    //   ],
+    //   [
+    //     'Consolidados',
+    //     totalConsolidado.toString(),
+    //     _calcPercent(totalConsolidado)
+    //   ],
+    //   [
+    //     'Dizimistas',
+    //     totalDizimistas.toString(),
+    //     _calcPercent(totalDizimistas)
+    //   ],
+    //   [
+    //     'Desativados',
+    //     totalDesativados.toString(),
+    //     _calcPercent(totalDesativados)
+    //   ],
+    //   [
+    //     'Líderes em Treinamento',
+    //     totalLiderTreinamento.toString(),
+    //     _calcPercent(totalLiderTreinamento)
+    //   ],
+    //   [
+    //     'Total de Membros (MB+FA) dos meses anteriores',
+    //     totalAnteriores.toString(),
+    //     _calcPercent(totalAnteriores)
+    //   ],
+    //   [
+    //     'Crescimento em Relação ao período anterior',
+    //     (_listMembersFiltered.length - totalAnteriores).toString(),
+    //     '${porcentagemCrescimento.toStringAsFixed(2).replaceAll('.', ',')}%'
+    //   ]
+    // ];
+    //
+    // pdf.addPage(pw.MultiPage(
+    //   pageFormat:
+    //       PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+    //   crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //   header: (pw.Context context) {
+    //     if (context.pageNumber == 1) {
+    //       return null;
+    //     }
+    //     return pw.Container(
+    //       alignment: pw.Alignment.centerRight,
+    //       margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+    //       padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+    //       decoration: const pw.BoxDecoration(
+    //           border: pw.BoxBorder(
+    //               bottom: true, width: 0.5, color: PdfColors.grey)),
+    //       child: pw.Text(
+    //         'Relatório Cadastro de Célula',
+    //         style: pw.Theme.of(context)
+    //             .defaultTextStyle
+    //             .copyWith(color: PdfColors.grey),
+    //       ),
+    //     );
+    //   },
+    //   footer: (pw.Context context) {
+    //     return pw.Container(
+    //       alignment: pw.Alignment.centerRight,
+    //       margin: const pw.EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
+    //       child: pw.Text(
+    //         'Página ${context.pageNumber} de ${context.pagesCount}',
+    //         style: pw.Theme.of(context)
+    //             .defaultTextStyle
+    //             .copyWith(color: PdfColors.grey),
+    //       ),
+    //     );
+    //   },
+    //   build: (pw.Context context) => <pw.Widget>[
+    //     pw.Header(
+    //         level: 0,
+    //         child: pw.Row(
+    //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //             children: <pw.Widget>[
+    //               pw.Text('Relatório Cadastro de Célula', textScaleFactor: 2),
+    //               pw.PdfLogo()
+    //             ])),
+    //     pw.Header(
+    //         level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
+    //     pw.Padding(padding: const pw.EdgeInsets.all(10)),
+    //     pw.Text('Nome Célula: ${celula.dadosCelula.nomeCelula}'),
+    //     pw.Text(
+    //         'Endereço: ${celula.dadosCelula.logradouro}, ${celula.dadosCelula.bairro}, ${celula.dadosCelula.cidade}'),
+    //     pw.Text('Líder: ${celula.usuario.nome}'),
+    //     pw.Text('Discipulador: ${celula.usuario.discipulador}'),
+    //     pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
+    //     pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
+    //     pw.Text('Igreja: ${celula.usuario.igreja}'),
+    //     pw.SizedBox(height: 10),
+    //     pw.Table.fromTextArray(
+    //       headers: tableHeaders,
+    //       context: context,
+    //       border: null,
+    //       data: dataTable,
+    //       cellAlignments: {
+    //         1: pw.Alignment.center,
+    //         2: pw.Alignment.center,
+    //       },
+    //       headerAlignment: pw.Alignment.centerLeft,
+    //       headerStyle: pw.TextStyle(
+    //         color: PdfColors.white,
+    //         fontWeight: pw.FontWeight.bold,
+    //       ),
+    //       headerDecoration: pw.BoxDecoration(
+    //         color: PdfColors.cyan,
+    //       ),
+    //       rowDecoration: pw.BoxDecoration(
+    //         border: pw.BoxBorder(
+    //           bottom: true,
+    //           color: PdfColors.cyan,
+    //           width: .5,
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // ));
+    //
+    // final String dir = (await getApplicationDocumentsDirectory()).path;
+    // final String path = '$dir/relatorio_cadastro_celula.pdf';
+    // final File file = File(path);
+    // await file.writeAsBytes(pdf.save());
+    //
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (_) => PdfViewerPage(path: path),
+    //   ),
+    // );
   }
 }

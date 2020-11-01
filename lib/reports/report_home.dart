@@ -203,6 +203,7 @@ class _ReportHomeState extends State<ReportHome> {
     if (result != null) {
 
       if(encargo == 'Lider'){
+        print('cargo lider');
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -214,6 +215,7 @@ class _ReportHomeState extends State<ReportHome> {
         );
       }
       else if(encargo == 'Discipulador'){
+        print('cargo discipulador');
         Navigator.push(
           context,
           MaterialPageRoute(

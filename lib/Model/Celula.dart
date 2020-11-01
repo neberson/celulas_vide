@@ -1,44 +1,55 @@
-
 import 'package:celulas_vide/stores/list_membro_store.dart';
 import 'package:celulas_vide/stores/membro_store.dart';
 import 'package:intl/intl.dart';
 
-class Celula{
-
+class Celula {
   Usuario usuario;
   List<MembroCelula> membros;
   DadosCelulaBEAN dadosCelula;
   List<CelulaMonitorada> celulasMonitoradas;
   List<Convite> convitesRecebidos;
   Convite conviteRealizado;
+  ModeloRelatorioCadastro modeloRelatorioCadastro;
 
-  Celula({this.usuario, this.membros, this.dadosCelula, this.celulasMonitoradas, this.convitesRecebidos, this.conviteRealizado});
+  Celula(
+      {this.usuario,
+      this.membros,
+      this.dadosCelula,
+      this.celulasMonitoradas,
+      this.convitesRecebidos,
+      this.conviteRealizado,
+      this.modeloRelatorioCadastro});
 
-  Celula.fromMap(map){
+  Celula.fromMap(map) {
     this.usuario = Usuario.fromMap(map['Usuario']);
     membros = List<MembroCelula>();
 
-    if(map.containsKey('Membros'))
-      map['Membros'].forEach((element) => membros.add(MembroCelula.fromMap(element)));
+    if (map.containsKey('Membros'))
+      map['Membros']
+          .forEach((element) => membros.add(MembroCelula.fromMap(element)));
 
-    if(map.containsKey('DadosCelula'))
+    if (map.containsKey('DadosCelula'))
       this.dadosCelula = DadosCelulaBEAN.fromMap(map['DadosCelula']);
 
     celulasMonitoradas = [];
-    if(map.containsKey('celulasMonitoradas'))
-      map['celulasMonitoradas'].forEach((element) => celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
+    if (map.containsKey('celulasMonitoradas'))
+      map['celulasMonitoradas'].forEach((element) =>
+          celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
 
     convitesRecebidos = [];
-    if(map.containsKey('convitesRecebidos'))
-      map['convitesRecebidos'].forEach((element) => convitesRecebidos.add(Convite.fromMap(element)));
+    if (map.containsKey('convitesRecebidos'))
+      map['convitesRecebidos'].forEach(
+          (element) => convitesRecebidos.add(Convite.fromMap(element)));
 
-    if(map.containsKey('conviteRealizado') && map['conviteRealizado'] != null)
+    if (map.containsKey('conviteRealizado') && map['conviteRealizado'] != null)
       this.conviteRealizado = Convite.fromMap(map['conviteRealizado']);
+
+    modeloRelatorioCadastro = ModeloRelatorioCadastro();
 
   }
 }
 
-class DadosCelulaBEAN{
+class DadosCelulaBEAN {
   String nomeCelula;
   String anfitriao;
   String tipoCelula;
@@ -57,12 +68,12 @@ class DadosCelulaBEAN{
 
   DadosCelulaBEAN();
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      "DadosCelula":{
+      "DadosCelula": {
         "nomeCelula": this.nomeCelula,
         "nomeAnfitriao": this.anfitriao,
-        "tipoCelula":this.tipoCelula,
+        "tipoCelula": this.tipoCelula,
         "diaCelula": this.diaCelula,
         "horarioCelula": this.horarioCelula,
         "dataInicioCelula": this.dataCelula,
@@ -81,7 +92,7 @@ class DadosCelulaBEAN{
     return map;
   }
 
-  DadosCelulaBEAN.fromMap(map){
+  DadosCelulaBEAN.fromMap(map) {
     this.nomeCelula = map['nomeCelula'];
     this.anfitriao = map['nomeAnfitriao'];
     this.tipoCelula = map['tipoCelula'];
@@ -98,7 +109,6 @@ class DadosCelulaBEAN{
     this.cidade = map['cidade'];
     this.estado = map['estado'];
   }
-
 }
 
 class MembroCelula {
@@ -140,10 +150,12 @@ class MembroCelula {
     return map;
   }
 
-  MembroCelula.fromMap(map){
+  MembroCelula.fromMap(map) {
     this.nomeMembro = map['nomeMembro'];
     this.generoMembro = map['generoMembro'];
-    this.dataNascimentoMembro = map['dataNascimentoMembro'] != null ? map['dataNascimentoMembro'].toDate() : null;
+    this.dataNascimentoMembro = map['dataNascimentoMembro'] != null
+        ? map['dataNascimentoMembro'].toDate()
+        : null;
     this.telefoneMembro = map['telefoneMembro'];
     this.enderecoMembro = map['enderecoMembro'];
     this.condicaoMembro = map['condicaoMembro'];
@@ -194,11 +206,12 @@ class MembroCelula {
       case 3:
         return telefoneMembro;
       case 4:
-        return dataNascimentoMembro != null ? DateFormat('dd/MM/yyyy').format(dataNascimentoMembro) : '';
+        return dataNascimentoMembro != null
+            ? DateFormat('dd/MM/yyyy').format(dataNascimentoMembro)
+            : '';
     }
     return '';
   }
-
 }
 
 class Usuario {
@@ -247,7 +260,7 @@ class Usuario {
     return map;
   }
 
-  Usuario.fromMap(map){
+  Usuario.fromMap(map) {
     this.idUsuario = map['idUsuario'];
     this.nome = map['nome'];
     this.email = map['email'];
@@ -258,18 +271,16 @@ class Usuario {
     this.pastorIgreja = map['pastorIgreja'] ?? '';
     this.igreja = map['igreja'] ?? '';
   }
-
 }
 
-class CelulaMonitorada{
-
+class CelulaMonitorada {
   String idCelula;
   String nomeLider;
   DateTime createdAt;
 
   CelulaMonitorada({this.idCelula, this.nomeLider, this.createdAt});
 
-  CelulaMonitorada.fromMap(map){
+  CelulaMonitorada.fromMap(map) {
     this.idCelula = map['idCelula'];
     this.nomeLider = map['nomeLider'];
     this.createdAt = map['createdAt'].toDate();
@@ -284,25 +295,29 @@ class CelulaMonitorada{
 
     return data;
   }
-
 }
 
-class Convite{
-
+class Convite {
   String idUsuario;
   String nomeIntegrante;
   int status;
   DateTime createdAt;
   DateTime updatedAt;
 
-  Convite({this.idUsuario, this.nomeIntegrante, this.status, this.createdAt, this.updatedAt});
+  Convite(
+      {this.idUsuario,
+      this.nomeIntegrante,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
-  Convite.fromMap(map){
+  Convite.fromMap(map) {
     this.idUsuario = map['idUsuario'];
     this.nomeIntegrante = map['nomeIntegrante'];
     this.status = map['status'];
     this.createdAt = map['createdAt'].toDate();
-    this.updatedAt = map['updatedAt'] != null ? map['updatedAt'].toDate() : null;
+    this.updatedAt =
+        map['updatedAt'] != null ? map['updatedAt'].toDate() : null;
   }
 
   Map<String, dynamic> toMap() {
@@ -316,6 +331,35 @@ class Convite{
 
     return data;
   }
-
 }
 
+class ModeloRelatorioCadastro {
+  String nomeCelula;
+  int totalFA;
+  int totalMb;
+  int totalEncontroComDeus;
+  int totalCursoMaturidade;
+  int totalCtl;
+  int totalSeminario;
+  int totalConsolidado;
+  int totalDizimistas;
+  int totalDesativados;
+  int totalLiderTreinamento;
+  int totalAnteriores;
+  double porcentagemCrescimento;
+
+  ModeloRelatorioCadastro(
+      {this.nomeCelula,
+      this.totalFA = 0,
+      this.totalMb = 0,
+      this.totalEncontroComDeus = 0,
+      this.totalCursoMaturidade = 0,
+      this.totalCtl = 0,
+      this.totalSeminario = 0,
+      this.totalConsolidado = 0,
+      this.totalDizimistas = 0,
+      this.totalDesativados = 0,
+      this.totalLiderTreinamento = 0,
+      this.totalAnteriores = 0,
+      this.porcentagemCrescimento = 0});
+}

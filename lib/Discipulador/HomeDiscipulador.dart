@@ -147,7 +147,7 @@ class _HomeDiscipuladorState extends State<HomeDiscipulador> {
   _onClickCategoria(Categoria categoria){
 
     if(categoria.rota == '/ReportsHome')
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportHome(encargo: 'Lider',)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportHome(encargo: 'Discipulador',)));
     else
       Navigator.pushNamed(context, categoria.rota);
 
