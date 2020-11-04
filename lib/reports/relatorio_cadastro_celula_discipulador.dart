@@ -60,8 +60,13 @@ class _RelatorioCadastroCelulaDiscipuladorState
   _filterDates() {
     listaCelulas.forEach((cel) {
       for (int i = 0; i < cel.membros.length; i++) {
-        if (cel.membros[i].dataCadastro.isAfter(widget.dateStart) &&
-            cel.membros[i].dataCadastro.isBefore(widget.dateEnd)) {
+
+        DateTime dateRegister = DateTime(cel.membros[i].dataCadastro.year, cel.membros[i].dataCadastro.month, cel.membros[i].dataCadastro.day);
+
+        if (dateRegister.isAfter(widget.dateStart) && (dateRegister.isBefore(widget.dateEnd) || dateRegister.isAtSameMomentAs(widget.dateEnd) )) {
+
+          print('passou: ${cel.usuario.nome}');
+
           haveDate = true;
 
           if (cel.membros[i].condicaoMembro == 'Frenquentador Assiduo')
@@ -156,14 +161,25 @@ class _RelatorioCadastroCelulaDiscipuladorState
             ),
           ),
           Container(
-            color: Theme.of(context).accentColor.withAlpha(80),
+            color: Theme.of(context).accentColor.withAlpha(60),
             margin: EdgeInsets.only(left: 8, right: 8, top: 16),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(columns: fetchColumns(), rows: [
                 _dataRowLider('NOME DO LÍDER'),
                 _dataRowDescricao(),
-                _dataRow('Total (MB+FA)')
+                _dataRow('Total (MB+FA)', 0),
+                _dataRow('Total (FA)', 1),
+                _dataRow('Total (MB)', 2),
+                _dataRow('Passaram pelo\nEncontro com Deus', 3),
+                _dataRow(
+                    'Total com Curso de\nMaturidade no Espírito Concluído', 4),
+                _dataRow('Total com\nCTL Concluído', 5),
+                _dataRow('Total com Seminário\nConcluído', 6),
+                _dataRow('Consolidados', 7),
+                _dataRow('Dizimistas', 8),
+                _dataRow('Desativados', 9),
+                _dataRow('Líderes em\nTreinamento', 10),
               ]),
             ),
           ),
@@ -192,7 +208,51 @@ class _RelatorioCadastroCelulaDiscipuladorState
   // String _calcPercent(int value) =>
   //     '${((100 / _listMembersFiltered.length) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
 
-  _dataRow(String title) {
+  fetchRows() {
+    List<String> headerRows = [
+      'Total (MB+FA)',
+      'Total (FA)',
+      'Total (MB)',
+      'Passaram pelo\nEncontro com Deus',
+      'Total com Curso de\nMaturidade no Espírito Concluído',
+      'Total com\nCTL Concluído',
+      'Total com Seminário\nConcluído',
+      'Consolidados',
+      'Dizimistas',
+      'Desativados',
+      'Líderes em\nTreinamento'
+    ];
+
+    List<DataRow> dataRows = [];
+
+    for (int i = 0; i < headerRows.length; i++) {
+      List<DataCell> cells = [];
+
+      var firstCell = DataCell(Text(
+        headerRows[0],
+        style: styleTitle,
+      ));
+
+      cells.add(firstCell);
+
+      listaCelulas.forEach((element) {
+        var dataCell = DataCell(
+          Center(
+            child: Text(
+              element.modeloRelatorioCadastro.getIndex(i).toString(),
+            ),
+          ),
+        );
+        cells.add(dataCell);
+      });
+
+      dataRows.add(DataRow(cells: cells));
+    }
+
+    return dataRows;
+  }
+
+  _dataRow(String title, int index) {
     List<DataCell> cells = [];
 
     var firstCell = DataCell(Text(
@@ -203,12 +263,13 @@ class _RelatorioCadastroCelulaDiscipuladorState
     cells.add(firstCell);
 
     listaCelulas.forEach((element) {
-      var dataCell = DataCell(Center(
+      var dataCell = DataCell(
+        Center(
           child: Text(
-        (element.modeloRelatorioCadastro.totalMb +
-                element.modeloRelatorioCadastro.totalFA)
-            .toString(),
-      )));
+            element.modeloRelatorioCadastro.getIndex(index).toString(),
+          ),
+        ),
+      );
       cells.add(dataCell);
     });
 

@@ -362,4 +362,33 @@ class ModeloRelatorioCadastro {
       this.totalLiderTreinamento = 0,
       this.totalAnteriores = 0,
       this.porcentagemCrescimento = 0});
+
+  getIndex(int index) {
+    switch (index) {
+      case 0:
+        return totalMb+totalFA;
+      case 1:
+        return totalFA;
+      case 2:
+        return totalMb;
+      case 3:
+        return totalEncontroComDeus;
+      case 4:
+        return totalCursoMaturidade;
+      case 5:
+        return totalCtl;
+      case 6:
+        return totalSeminario;
+      case 7:
+        return totalConsolidado;
+      case 8:
+        return totalDizimistas;
+      case 9:
+        return totalDesativados;
+      case 10:
+        return totalLiderTreinamento;
+    }
+    return '';
+  }
+
 }
