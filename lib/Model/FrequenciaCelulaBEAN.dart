@@ -1,7 +1,7 @@
 
 class Frequencia {
 
-    String dataFrequencia;
+    DateTime dataFrequencia;
     List<Map> membrosFrequencia;
     double ofertaFrequencia;
     int quantidadeVisitantes;

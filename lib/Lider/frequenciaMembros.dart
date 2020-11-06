@@ -3,11 +3,13 @@ import 'package:celulas_vide/Model/FrequenciaCelulaBEAN.dart';
 import 'package:celulas_vide/Model/frequenciaDAO.dart';
 import 'package:celulas_vide/stores/list_membro_store.dart';
 import 'package:celulas_vide/stores/membro_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class frequenciaMembros extends StatefulWidget {
   @override
@@ -21,8 +23,8 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   int _indexListaFrequenciaCulto = -1;
   int presentCelula = 0;
   int presentCulto = 0;
-  var _dataCelula = new MaskedTextController(mask: '00/00/0000');
-  var _dataCulto = new MaskedTextController(mask: '00/00/0000');
+  var _dataCelula = new TextEditingController();
+  var _dataCulto = new TextEditingController();
   var _quantidadeVisitantes = new MaskedTextController(mask: '000');
   var _valorOferta = new MoneyMaskedTextController(
       leftSymbol: "Oferta: R\$ ",
@@ -41,6 +43,9 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   ListMembroStore _membrosStore = new ListMembroStore();
   ListMembroStore _membrosStoreCulto = new ListMembroStore();
   MembroCelula _membrosCelulaMap = new MembroCelula();
+
+  DateTime _dataCelulaSelecionada;
+  DateTime _dataCultoSelecionada;
 
   _recuperarListaMembros() async {
     setState(() {
@@ -163,7 +168,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     _frequenciasCelula = _frequenciasCelula;
     setState(() {
       _indexListaFrequencia = -1;
-      _dataCelula.text = "";
       _valorOferta.updateValue(0.0);
       _quantidadeVisitantes.text = "";
       for(MembroStore membro in _membrosStore.membrosList){
@@ -177,7 +181,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     _frequenciasCulto = _frequenciasCulto;
     setState(() {
       _indexListaFrequenciaCulto = -1;
-      _dataCulto.text = "";
     });
     for(MembroStore membro in _membrosStoreCulto.membrosList){
       membro.setFrequenciaMembro(false);
@@ -188,6 +191,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   @override
   void initState() {
     super.initState();
+
+    _dataCelula.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    _dataCulto.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
     _recuperarListaMembros();
     _recuperarListaFrequencia();
   }
@@ -276,8 +283,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                               child: TextField(
                                 keyboardType: TextInputType.number,
                                 controller: _dataCelula,
+                                readOnly: true,
+                                onTap: () => showDialogDate(0),
                                 decoration: InputDecoration(
-                                    hintText: "Data da Célula",
+                                  hintText: "Data da Célula",
                                     hintStyle: TextStyle(color: Colors.black26),
                                     filled: true,
                                     fillColor: Colors.white,
@@ -418,7 +427,9 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                               });
 
                                               _frequenciaCelula.dataFrequencia =
-                                                  _dataCelula.text;
+                                                  _dataCelulaSelecionada;
+
+
                                               _frequenciaCelula
                                                       .membrosFrequencia =
                                                   new List<Map>();
@@ -591,8 +602,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                               setState(() {
                                                 _circularProgressButton = 1;
                                               });
-                                              _frequenciaCulto.dataFrequencia =
-                                                  _dataCulto.text;
+
+                                              _frequenciaCulto.dataFrequencia = _dataCultoSelecionada;
+
+
                                               _frequenciaCulto
                                                   .membrosFrequencia =
                                               new List<Map>();
@@ -671,6 +684,38 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                 ],
               ),
       ),
+    );
+  }
+
+  showDialogDate(int type){
+
+    var initialDate = DateTime.now();
+
+    return showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return Container(
+            height: 245,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              use24hFormat: true,
+              maximumDate: initialDate,
+              initialDateTime: initialDate,
+              onDateTimeChanged: (DateTime date){
+
+                if(type == 0){
+                  _dataCelulaSelecionada = date;
+                  _dataCelula.text = DateFormat('dd/MM/yyyy').format(date);
+                }
+                else{
+                  _dataCultoSelecionada = date;
+                  _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
+                }
+
+              },
+            ),
+          );
+        }
     );
   }
 
