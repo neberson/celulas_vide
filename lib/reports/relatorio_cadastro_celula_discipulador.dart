@@ -30,11 +30,10 @@ class _RelatorioCadastroCelulaDiscipuladorState
   bool isLoading = true;
   var error;
   bool haveDate = true;
+  double totalMembros = 0;
+  int countMemberInDate = 0;
 
   List<Celula> listaCelulas = [];
-
-  List<double> listaPorcentagemAnterior = [];
-
   var styleTitle = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
 
   @override
@@ -59,15 +58,15 @@ class _RelatorioCadastroCelulaDiscipuladorState
 
   _filterDates() {
     listaCelulas.forEach((cel) {
+
       for (int i = 0; i < cel.membros.length; i++) {
 
         DateTime dateRegister = DateTime(cel.membros[i].dataCadastro.year, cel.membros[i].dataCadastro.month, cel.membros[i].dataCadastro.day);
 
         if (dateRegister.isAfter(widget.dateStart) && (dateRegister.isBefore(widget.dateEnd) || dateRegister.isAtSameMomentAs(widget.dateEnd) )) {
 
-          print('passou: ${cel.usuario.nome}');
-
           haveDate = true;
+          countMemberInDate++;
 
           if (cel.membros[i].condicaoMembro == 'Frenquentador Assiduo')
             cel.modeloRelatorioCadastro.totalFA++;
@@ -96,7 +95,17 @@ class _RelatorioCadastroCelulaDiscipuladorState
           if (cel.membros[i].status == 1)
             cel.modeloRelatorioCadastro.totalDesativados++;
         }
+
+        if (cel.membros[i].dataCadastro.isBefore(widget.dateStart)) cel.modeloRelatorioCadastro.totalAnteriores++;
+
+        if(cel.modeloRelatorioCadastro.totalAnteriores != 0) {
+          var aux = countMemberInDate - cel.modeloRelatorioCadastro.totalAnteriores;
+          var aux2 = aux / cel.modeloRelatorioCadastro.totalAnteriores;
+          cel.modeloRelatorioCadastro.porcentagemCrescimento = aux2 * 100;
+        }
+
       }
+
     });
   }
 
@@ -138,8 +147,8 @@ class _RelatorioCadastroCelulaDiscipuladorState
       columns.add(dataColumn);
     });
 
-    // columns.add(DataColumn(label: Text('')));
-    // columns.add(DataColumn(label: Text('')));
+    columns.add(DataColumn(label: Text('')));
+    columns.add(DataColumn(label: Text('')));
 
     return columns;
   }
@@ -173,13 +182,15 @@ class _RelatorioCadastroCelulaDiscipuladorState
                 _dataRow('Total (MB)', 2),
                 _dataRow('Passaram pelo\nEncontro com Deus', 3),
                 _dataRow(
-                    'Total com Curso de\nMaturidade no Espírito Concluído', 4),
+                    'Total com Curso de\nMaturidade no\nEspírito Concluído', 4),
                 _dataRow('Total com\nCTL Concluído', 5),
                 _dataRow('Total com Seminário\nConcluído', 6),
                 _dataRow('Consolidados', 7),
                 _dataRow('Dizimistas', 8),
                 _dataRow('Desativados', 9),
                 _dataRow('Líderes em\nTreinamento', 10),
+                _dataRow('Total (MB+FA)\nPeríodo anterior', 11),
+                _dataRow('Crescimento em relação\nao período anterior', 12),
               ]),
             ),
           ),
@@ -205,53 +216,6 @@ class _RelatorioCadastroCelulaDiscipuladorState
     );
   }
 
-  // String _calcPercent(int value) =>
-  //     '${((100 / _listMembersFiltered.length) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
-
-  fetchRows() {
-    List<String> headerRows = [
-      'Total (MB+FA)',
-      'Total (FA)',
-      'Total (MB)',
-      'Passaram pelo\nEncontro com Deus',
-      'Total com Curso de\nMaturidade no Espírito Concluído',
-      'Total com\nCTL Concluído',
-      'Total com Seminário\nConcluído',
-      'Consolidados',
-      'Dizimistas',
-      'Desativados',
-      'Líderes em\nTreinamento'
-    ];
-
-    List<DataRow> dataRows = [];
-
-    for (int i = 0; i < headerRows.length; i++) {
-      List<DataCell> cells = [];
-
-      var firstCell = DataCell(Text(
-        headerRows[0],
-        style: styleTitle,
-      ));
-
-      cells.add(firstCell);
-
-      listaCelulas.forEach((element) {
-        var dataCell = DataCell(
-          Center(
-            child: Text(
-              element.modeloRelatorioCadastro.getIndex(i).toString(),
-            ),
-          ),
-        );
-        cells.add(dataCell);
-      });
-
-      dataRows.add(DataRow(cells: cells));
-    }
-
-    return dataRows;
-  }
-
   _dataRow(String title, int index) {
     List<DataCell> cells = [];
 
@@ -262,6 +226,8 @@ class _RelatorioCadastroCelulaDiscipuladorState
 
     cells.add(firstCell);
 
+    double totalItem = 0;
+
     listaCelulas.forEach((element) {
       var dataCell = DataCell(
         Center(
@@ -271,13 +237,20 @@ class _RelatorioCadastroCelulaDiscipuladorState
         ),
       );
       cells.add(dataCell);
+      totalItem += element.modeloRelatorioCadastro.getIndex(index);
     });
 
-    // cells.add(DataCell(Center(child: Text(''))));
-    // cells.add(DataCell(Center(child: Text(''))));
+    cells.add(DataCell(Center(child: Text(totalItem.toString()))));
+    cells.add(DataCell(Center(child: Text(index == 0 ? '100%' : _calcPercent(totalItem)))));
+
+    if(index == 0)
+      totalMembros = totalItem;
 
     return DataRow(cells: cells);
   }
+
+  String _calcPercent(double value) =>
+      '${((100 / totalMembros) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
 
   _dataRowLider(String title) {
     List<DataCell> cells = [];
@@ -298,8 +271,8 @@ class _RelatorioCadastroCelulaDiscipuladorState
       cells.add(dataCell);
     });
 
-    // cells.add(DataCell(Center(child: Text(''))));
-    // cells.add(DataCell(Center(child: Text(''))));
+    cells.add(DataCell(Center(child: Text(''))));
+    cells.add(DataCell(Center(child: Text(''))));
 
     return DataRow(
       cells: cells,
@@ -325,8 +298,8 @@ class _RelatorioCadastroCelulaDiscipuladorState
       cells.add(dataCell);
     });
 
-    // cells.add(DataCell(Center(child: Text('TOTAL', style: styleTitle,))));
-    // cells.add(DataCell(Center(child: Text('PERCENTUAL', style: styleTitle,))));
+    cells.add(DataCell(Center(child: Text('TOTAL', style: styleTitle,))));
+    cells.add(DataCell(Center(child: Text('PERCENTUAL', style: styleTitle,))));
 
     return DataRow(
       cells: cells,

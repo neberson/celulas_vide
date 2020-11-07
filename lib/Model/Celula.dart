@@ -387,6 +387,10 @@ class ModeloRelatorioCadastro {
         return totalDesativados;
       case 10:
         return totalLiderTreinamento;
+      case 11:
+        return totalAnteriores;
+      case 12:
+        return porcentagemCrescimento;
     }
     return '';
   }
