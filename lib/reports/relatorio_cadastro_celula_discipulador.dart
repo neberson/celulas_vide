@@ -249,7 +249,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
     return DataRow(cells: cells);
   }
 
-  String _calcPercent(double value) =>
+  String _calcPercent(value) =>
       '${((100 / totalMembros) * value).toStringAsFixed(2).replaceAll('.', ',')}%';
 
   _dataRowLider(String title) {
@@ -333,28 +333,122 @@ class _RelatorioCadastroCelulaDiscipuladorState
     final pdf = pw.Document();
 
     const tableHeaders = [
+      'Nome da Célula',
+      'Nome do Líder',
       'Total (MB+FA)',
       'Total (FA)',
       'Total (MB)',
-      'Passaram Encontro com Deus',
-      'Total Mat. Espírito Santo',
+      'Encontro com Deus',
+      'Mat. Espírito Santo',
       'Total CTL',
       'Total Sem. Concluído',
       'Consolidados',
       'Dizimistas',
+      'Desativados',
       'Líderes em Treinamento',
-      'Total (MB+FA) Per. Ant.',
-      'Crescimento Per. Ant.'
+      'Total (MB+FA) Per. Anterior',
+      'Crescimento Per. Anterior',
     ];
 
-    var dataTable = [
-      ['Total de Membros     ', 'teste', '100%      '],
+    List<List<String>> dataTable = [];
+
+    int totalMbFa = 0;
+    int totalFa = 0;
+    int totalMb = 0;
+    int totalEncontroComDeus = 0;
+    int totalCursoMaturidade = 0;
+    int totalCtl = 0;
+    int totalSeminario = 0;
+    int totalConsolidado = 0;
+    int totalDizimistas = 0;
+    int totalDesativados = 0;
+    int totalLiderTreinamento = 0;
+    int totalAnteriores = 0;
+    double porcentagemCrescimento = 0;
+
+    listaCelulas.forEach((element) {
+      List<String> row = [
+        element.dadosCelula.nomeCelula,
+        element.usuario.nome,
+        (element.modeloRelatorioCadastro.totalFA +
+                element.modeloRelatorioCadastro.totalMb)
+            .toString(),
+        element.modeloRelatorioCadastro.totalFA.toString(),
+        element.modeloRelatorioCadastro.totalMb.toString(),
+        element.modeloRelatorioCadastro.totalEncontroComDeus.toString(),
+        element.modeloRelatorioCadastro.totalCursoMaturidade.toString(),
+        element.modeloRelatorioCadastro.totalCtl.toString(),
+        element.modeloRelatorioCadastro.totalSeminario.toString(),
+        element.modeloRelatorioCadastro.totalConsolidado.toString(),
+        element.modeloRelatorioCadastro.totalDizimistas.toString(),
+        element.modeloRelatorioCadastro.totalDesativados.toString(),
+        element.modeloRelatorioCadastro.totalLiderTreinamento.toString(),
+        element.modeloRelatorioCadastro.totalAnteriores.toString(),
+        element.modeloRelatorioCadastro.porcentagemCrescimento.toString()
+      ];
+      dataTable.add(row);
+
+      //create list total
+      totalMbFa += element.modeloRelatorioCadastro.totalFA+element.modeloRelatorioCadastro.totalMb;
+      totalFa += element.modeloRelatorioCadastro.totalFA;
+      totalMb += element.modeloRelatorioCadastro.totalMb;
+      totalEncontroComDeus += element.modeloRelatorioCadastro.totalEncontroComDeus;
+      totalCursoMaturidade += element.modeloRelatorioCadastro.totalCursoMaturidade;
+      totalCtl += element.modeloRelatorioCadastro.totalCtl;
+      totalSeminario += element.modeloRelatorioCadastro.totalSeminario;
+      totalConsolidado += element.modeloRelatorioCadastro.totalConsolidado;
+      totalDizimistas += element.modeloRelatorioCadastro.totalDizimistas;
+      totalDesativados += element.modeloRelatorioCadastro.totalDesativados;
+      totalLiderTreinamento += element.modeloRelatorioCadastro.totalLiderTreinamento;
+      totalAnteriores  += element.modeloRelatorioCadastro.totalAnteriores;
+      porcentagemCrescimento  += element.modeloRelatorioCadastro.porcentagemCrescimento;
+
+    });
+
+     List<String> rowTotal = [
+       '',
+       'TOTAL',
+       totalMbFa.toString(),
+       totalFa.toString(),
+       totalMb.toString(),
+       totalEncontroComDeus.toString(),
+       totalCursoMaturidade.toString(),
+       totalCtl.toString(),
+       totalSeminario.toString(),
+       totalConsolidado.toString(),
+       totalDizimistas.toString(),
+       totalDesativados.toString(),
+       totalLiderTreinamento.toString(),
+       totalAnteriores.toString(),
+       porcentagemCrescimento.toString()
+     ];
+
+    dataTable.add(rowTotal);
+
+    List<String> rowPorcentagem = [
+      '',
+      'PERCENTUAL',
+      _calcPercent(totalMbFa),
+      _calcPercent(totalFa),
+      _calcPercent(totalMb),
+      _calcPercent(totalEncontroComDeus),
+      _calcPercent(totalCursoMaturidade),
+      _calcPercent(totalCtl),
+      _calcPercent(totalSeminario),
+      _calcPercent(totalConsolidado),
+      _calcPercent(totalDizimistas),
+      _calcPercent(totalDesativados),
+      _calcPercent(totalLiderTreinamento),
+      _calcPercent(totalAnteriores),
+      _calcPercent(porcentagemCrescimento)
     ];
+
+    dataTable.add(rowPorcentagem);
 
     pdf.addPage(pw.MultiPage(
       pageFormat: PdfPageFormat.a3,
-      //   orientation: pw.PageOrientation.landscape,
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      orientation: pw.PageOrientation.landscape,
+      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
       header: (pw.Context context) {
         if (context.pageNumber == 1) {
           return null;
@@ -364,8 +458,9 @@ class _RelatorioCadastroCelulaDiscipuladorState
           //   margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
           //  padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
           decoration: const pw.BoxDecoration(
-              border: pw.BoxBorder(
-                  bottom: true, width: 0.5, color: PdfColors.grey)),
+            border:
+                pw.BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey),
+          ),
           child: pw.Text(
             'Relatório Cadastro de Célula',
             style: pw.Theme.of(context)
@@ -388,14 +483,15 @@ class _RelatorioCadastroCelulaDiscipuladorState
       },
       build: (pw.Context context) => <pw.Widget>[
         pw.Header(
-            child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: <pw.Widget>[
-              pw.Text(
-                'Relatório Cadastro de Célula',
-              ),
-              pw.PdfLogo()
-            ])),
+          child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: <pw.Widget>[
+                pw.Text(
+                  'Relatório Cadastro de Célula',
+                ),
+                pw.PdfLogo()
+              ]),
+        ),
         pw.Header(
             level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
         //  pw.Padding(padding: const pw.EdgeInsets.all(10)),
@@ -405,20 +501,15 @@ class _RelatorioCadastroCelulaDiscipuladorState
         // pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
         // pw.Text('Igreja: ${celula.usuario.igreja}'),
         pw.SizedBox(height: 10),
+        pw.Table(),
         pw.Table.fromTextArray(
           headers: tableHeaders,
           context: context,
           border: null,
           data: dataTable,
-          cellAlignments: {
-            1: pw.Alignment.center,
-            2: pw.Alignment.center,
-          },
-          headerAlignment: pw.Alignment.centerLeft,
-          headerStyle: pw.TextStyle(
-            color: PdfColors.white,
-            fontWeight: pw.FontWeight.bold,
-          ),
+          cellAlignment: pw.Alignment.center,
+          headerAlignment: pw.Alignment.center,
+          headerStyle: pw.TextStyle(color: PdfColors.white, fontSize: 9),
           headerDecoration: pw.BoxDecoration(
             color: PdfColors.cyan,
           ),
@@ -426,7 +517,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
             border: pw.BoxBorder(
               bottom: true,
               color: PdfColors.cyan,
-              width: .5,
+              //  width: .5,
             ),
           ),
         ),
@@ -440,7 +531,10 @@ class _RelatorioCadastroCelulaDiscipuladorState
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PdfViewerPage(path: path),
+        builder: (_) => PdfViewerPage(
+          path: path,
+          isLandscape: true,
+        ),
       ),
     );
   }
