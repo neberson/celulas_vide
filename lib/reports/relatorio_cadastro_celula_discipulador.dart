@@ -8,6 +8,7 @@ import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -33,6 +34,10 @@ class _RelatorioCadastroCelulaDiscipuladorState
   double totalMembros = 0;
   int countMemberInDate = 0;
 
+  bool loadingGenerate = false;
+
+  Celula celula;
+
   List<Celula> listaCelulas = [];
   var styleTitle = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
 
@@ -41,17 +46,20 @@ class _RelatorioCadastroCelulaDiscipuladorState
     reportBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
       _filterDates();
-      setState(() => isLoading = false);
-    });
 
-    //     .catchError((onError) {
-    //   print('error getting frequencia membros: ${onError.toString()}');
-    //   setState(() {
-    //     error =
-    //         'Não foi possível obter a frequencia dos membros, tente novamente.';
-    //     isLoading = false;
-    //   });
-    // });
+      reportBloc.getCelula().then((value) {
+        celula = value;
+
+        setState(() => isLoading = false);
+      });
+    }).catchError((onError) {
+      print('error getting frequencia membros: ${onError.toString()}');
+      setState(() {
+        error =
+            'Não foi possível obter a frequencia dos membros, tente novamente.';
+        isLoading = false;
+      });
+    });
 
     super.initState();
   }
@@ -204,10 +212,20 @@ class _RelatorioCadastroCelulaDiscipuladorState
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(40))),
                   color: Colors.pink,
-                  child: Text(
-                    "Gerar PDF",
-                    style: TextStyle(color: Colors.white70, fontSize: 20),
-                  ),
+                  child: loadingGenerate
+                      ? SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white70),
+                            strokeWidth: 3.0,
+                          ),
+                        )
+                      : Text(
+                          "Gerar PDF",
+                          style: TextStyle(color: Colors.white70, fontSize: 20),
+                        ),
                   onPressed: _onClickGenerate,
                 ),
               )),
@@ -330,6 +348,10 @@ class _RelatorioCadastroCelulaDiscipuladorState
   }
 
   _onClickGenerate() async {
+    setState(() {
+      loadingGenerate = true;
+    });
+
     final pdf = pw.Document();
 
     const tableHeaders = [
@@ -339,7 +361,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
       'Total (FA)',
       'Total (MB)',
       'Encontro com Deus',
-      'Mat. Espírito Santo',
+      'Curso Mat. no Espírito',
       'Total CTL',
       'Total Sem. Concluído',
       'Consolidados',
@@ -389,39 +411,43 @@ class _RelatorioCadastroCelulaDiscipuladorState
       dataTable.add(row);
 
       //create list total
-      totalMbFa += element.modeloRelatorioCadastro.totalFA+element.modeloRelatorioCadastro.totalMb;
+      totalMbFa += element.modeloRelatorioCadastro.totalFA +
+          element.modeloRelatorioCadastro.totalMb;
       totalFa += element.modeloRelatorioCadastro.totalFA;
       totalMb += element.modeloRelatorioCadastro.totalMb;
-      totalEncontroComDeus += element.modeloRelatorioCadastro.totalEncontroComDeus;
-      totalCursoMaturidade += element.modeloRelatorioCadastro.totalCursoMaturidade;
+      totalEncontroComDeus +=
+          element.modeloRelatorioCadastro.totalEncontroComDeus;
+      totalCursoMaturidade +=
+          element.modeloRelatorioCadastro.totalCursoMaturidade;
       totalCtl += element.modeloRelatorioCadastro.totalCtl;
       totalSeminario += element.modeloRelatorioCadastro.totalSeminario;
       totalConsolidado += element.modeloRelatorioCadastro.totalConsolidado;
       totalDizimistas += element.modeloRelatorioCadastro.totalDizimistas;
       totalDesativados += element.modeloRelatorioCadastro.totalDesativados;
-      totalLiderTreinamento += element.modeloRelatorioCadastro.totalLiderTreinamento;
-      totalAnteriores  += element.modeloRelatorioCadastro.totalAnteriores;
-      porcentagemCrescimento  += element.modeloRelatorioCadastro.porcentagemCrescimento;
-
+      totalLiderTreinamento +=
+          element.modeloRelatorioCadastro.totalLiderTreinamento;
+      totalAnteriores += element.modeloRelatorioCadastro.totalAnteriores;
+      porcentagemCrescimento +=
+          element.modeloRelatorioCadastro.porcentagemCrescimento;
     });
 
-     List<String> rowTotal = [
-       '',
-       'TOTAL',
-       totalMbFa.toString(),
-       totalFa.toString(),
-       totalMb.toString(),
-       totalEncontroComDeus.toString(),
-       totalCursoMaturidade.toString(),
-       totalCtl.toString(),
-       totalSeminario.toString(),
-       totalConsolidado.toString(),
-       totalDizimistas.toString(),
-       totalDesativados.toString(),
-       totalLiderTreinamento.toString(),
-       totalAnteriores.toString(),
-       porcentagemCrescimento.toString()
-     ];
+    List<String> rowTotal = [
+      '',
+      'TOTAL',
+      totalMbFa.toString(),
+      totalFa.toString(),
+      totalMb.toString(),
+      totalEncontroComDeus.toString(),
+      totalCursoMaturidade.toString(),
+      totalCtl.toString(),
+      totalSeminario.toString(),
+      totalConsolidado.toString(),
+      totalDizimistas.toString(),
+      totalDesativados.toString(),
+      totalLiderTreinamento.toString(),
+      totalAnteriores.toString(),
+      porcentagemCrescimento.toString()
+    ];
 
     dataTable.add(rowTotal);
 
@@ -444,6 +470,11 @@ class _RelatorioCadastroCelulaDiscipuladorState
     ];
 
     dataTable.add(rowPorcentagem);
+
+    final PdfImage logoImage = PdfImage.file(
+      pdf.document,
+      bytes: (await rootBundle.load('images/logo-01.png')).buffer.asUint8List(),
+    );
 
     pdf.addPage(pw.MultiPage(
       pageFormat: PdfPageFormat.a3,
@@ -489,19 +520,18 @@ class _RelatorioCadastroCelulaDiscipuladorState
                 pw.Text(
                   'Relatório Cadastro de Célula',
                 ),
-                pw.PdfLogo()
+                pw.Container(
+                    height: 100, width: 100, child: pw.Image(logoImage))
               ]),
         ),
         pw.Header(
             level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
-        //  pw.Padding(padding: const pw.EdgeInsets.all(10)),
-        // pw.Text('Nome Célula: ${celula.dadosCelula.nomeCelula}'),
-        // pw.Text('Discipulador: ${celula.usuario.discipulador}'),
-        // pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
-        // pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
-        // pw.Text('Igreja: ${celula.usuario.igreja}'),
-        pw.SizedBox(height: 10),
-        pw.Table(),
+        pw.Padding(padding: const pw.EdgeInsets.all(10)),
+        pw.Text('Discipulador: ${celula.usuario.nome}'),
+        pw.Text('Pastor Rede: ${celula.usuario.pastorRede}'),
+        pw.Text('Pastor Igreja: ${celula.usuario.pastorIgreja}'),
+        pw.Text('Igreja: ${celula.usuario.igreja}'),
+        pw.SizedBox(height: 15),
         pw.Table.fromTextArray(
           headers: tableHeaders,
           context: context,
@@ -528,6 +558,10 @@ class _RelatorioCadastroCelulaDiscipuladorState
     final String path = '$dir/relatorio_cadastro_celula.pdf';
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
+
+    setState(() {
+      loadingGenerate = true;
+    });
 
     Navigator.of(context).push(
       MaterialPageRoute(
