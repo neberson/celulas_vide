@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ReportOffers extends StatefulWidget {
-  final title;
+
   DateTime dateStart;
   DateTime dateEnd;
-  ReportOffers({this.title, this.dateStart, this.dateEnd});
+  ReportOffers({this.dateStart, this.dateEnd});
 
   @override
   _ReportOffersState createState() => _ReportOffersState();
@@ -76,7 +76,7 @@ class _ReportOffersState extends State<ReportOffers> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
-        title: Text(widget.title),
+        title: Text('Ofertas da Célula'),
       ),
       body: isLoading
           ? loading()

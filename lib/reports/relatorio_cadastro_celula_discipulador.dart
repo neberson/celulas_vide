@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:celulas_vide/Model/Celula.dart';
@@ -18,7 +19,7 @@ class RelatorioCadastroCelulaDiscipulador extends StatefulWidget {
   DateTime dateStart;
   DateTime dateEnd;
 
-  RelatorioCadastroCelulaDiscipulador({this.dateStart, this.dateEnd});
+  RelatorioCadastroCelulaDiscipulador(this.dateStart, this.dateEnd);
 
   @override
   _RelatorioCadastroCelulaDiscipuladorState createState() =>
@@ -34,7 +35,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
   double totalMembros = 0;
   int countMemberInDate = 0;
 
-  bool loadingGenerate = false;
+  StreamController<bool> _stGenerate = StreamController<bool>.broadcast();
 
   Celula celula;
 
@@ -203,32 +204,38 @@ class _RelatorioCadastroCelulaDiscipuladorState
             ),
           ),
           Padding(
-              padding:
-                  EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
-              child: SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(40))),
-                  color: Colors.pink,
-                  child: loadingGenerate
-                      ? SizedBox(
-                          height: 18,
-                          width: 18,
-                          child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white70),
-                            strokeWidth: 3.0,
-                          ),
-                        )
-                      : Text(
-                          "Gerar PDF",
-                          style: TextStyle(color: Colors.white70, fontSize: 20),
-                        ),
-                  onPressed: _onClickGenerate,
-                ),
-              )),
+            padding: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 20),
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _stGenerate.stream,
+                  builder: (context, snapshot) {
+                    return RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(40))),
+                      color: Colors.pink,
+                      child: snapshot.data
+                          ? SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white70),
+                                strokeWidth: 3.0,
+                              ),
+                            )
+                          : Text(
+                              "Gerar PDF",
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 20),
+                            ),
+                      onPressed: _onClickGenerate,
+                    );
+                  }),
+            ),
+          ),
         ],
       ),
     );
@@ -348,9 +355,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
   }
 
   _onClickGenerate() async {
-    setState(() {
-      loadingGenerate = true;
-    });
+    _stGenerate.add(true);
 
     final pdf = pw.Document();
 
@@ -559,9 +564,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
 
-    setState(() {
-      loadingGenerate = true;
-    });
+    _stGenerate.add(false);
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -571,5 +574,11 @@ class _RelatorioCadastroCelulaDiscipuladorState
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _stGenerate.close();
+    super.dispose();
   }
 }
