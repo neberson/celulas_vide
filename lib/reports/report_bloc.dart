@@ -40,4 +40,13 @@ class ReportBloc {
 
   }
 
+  Future<FrequenciaModel> getFrequenciaByCelula(String idCelula) async {
+
+    var doc = await Firestore.instance.collection('frequencia')
+        .document(idCelula).get();
+
+    return FrequenciaModel.fromMap(doc.data);
+
+  }
+
 }

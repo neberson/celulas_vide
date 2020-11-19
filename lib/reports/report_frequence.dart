@@ -16,7 +16,8 @@ import 'package:pdf/widgets.dart' as pw;
 class ReportFrequence extends StatefulWidget {
   DateTime dateStart;
   DateTime dateEnd;
-  ReportFrequence({this.dateStart, this.dateEnd});
+  Celula celulaDiscipulador;
+  ReportFrequence({this.dateStart, this.dateEnd, this.celulaDiscipulador});
 
   @override
   _ReportFrequenceState createState() => _ReportFrequenceState();
@@ -56,39 +57,74 @@ class _ReportFrequenceState extends State<ReportFrequence> {
 
   @override
   void initState() {
-    reportBloc.getCelula().then((celula) {
-      this.celula = celula;
 
-      reportBloc.getFrequencia().then((frequencia) {
-        frequenciaModel = frequencia;
-        _filterDataCelula();
-        _filterDataCulto();
+    if(widget.celulaDiscipulador != null){
+      _setDataCelulaDiscipulador();
+    }
+    else{
+      reportBloc.getCelula().then((celula) {
+        this.celula = celula;
 
-        setState(() => isLoading = false);
+        reportBloc.getFrequencia().then((frequencia) {
+          frequenciaModel = frequencia;
+          _filterDataCelula();
+          _filterDataCulto();
+
+          setState(() => isLoading = false);
+        }).catchError((onError) {
+          print('error getting frequencia membros: ${onError.toString()}');
+          setState(() {
+            error =
+            'Não foi possível obter a frequencia dos membros, tente novamente.';
+            isLoading = false;
+          });
+        });
       }).catchError((onError) {
         print('error getting frequencia membros: ${onError.toString()}');
         setState(() {
           error =
-              'Não foi possível obter a frequencia dos membros, tente novamente.';
+          'Não foi possível obter a frequencia dos membros, tente novamente.';
           isLoading = false;
         });
       });
-    }).catchError((onError) {
-      print('error getting frequencia membros: ${onError.toString()}');
-      setState(() {
-        error =
-            'Não foi possível obter a frequencia dos membros, tente novamente.';
-        isLoading = false;
-      });
-    });
+    }
 
     super.initState();
   }
 
+  _setDataCelulaDiscipulador(){
+
+    this.celula = widget.celulaDiscipulador;
+
+    reportBloc.getFrequenciaByCelula(celula.usuario.idUsuario).then((frequencia) {
+      frequenciaModel = frequencia;
+
+       _filterDataCelula();
+       _filterDataCulto();
+
+      setState(() => isLoading = false);
+    }).catchError((onError) {
+      print('error getting frequencia membros: ${onError.toString()}');
+      setState(() {
+        error =
+        'Não foi possível obter a frequencia dos membros, tente novamente.';
+        isLoading = false;
+      });
+    });
+
+  }
+
   _filterDataCelula() {
     frequenciaModel.frequenciaCelula.forEach((element) {
+
+      print('passou aqui');
+
+
+
       if (element.dataCelula.isAfter(widget.dateStart) &&
-          element.dataCelula.isBefore(widget.dateEnd)) {
+          (element.dataCelula.isBefore(widget.dateEnd) ||
+              element.dataCelula.isAtSameMomentAs(widget.dateEnd))) {
+
         listaFrequenciaCelula.add(element);
 
         listVisitantes.add(element.quantidadeVisitantes);

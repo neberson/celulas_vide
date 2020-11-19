@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
+import 'package:celulas_vide/reports/report_frequence.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 class RelatorioFrequenciaDiscipulador extends StatefulWidget {
-  RelatorioFrequenciaDiscipulador(DateTime dateStart, DateTime dateEnd);
+  DateTime dateStart;
+  DateTime dateEnd;
+
+  RelatorioFrequenciaDiscipulador(this.dateStart, this.dateEnd);
 
   @override
   _RelatorioFrequenciaDiscipuladorState createState() =>
@@ -16,7 +20,7 @@ class RelatorioFrequenciaDiscipulador extends StatefulWidget {
 
 class _RelatorioFrequenciaDiscipuladorState
     extends State<RelatorioFrequenciaDiscipulador> {
-  bool isLoading = false;
+  bool isLoading = true;
   final reportBloc = ReportBloc();
 
   List<Celula> listaCelulas = [];
@@ -84,22 +88,20 @@ class _RelatorioFrequenciaDiscipuladorState
                       color: Colors.pink,
                       child: snapshot.data
                           ? SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white70),
-                          strokeWidth: 3.0,
-                        ),
-                      )
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white70),
+                                strokeWidth: 3.0,
+                              ),
+                            )
                           : Text(
-                        "Gerar PDF de todas",
-                        style: TextStyle(
-                            color: Colors.white70, fontSize: 20),
-                      ),
-                      onPressed: () {
-
-                      },
+                              "Gerar PDF de todas",
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 20),
+                            ),
+                      onPressed: () {},
                     );
                   }),
             ),
@@ -113,12 +115,23 @@ class _RelatorioFrequenciaDiscipuladorState
     return Card(
       color: Colors.grey[200],
       child: ListTile(
-        title: Text(celula.dadosCelula.nomeCelula, style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).accentColor),),
-        subtitle: Text(celula.usuario.nome),
-        onTap: () {
-
-        },
-      ),
+          title: Text(
+            celula.dadosCelula.nomeCelula,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor),
+          ),
+          subtitle: Text(celula.usuario.nome),
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReportFrequence(
+                    celulaDiscipulador: celula,
+                    dateStart: widget.dateStart,
+                    dateEnd: widget.dateEnd,
+                  ),
+                ),
+              )),
     );
   }
 
@@ -127,5 +140,4 @@ class _RelatorioFrequenciaDiscipuladorState
     _stGenerate.close();
     super.dispose();
   }
-
 }

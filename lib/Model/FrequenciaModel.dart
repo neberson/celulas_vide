@@ -8,6 +8,7 @@ class FrequenciaModel {
 
   FrequenciaModel.fromMap(map) {
     frequenciaCelula = [];
+
     map['frequenciaCelula'].forEach((v) {
       frequenciaCelula.add(new FrequenciaCelula.fromMap(v));
     });
