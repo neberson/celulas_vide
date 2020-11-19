@@ -57,11 +57,9 @@ class _ReportFrequenceState extends State<ReportFrequence> {
 
   @override
   void initState() {
-
-    if(widget.celulaDiscipulador != null){
+    if (widget.celulaDiscipulador != null) {
       _setDataCelulaDiscipulador();
-    }
-    else{
+    } else {
       reportBloc.getCelula().then((celula) {
         this.celula = celula;
 
@@ -75,7 +73,7 @@ class _ReportFrequenceState extends State<ReportFrequence> {
           print('error getting frequencia membros: ${onError.toString()}');
           setState(() {
             error =
-            'Não foi possível obter a frequencia dos membros, tente novamente.';
+                'Não foi possível obter a frequencia dos membros, tente novamente.';
             isLoading = false;
           });
         });
@@ -83,7 +81,7 @@ class _ReportFrequenceState extends State<ReportFrequence> {
         print('error getting frequencia membros: ${onError.toString()}');
         setState(() {
           error =
-          'Não foi possível obter a frequencia dos membros, tente novamente.';
+              'Não foi possível obter a frequencia dos membros, tente novamente.';
           isLoading = false;
         });
       });
@@ -92,39 +90,33 @@ class _ReportFrequenceState extends State<ReportFrequence> {
     super.initState();
   }
 
-  _setDataCelulaDiscipulador(){
-
+  _setDataCelulaDiscipulador() {
     this.celula = widget.celulaDiscipulador;
 
-    reportBloc.getFrequenciaByCelula(celula.usuario.idUsuario).then((frequencia) {
+    reportBloc
+        .getFrequenciaByCelula(celula.usuario.idUsuario)
+        .then((frequencia) {
       frequenciaModel = frequencia;
 
-       _filterDataCelula();
-       _filterDataCulto();
+      _filterDataCelula();
+      _filterDataCulto();
 
       setState(() => isLoading = false);
     }).catchError((onError) {
       print('error getting frequencia membros: ${onError.toString()}');
       setState(() {
         error =
-        'Não foi possível obter a frequencia dos membros, tente novamente.';
+            'Não foi possível obter a frequencia dos membros, tente novamente.';
         isLoading = false;
       });
     });
-
   }
 
   _filterDataCelula() {
     frequenciaModel.frequenciaCelula.forEach((element) {
-
-      print('passou aqui');
-
-
-
       if (element.dataCelula.isAfter(widget.dateStart) &&
           (element.dataCelula.isBefore(widget.dateEnd) ||
               element.dataCelula.isAtSameMomentAs(widget.dateEnd))) {
-
         listaFrequenciaCelula.add(element);
 
         listVisitantes.add(element.quantidadeVisitantes);

@@ -1,4 +1,3 @@
-
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/repository/services.dart';
@@ -8,8 +7,10 @@ class ReportBloc {
   Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
-    var doc = await
-        Firestore.instance.collection('Celula').document(currentUser.uid).get();
+    var doc = await Firestore.instance
+        .collection('Celula')
+        .document(currentUser.uid)
+        .get();
 
     return Celula.fromMap(doc.data);
   }
@@ -30,23 +31,37 @@ class ReportBloc {
   }
 
   Future<FrequenciaModel> getFrequencia() async {
-
     var currentUser = await getCurrentUserFirebase();
 
-    var doc = await Firestore.instance.collection('frequencia')
-        .document(currentUser.uid).get();
+    var doc = await Firestore.instance
+        .collection('frequencia')
+        .document(currentUser.uid)
+        .get();
 
     return FrequenciaModel.fromMap(doc.data);
-
   }
 
   Future<FrequenciaModel> getFrequenciaByCelula(String idCelula) async {
-
-    var doc = await Firestore.instance.collection('frequencia')
-        .document(idCelula).get();
+    var doc = await Firestore.instance
+        .collection('frequencia')
+        .document(idCelula)
+        .get();
 
     return FrequenciaModel.fromMap(doc.data);
-
   }
 
+  Future getAllFrequenciasByCelulas(List<Celula> listaCelulas) async {
+    List<FrequenciaModel> frequencias = [];
+
+    for (int i = 0; i < listaCelulas.length; i++) {
+      var docFrequence = await Firestore.instance
+          .collection('frequencia')
+          .document(listaCelulas[i].usuario.idUsuario)
+          .get();
+
+      frequencias.add(FrequenciaModel.fromMap(docFrequence.data));
+    }
+
+    return frequencias;
+  }
 }

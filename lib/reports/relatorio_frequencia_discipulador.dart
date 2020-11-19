@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/reports/report_bloc.dart';
 import 'package:celulas_vide/reports/report_frequence.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
@@ -24,8 +25,19 @@ class _RelatorioFrequenciaDiscipuladorState
   final reportBloc = ReportBloc();
 
   List<Celula> listaCelulas = [];
+  List<FrequenciaModel> frequencias = [];
   Celula celula;
   var error;
+
+  bool haveDate = true;
+  int countMemberInDate = 0;
+
+  List<int> listBatizados = [];
+  List<int> listFA = [];
+  List<int> listVisitantes = [];
+  List<int> listTotal = [];
+  List<double> listTotalPercent = [];
+  List<double> listMediaPeriodo = [];
 
   StreamController<bool> _stGenerate = StreamController<bool>.broadcast();
 
@@ -97,11 +109,11 @@ class _RelatorioFrequenciaDiscipuladorState
                               ),
                             )
                           : Text(
-                              "Gerar PDF de todas",
+                              "Gerar relatório",
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 20),
                             ),
-                      onPressed: () {},
+                      onPressed: _onClickGenerateAll,
                     );
                   }),
             ),
@@ -139,5 +151,41 @@ class _RelatorioFrequenciaDiscipuladorState
   void dispose() {
     _stGenerate.close();
     super.dispose();
+  }
+
+  void _onClickGenerateAll() {
+    _stGenerate.add(true);
+
+    reportBloc.getAllFrequenciasByCelulas(listaCelulas).then((value) {
+      frequencias = List.from(value);
+
+      _filterDates();
+    }).catchError((onError) {
+      print('error getting frequences: ${onError.toString()}');
+
+      _stGenerate.add(false);
+    });
+  }
+
+  _filterDates() {
+    frequencias.forEach((freq) {
+      freq.frequenciaCelula.forEach((freqCel) {
+        DateTime dateRegister = DateTime(freqCel.dataCelula.year,
+            freqCel.dataCelula.month, freqCel.dataCelula.day);
+
+        if (dateRegister.isAfter(widget.dateStart) &&
+            (dateRegister.isBefore(widget.dateEnd) ||
+                dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+          haveDate = true;
+          countMemberInDate++;
+
+          freqCel.membrosCelula.forEach((mem) {
+
+
+          });
+
+        }
+      });
+    });
   }
 }
