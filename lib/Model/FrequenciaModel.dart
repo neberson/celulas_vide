@@ -25,12 +25,14 @@ class FrequenciaCelula {
   var ofertaCelula;
   List<MembroFrequencia> membrosCelula;
   int quantidadeVisitantes;
+  ModelReportFrequence modelReportFrequence;
 
   FrequenciaCelula(
       {this.dataCelula,
       this.ofertaCelula,
       this.membrosCelula,
-      this.quantidadeVisitantes});
+      this.quantidadeVisitantes,
+      this.modelReportFrequence});
 
   FrequenciaCelula.fromMap(map) {
     this.dataCelula = map['dataCelula'].toDate();
@@ -40,6 +42,9 @@ class FrequenciaCelula {
       membrosCelula.add(MembroFrequencia.fromMap(v));
     });
     this.quantidadeVisitantes = map['quantidadeVisitantes'];
+
+    modelReportFrequence = ModelReportFrequence();
+
   }
 
   String getIndex(int index) {
@@ -95,4 +100,21 @@ class MembroFrequencia {
     this.frequenciaMembro = map['frequenciaMembro'];
     this.condicaoMembro = map['condicaoMembro'];
   }
+}
+
+class ModelReportFrequence {
+  List<int> listBatizados;
+  List<int> listFA;
+  List<int> listVisitantes;
+  List<int> listTotal;
+  List<double> listTotalPercent;
+  List<double> listMediaPeriodo;
+
+  ModelReportFrequence(
+      {this.listBatizados,
+      this.listFA,
+      this.listVisitantes,
+      this.listTotal,
+      this.listTotalPercent,
+      this.listMediaPeriodo});
 }

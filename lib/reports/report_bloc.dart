@@ -59,7 +59,8 @@ class ReportBloc {
           .document(listaCelulas[i].usuario.idUsuario)
           .get();
 
-      frequencias.add(FrequenciaModel.fromMap(docFrequence.data));
+      if(docFrequence.exists && docFrequence.data != null)
+        frequencias.add(FrequenciaModel.fromMap(docFrequence.data));
     }
 
     return frequencias;
