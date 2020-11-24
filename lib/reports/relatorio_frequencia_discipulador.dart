@@ -33,11 +33,11 @@ class _RelatorioFrequenciaDiscipuladorState
   final reportBloc = ReportBloc();
 
   List<Celula> listaCelulas = [];
+  List<Celula> listaCelulasFiltradas = [];
   List<FrequenciaModel> frequencias = [];
 
   List<FrequenciaCelula> listaFrequenciasFiltradas = [];
 
-  // Celula celula;
   var error;
 
   bool haveDate = true;
@@ -160,20 +160,17 @@ class _RelatorioFrequenciaDiscipuladorState
       frequencias = List.from(value);
 
       _filterDates();
-     // _onClickGenerate();
-    });
+      _onClickGenerate();
+    }).catchError((onError) {
+      print('error getting frequences: ${onError.toString()}');
 
-    //     .catchError((onError) {
-    //   print('error getting frequences: ${onError.toString()}');
-    //
-    //   _stGenerate.add(false);
-    // });
+      _stGenerate.add(false);
+    });
   }
 
   _filterDates() {
     frequencias.forEach((freq) {
       freq.frequenciaCelula.forEach((freqCel) {
-
         freqCel.modelReportFrequence.listBatizados = [];
         freqCel.modelReportFrequence.listFA = [];
         freqCel.modelReportFrequence.listVisitantes = [];
@@ -187,8 +184,8 @@ class _RelatorioFrequenciaDiscipuladorState
         if (dateRegister.isAfter(widget.dateStart) &&
             (dateRegister.isBefore(widget.dateEnd) ||
                 dateRegister.isAtSameMomentAs(widget.dateEnd))) {
-
-          freqCel.modelReportFrequence.listVisitantes.add(freqCel.quantidadeVisitantes);
+          freqCel.modelReportFrequence.listVisitantes
+              .add(freqCel.quantidadeVisitantes);
 
           int totalFA = 0;
           int totalMB = 0;
@@ -196,22 +193,21 @@ class _RelatorioFrequenciaDiscipuladorState
           freqCel.membrosCelula.forEach((mem) {
             if (mem.condicaoMembro == 'Frenquentador Assiduo')
               totalFA++;
-            else if (mem.condicaoMembro == 'Membro Batizado')
-              totalMB++;
+            else if (mem.condicaoMembro == 'Membro Batizado') totalMB++;
 
             freqCel.modelReportFrequence.listFA.add(totalFA);
             freqCel.modelReportFrequence.listBatizados.add(totalMB);
 
-            freqCel.modelReportFrequence.listTotal.add(totalFA + totalMB + freqCel.quantidadeVisitantes);
+            freqCel.modelReportFrequence.listTotal
+                .add(totalFA + totalMB + freqCel.quantidadeVisitantes);
 
-            freqCel.modelReportFrequence.listTotalPercent.add((100 / freqCel.membrosCelula.length) * (totalMB + totalFA));
+            freqCel.modelReportFrequence.listTotalPercent.add(
+                (100 / freqCel.membrosCelula.length) * (totalMB + totalFA));
 
             listaFrequenciasFiltradas.add(freqCel);
-
           });
         }
       });
-
     });
   }
 
@@ -223,17 +219,34 @@ class _RelatorioFrequenciaDiscipuladorState
     var tableHeadersCelula = [
       'Data',
       'Batizados',
-      'Frequentadores\nAssíduos',
+      'Frequentadores Assíduos',
       'Visitantes',
-      'Total Geral\n(MB+FA+V)',
-      'Percentual de\nPresença (MB+FA)'
+      'Total Geral (MB+FA+V)',
+      'Percentual de Presença (MB+FA)'
     ];
 
-    List<List<String>> dataTable = [];
+    var allTables = [];
 
-    List<String> row = ['teste', 'teste'];
+    for(int i=0; i<frequencias.length; i++){
 
-    dataTable.add(row);
+      List<List<String>> dataTable = [];
+      print(i);
+
+      List<String> row = [
+        DateFormat('dd/MM/yyy').format(listaFrequenciasFiltradas[i].dataCelula),
+        listaFrequenciasFiltradas[i].modelReportFrequence.listBatizados[i].toString(),
+        listaFrequenciasFiltradas[i].modelReportFrequence.listFA[i].toString(),
+        listaFrequenciasFiltradas[i].modelReportFrequence.listVisitantes[i].toString(),
+        listaFrequenciasFiltradas[i].modelReportFrequence.listTotal[i].toString(),
+        '${listaFrequenciasFiltradas[i].modelReportFrequence.listTotalPercent[i].toStringAsFixed(2).replaceAll('.', ',')}%'
+      ];
+
+      dataTable.add(row);
+
+      allTables.add(dataTable);
+
+    }
+
 
     final PdfImage logoImage = PdfImage.file(
       pdf.document,
@@ -241,7 +254,7 @@ class _RelatorioFrequenciaDiscipuladorState
     );
 
     pdf.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a3,
+      pageFormat: PdfPageFormat.a4,
       orientation: pw.PageOrientation.landscape,
       //   crossAxisAlignment: pw.CrossAxisAlignment.start,
       header: (pw.Context context) {
@@ -296,47 +309,37 @@ class _RelatorioFrequenciaDiscipuladorState
         pw.Text('Pastor Igreja: '),
         pw.Text('Igreja: '),
         pw.SizedBox(height: 15),
-        pw.Column(children: [
-          pw.Table.fromTextArray(
-            headers: tableHeaders,
-            context: context,
-            border: null,
-            data: dataTable,
-            cellAlignment: pw.Alignment.center,
-            headerAlignment: pw.Alignment.center,
-            headerStyle: pw.TextStyle(color: PdfColors.white, fontSize: 9),
-            headerDecoration: pw.BoxDecoration(
-              color: PdfColors.cyan,
-            ),
-            rowDecoration: pw.BoxDecoration(
-              border: pw.BoxBorder(
-                bottom: true,
-                color: PdfColors.cyan,
-                //  width: .5,
-              ),
-            ),
-          ),
-          pw.SizedBox(height: 20),
-          pw.Table.fromTextArray(
-            headers: tableHeaders,
-            context: context,
-            border: null,
-            data: dataTable,
-            cellAlignment: pw.Alignment.center,
-            headerAlignment: pw.Alignment.center,
-            headerStyle: pw.TextStyle(color: PdfColors.white, fontSize: 9),
-            headerDecoration: pw.BoxDecoration(
-              color: PdfColors.cyan,
-            ),
-            rowDecoration: pw.BoxDecoration(
-              border: pw.BoxBorder(
-                bottom: true,
-                color: PdfColors.cyan,
-                //  width: .5,
-              ),
-            ),
-          ),
-        ]),
+        pw.Column(
+            children: allTables
+                .map(
+                  (e) => pw.Column(
+                    children: [
+                      pw.Table.fromTextArray(
+                        headers: tableHeadersCelula,
+                        context: context,
+                        border: null,
+                        data: e,
+                        cellAlignment: pw.Alignment.center,
+                        headerAlignment: pw.Alignment.center,
+                        headerStyle:
+                        pw.TextStyle(color: PdfColors.white, fontSize: 9),
+                        headerDecoration: pw.BoxDecoration(
+                          color: PdfColors.cyan,
+                        ),
+                        rowDecoration: pw.BoxDecoration(
+                          border: pw.BoxBorder(
+                            bottom: true,
+                            color: PdfColors.cyan,
+                            //  width: .5,
+                          ),
+                        ),
+                      ),
+                      pw.SizedBox(height: 10),
+                      pw.Text('-----------------------------')
+                    ]
+                  ),
+                )
+                .toList()),
       ],
     ));
 
