@@ -114,9 +114,14 @@ class _ReportFrequenceState extends State<ReportFrequence> {
 
   _filterDataCelula() {
     frequenciaModel.frequenciaCelula.forEach((element) {
-      if (element.dataCelula.isAfter(widget.dateStart) &&
-          (element.dataCelula.isBefore(widget.dateEnd) ||
-              element.dataCelula.isAtSameMomentAs(widget.dateEnd))) {
+
+      DateTime dateComparation = DateTime(element.dataCelula.year,
+          element.dataCelula.month, element.dataCelula.day);
+
+      if (dateComparation.isAfter(widget.dateStart) &&
+          (dateComparation.isBefore(widget.dateEnd) ||
+              dateComparation.isAtSameMomentAs(widget.dateEnd))){
+
         listaFrequenciaCelula.add(element);
 
         listVisitantes.add(element.quantidadeVisitantes);

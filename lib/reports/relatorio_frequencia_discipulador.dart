@@ -33,9 +33,9 @@ class _RelatorioFrequenciaDiscipuladorState
 
   List<Celula> listaCelulas = [];
   List<Celula> listaCelulasFiltradas = [];
-  List<FrequenciaModel> frequencias = [];
+  List<FrequenciaModel> frequenciasDaCelula = [];
 
-  List<FrequenciaCelula> listaFrequenciasFiltradas = [];
+  List<FrequenciaModel> listaFrequenciasFiltradas = [];
 
   var error;
 
@@ -156,7 +156,14 @@ class _RelatorioFrequenciaDiscipuladorState
     _stGenerate.add(true);
 
     reportBloc.getAllFrequenciasByCelulas(listaCelulas).then((value) {
-      frequencias = List.from(value);
+      frequenciasDaCelula = List.from(value);
+
+      for(int i=0; i<frequenciasDaCelula.length; i++){
+
+        List<FrequenciaCelula> list = [];
+
+        listaFrequenciasFiltradas.add(FrequenciaModel(frequenciaCelula: list));
+      }
 
       _filterDates();
       _onClickGenerate();
@@ -168,7 +175,11 @@ class _RelatorioFrequenciaDiscipuladorState
   }
 
   _filterDates() {
-    frequencias.forEach((freq) {
+
+    int countCelulas = -1;
+
+    frequenciasDaCelula.forEach((freq) {
+      countCelulas++;
       freq.frequenciaCelula.forEach((freqCel) {
         DateTime dateRegister = DateTime(freqCel.dataCelula.year,
             freqCel.dataCelula.month, freqCel.dataCelula.day);
@@ -193,8 +204,9 @@ class _RelatorioFrequenciaDiscipuladorState
                         freqCel.modelReportFrequence.totalMB));
           });
 
-          listaFrequenciasFiltradas.add(freqCel);
+          listaFrequenciasFiltradas[countCelulas].frequenciaCelula.add(freqCel);
         }
+
       });
     });
   }
@@ -216,7 +228,10 @@ class _RelatorioFrequenciaDiscipuladorState
     var allTables = [];
     List<List<String>> dataHeaders = [];
 
-    for (int i = 0; i < frequencias.length; i++) {
+    for (int i = 0; i < frequenciasDaCelula.length; i++) {
+
+      print('table: $i');
+
       List<List<String>> dataTable = [];
 
       List<String> header = [
@@ -232,42 +247,43 @@ class _RelatorioFrequenciaDiscipuladorState
       int somaTotal = 0;
       double somaPercentualPresenca = 0;
 
-      for (int j = 0; j < listaFrequenciasFiltradas.length; j++) {
-        somaMB += listaFrequenciasFiltradas[j].modelReportFrequence.totalMB;
-        somaFA += listaFrequenciasFiltradas[j].modelReportFrequence.totalFA;
-        somaVisitantes += listaFrequenciasFiltradas[j].quantidadeVisitantes;
-        somaTotal += listaFrequenciasFiltradas[j].modelReportFrequence.total;
+      listaFrequenciasFiltradas[i].frequenciaCelula.forEach((element) {
+        somaMB += element.modelReportFrequence.totalMB;
+        somaFA += element.modelReportFrequence.totalFA;
+        somaVisitantes += element.quantidadeVisitantes;
+        somaTotal += element.modelReportFrequence.total;
         somaPercentualPresenca +=
-            listaFrequenciasFiltradas[j].modelReportFrequence.totalPercent;
+            element.modelReportFrequence.totalPercent;
 
         List<String> row = [
           DateFormat('dd/MM/yyy')
-              .format(listaFrequenciasFiltradas[j].dataCelula),
-          listaFrequenciasFiltradas[j].modelReportFrequence.totalMB.toString(),
-          listaFrequenciasFiltradas[j].modelReportFrequence.totalFA.toString(),
-          listaFrequenciasFiltradas[j].quantidadeVisitantes.toString(),
-          listaFrequenciasFiltradas[j].modelReportFrequence.total.toString(),
-          '${listaFrequenciasFiltradas[i].modelReportFrequence.totalPercent.toStringAsFixed(2).replaceAll('.', ',')}%'
+              .format(element.dataCelula),
+          element.modelReportFrequence.totalMB.toString(),
+          element.modelReportFrequence.totalFA.toString(),
+          element.quantidadeVisitantes.toString(),
+          element.modelReportFrequence.total.toString(),
+          '${element.modelReportFrequence.totalPercent.toStringAsFixed(2).replaceAll('.', ',')}%'
         ];
 
         dataTable.add(row);
-      }
+      });
+
 
       var rowFrequence = [
         'Frequencia Media Mensal',
-        (somaMB / listaFrequenciasFiltradas.length)
+        (somaMB / frequenciasDaCelula[i].frequenciaCelula.length)
             .toStringAsFixed(2)
             .replaceAll('.', ','),
-        (somaFA / listaFrequenciasFiltradas.length)
+        (somaFA / frequenciasDaCelula[i].frequenciaCelula.length)
             .toStringAsFixed(2)
             .replaceAll('.', ','),
-        (somaVisitantes / listaFrequenciasFiltradas.length)
+        (somaVisitantes / frequenciasDaCelula[i].frequenciaCelula.length)
             .toStringAsFixed(2)
             .replaceAll('.', ','),
-        (somaTotal / listaFrequenciasFiltradas.length)
+        (somaTotal / frequenciasDaCelula[i].frequenciaCelula.length)
             .toStringAsFixed(2)
             .replaceAll('.', ','),
-        '${(somaPercentualPresenca / listaFrequenciasFiltradas.length).toStringAsFixed(2).replaceAll('.', ',')}%'
+        '${(somaPercentualPresenca / frequenciasDaCelula[i].frequenciaCelula.length).toStringAsFixed(2).replaceAll('.', ',')}%'
       ];
 
       dataTable.add(rowFrequence);
@@ -367,7 +383,6 @@ class _RelatorioFrequenciaDiscipuladorState
                   ),
                 ),
                 pw.SizedBox(height: 10),
-                pw.Text('-----------------------------')
               ]);
             },
             itemCount: allTables.length),

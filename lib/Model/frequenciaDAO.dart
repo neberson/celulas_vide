@@ -30,13 +30,13 @@ class frequenciaDAO {
 
         print('data: ${frequenciaCelula.last['dataCelula']}');
 
-        // FirebaseUser usuarioAtual = await _auth.currentUser();
-        //
-        // db
-        //     .collection("frequencia")
-        //     .document(usuarioAtual.uid)
-        //     .setData(mapMembros);
-        // _validacao = "Frequência gravada com sucesso!";
+        FirebaseUser usuarioAtual = await _auth.currentUser();
+
+        db
+            .collection("frequencia")
+            .document(usuarioAtual.uid)
+            .setData(mapMembros);
+        _validacao = "Frequência gravada com sucesso!";
       }
     } else {
       print("Indice da lista" + indice.toString());
