@@ -103,18 +103,16 @@ class MembroFrequencia {
 }
 
 class ModelReportFrequence {
-  List<int> listBatizados;
-  List<int> listFA;
-  List<int> listVisitantes;
-  List<int> listTotal;
-  List<double> listTotalPercent;
-  List<double> listMediaPeriodo;
+  int totalMB;
+  int totalFA;
+  int total;
+  double totalPercent;
+  double totalMediaPeriodo;
 
   ModelReportFrequence(
-      {this.listBatizados,
-      this.listFA,
-      this.listVisitantes,
-      this.listTotal,
-      this.listTotalPercent,
-      this.listMediaPeriodo});
+      {this.totalMB =0,
+      this.totalFA = 0,
+      this.total = 0,
+      this.totalPercent = 0,
+      this.totalMediaPeriodo = 0});
 }

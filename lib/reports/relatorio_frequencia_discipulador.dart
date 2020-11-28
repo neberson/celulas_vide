@@ -10,7 +10,6 @@ import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -171,41 +170,30 @@ class _RelatorioFrequenciaDiscipuladorState
   _filterDates() {
     frequencias.forEach((freq) {
       freq.frequenciaCelula.forEach((freqCel) {
-        freqCel.modelReportFrequence.listBatizados = [];
-        freqCel.modelReportFrequence.listFA = [];
-        freqCel.modelReportFrequence.listVisitantes = [];
-        freqCel.modelReportFrequence.listTotal = [];
-        freqCel.modelReportFrequence.listTotalPercent = [];
-        freqCel.modelReportFrequence.listMediaPeriodo = [];
-
         DateTime dateRegister = DateTime(freqCel.dataCelula.year,
             freqCel.dataCelula.month, freqCel.dataCelula.day);
 
         if (dateRegister.isAfter(widget.dateStart) &&
             (dateRegister.isBefore(widget.dateEnd) ||
                 dateRegister.isAtSameMomentAs(widget.dateEnd))) {
-          freqCel.modelReportFrequence.listVisitantes
-              .add(freqCel.quantidadeVisitantes);
-
-          int totalFA = 0;
-          int totalMB = 0;
-
           freqCel.membrosCelula.forEach((mem) {
             if (mem.condicaoMembro == 'Frenquentador Assiduo')
-              totalFA++;
-            else if (mem.condicaoMembro == 'Membro Batizado') totalMB++;
+              freqCel.modelReportFrequence.totalFA++;
+            else if (mem.condicaoMembro == 'Membro Batizado')
+              freqCel.modelReportFrequence.totalMB++;
 
-            freqCel.modelReportFrequence.listFA.add(totalFA);
-            freqCel.modelReportFrequence.listBatizados.add(totalMB);
+            freqCel.modelReportFrequence.total =
+                (freqCel.modelReportFrequence.totalFA +
+                    freqCel.modelReportFrequence.totalMB +
+                    freqCel.quantidadeVisitantes);
 
-            freqCel.modelReportFrequence.listTotal
-                .add(totalFA + totalMB + freqCel.quantidadeVisitantes);
-
-            freqCel.modelReportFrequence.listTotalPercent.add(
-                (100 / freqCel.membrosCelula.length) * (totalMB + totalFA));
-
-            listaFrequenciasFiltradas.add(freqCel);
+            freqCel.modelReportFrequence.totalPercent =
+                ((100 / freqCel.membrosCelula.length) *
+                    (freqCel.modelReportFrequence.totalFA +
+                        freqCel.modelReportFrequence.totalMB));
           });
+
+          listaFrequenciasFiltradas.add(freqCel);
         }
       });
     });
@@ -226,27 +214,79 @@ class _RelatorioFrequenciaDiscipuladorState
     ];
 
     var allTables = [];
+    List<List<String>> dataHeaders = [];
 
-    for(int i=0; i<frequencias.length; i++){
-
+    for (int i = 0; i < frequencias.length; i++) {
       List<List<String>> dataTable = [];
-      print(i);
 
-      List<String> row = [
-        DateFormat('dd/MM/yyy').format(listaFrequenciasFiltradas[i].dataCelula),
-        listaFrequenciasFiltradas[i].modelReportFrequence.listBatizados[i].toString(),
-        listaFrequenciasFiltradas[i].modelReportFrequence.listFA[i].toString(),
-        listaFrequenciasFiltradas[i].modelReportFrequence.listVisitantes[i].toString(),
-        listaFrequenciasFiltradas[i].modelReportFrequence.listTotal[i].toString(),
-        '${listaFrequenciasFiltradas[i].modelReportFrequence.listTotalPercent[i].toStringAsFixed(2).replaceAll('.', ',')}%'
+      List<String> header = [
+        'Célula: ${listaCelulas[i].dadosCelula.nomeCelula}',
+        'Líder: ${listaCelulas[i].usuario.nome}'
       ];
 
-      dataTable.add(row);
+      dataHeaders.add(header);
+
+      int somaMB = 0;
+      int somaFA = 0;
+      int somaVisitantes = 0;
+      int somaTotal = 0;
+      double somaPercentualPresenca = 0;
+
+      for (int j = 0; j < listaFrequenciasFiltradas.length; j++) {
+        somaMB += listaFrequenciasFiltradas[j].modelReportFrequence.totalMB;
+        somaFA += listaFrequenciasFiltradas[j].modelReportFrequence.totalFA;
+        somaVisitantes += listaFrequenciasFiltradas[j].quantidadeVisitantes;
+        somaTotal += listaFrequenciasFiltradas[j].modelReportFrequence.total;
+        somaPercentualPresenca +=
+            listaFrequenciasFiltradas[j].modelReportFrequence.totalPercent;
+
+        List<String> row = [
+          DateFormat('dd/MM/yyy')
+              .format(listaFrequenciasFiltradas[j].dataCelula),
+          listaFrequenciasFiltradas[j].modelReportFrequence.totalMB.toString(),
+          listaFrequenciasFiltradas[j].modelReportFrequence.totalFA.toString(),
+          listaFrequenciasFiltradas[j].quantidadeVisitantes.toString(),
+          listaFrequenciasFiltradas[j].modelReportFrequence.total.toString(),
+          '${listaFrequenciasFiltradas[i].modelReportFrequence.totalPercent.toStringAsFixed(2).replaceAll('.', ',')}%'
+        ];
+
+        dataTable.add(row);
+      }
+
+      var rowFrequence = [
+        'Frequencia Media Mensal',
+        (somaMB / listaFrequenciasFiltradas.length)
+            .toStringAsFixed(2)
+            .replaceAll('.', ','),
+        (somaFA / listaFrequenciasFiltradas.length)
+            .toStringAsFixed(2)
+            .replaceAll('.', ','),
+        (somaVisitantes / listaFrequenciasFiltradas.length)
+            .toStringAsFixed(2)
+            .replaceAll('.', ','),
+        (somaTotal / listaFrequenciasFiltradas.length)
+            .toStringAsFixed(2)
+            .replaceAll('.', ','),
+        '${(somaPercentualPresenca / listaFrequenciasFiltradas.length).toStringAsFixed(2).replaceAll('.', ',')}%'
+      ];
+
+      dataTable.add(rowFrequence);
+
+      var rowTotal = [
+        'Total Acumulado',
+        somaMB.toString(),
+        somaFA.toString(),
+        somaVisitantes.toString(),
+        somaTotal.toString(),
+        '-'
+      ];
+
+      dataTable.add(rowTotal);
 
       allTables.add(dataTable);
-
     }
 
+    _stGenerate.add(true);
 
     final PdfImage logoImage = PdfImage.file(
       pdf.document,
@@ -268,12 +308,6 @@ class _RelatorioFrequenciaDiscipuladorState
           decoration: const pw.BoxDecoration(
             border:
                 pw.BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey),
-          ),
-          child: pw.Text(
-            'Relatório Cadastro de Célula',
-            style: pw.Theme.of(context)
-                .defaultTextStyle
-                .copyWith(color: PdfColors.grey),
           ),
         );
       },
@@ -304,42 +338,39 @@ class _RelatorioFrequenciaDiscipuladorState
         pw.Header(
             level: 1, text: DateFormat.yMMMMd('pt').format(DateTime.now())),
         pw.Padding(padding: const pw.EdgeInsets.all(10)),
-        pw.Text('Discipulador: '),
-        pw.Text('Pastor Rede: '),
-        pw.Text('Pastor Igreja: '),
-        pw.Text('Igreja: '),
         pw.SizedBox(height: 15),
-        pw.Column(
-            children: allTables
-                .map(
-                  (e) => pw.Column(
-                    children: [
-                      pw.Table.fromTextArray(
-                        headers: tableHeadersCelula,
-                        context: context,
-                        border: null,
-                        data: e,
-                        cellAlignment: pw.Alignment.center,
-                        headerAlignment: pw.Alignment.center,
-                        headerStyle:
-                        pw.TextStyle(color: PdfColors.white, fontSize: 9),
-                        headerDecoration: pw.BoxDecoration(
-                          color: PdfColors.cyan,
-                        ),
-                        rowDecoration: pw.BoxDecoration(
-                          border: pw.BoxBorder(
-                            bottom: true,
-                            color: PdfColors.cyan,
-                            //  width: .5,
-                          ),
-                        ),
-                      ),
-                      pw.SizedBox(height: 10),
-                      pw.Text('-----------------------------')
-                    ]
+        pw.ListView.builder(
+            itemBuilder: (context, index) {
+              return pw.Column(children: [
+                pw.Column(
+                    children:
+                        dataHeaders[index].map((e) => pw.Text(e)).toList()),
+                pw.SizedBox(height: 15),
+                pw.Table.fromTextArray(
+                  headers: tableHeadersCelula,
+                  context: context,
+                  border: null,
+                  data: allTables[index],
+                  cellAlignment: pw.Alignment.center,
+                  headerAlignment: pw.Alignment.center,
+                  headerStyle:
+                      pw.TextStyle(color: PdfColors.white, fontSize: 9),
+                  headerDecoration: pw.BoxDecoration(
+                    color: PdfColors.cyan,
                   ),
-                )
-                .toList()),
+                  rowDecoration: pw.BoxDecoration(
+                    border: pw.BoxBorder(
+                      bottom: true,
+                      color: PdfColors.cyan,
+                      //  width: .5,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text('-----------------------------')
+              ]);
+            },
+            itemCount: allTables.length),
       ],
     ));
 
