@@ -40,11 +40,7 @@ class frequenciaDAO {
       }
     } else {
       print("Indice da lista" + indice.toString());
-      if (frequenciaCulto[indice]["dataCulto"] == null ||
-          frequenciaCulto[indice]["dataCulto"] == "" ||
-          frequenciaCulto[indice]["dataCulto"].toString().length < 10) {
-        _validacao = "Campo Data do Culto vazio ou inválido!";
-      } else {
+
         Map<String, dynamic> mapMembros = {
           "frequenciaCelula": frequenciaCelula,
           "frequenciaCulto": frequenciaCulto
@@ -57,7 +53,7 @@ class frequenciaDAO {
             .document(usuarioAtual.uid)
             .setData(mapMembros);
         _validacao = "Frequência gravada com sucesso!";
-      }
+
     }
 
     return _validacao;

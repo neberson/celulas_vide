@@ -16,8 +16,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 
 class RelatorioFrequenciaDiscipulador extends StatefulWidget {
-  DateTime dateStart;
-  DateTime dateEnd;
+  final DateTime dateStart;
+  final DateTime dateEnd;
 
   RelatorioFrequenciaDiscipulador(this.dateStart, this.dateEnd);
 
@@ -28,14 +28,19 @@ class RelatorioFrequenciaDiscipulador extends StatefulWidget {
 
 class _RelatorioFrequenciaDiscipuladorState
     extends State<RelatorioFrequenciaDiscipulador> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool isLoading = true;
   final reportBloc = ReportBloc();
 
   List<Celula> listaCelulas = [];
-  List<Celula> listaCelulasFiltradas = [];
-  List<FrequenciaModel> frequenciasDaCelula = [];
+  List<FrequenciaModel> listaTodasFrequencias = [];
 
-  List<FrequenciaModel> listaFrequenciasFiltradas = [];
+  List<FrequenciaModel> listaFrequenciasCelulaFiltradas = [];
+  List<FrequenciaModel> listaFrequenciasCultoFiltradas = [];
+
+  int countDateCultos = 0;
+  int countDateCelulas = 0;
 
   var error;
 
@@ -64,6 +69,7 @@ class _RelatorioFrequenciaDiscipuladorState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Células supervisionadas'),
       ),
@@ -108,11 +114,11 @@ class _RelatorioFrequenciaDiscipuladorState
                               ),
                             )
                           : Text(
-                              "Gerar relatório",
+                              "Gerar PDF",
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 20),
                             ),
-                      onPressed: _onClickGenerateAll,
+                      onPressed: _showModalSheet,
                     );
                   }),
             ),
@@ -120,6 +126,33 @@ class _RelatorioFrequenciaDiscipuladorState
         ],
       ),
     );
+  }
+
+  _showModalSheet() {
+    return showModalBottomSheet(
+        isDismissible: true,
+        enableDrag: false,
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30))),
+        builder: (context) {
+          return Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                    title: Text('Frequência de Células '),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _onClickGeneratePDF(0)),
+                ListTile(
+                    title: Text('Frequência de Cultos'),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _onClickGeneratePDF(1))
+              ],
+            ),
+          );
+        });
   }
 
   _itemCelula(Celula celula) {
@@ -146,39 +179,57 @@ class _RelatorioFrequenciaDiscipuladorState
     );
   }
 
-  @override
-  void dispose() {
-    _stGenerate.close();
-    super.dispose();
-  }
+  _onClickGeneratePDF(int type) {
+    //close modalSheet
+    Navigator.pop(context);
 
-  void _onClickGenerateAll() {
     _stGenerate.add(true);
 
+    //clean dates
+    listaTodasFrequencias.clear();
+    listaFrequenciasCelulaFiltradas.clear();
+    listaFrequenciasCultoFiltradas.clear();
+
     reportBloc.getAllFrequenciasByCelulas(listaCelulas).then((value) {
-      frequenciasDaCelula = List.from(value);
+      listaTodasFrequencias = List.from(value);
 
-      for(int i=0; i<frequenciasDaCelula.length; i++){
+      if (type == 0) {
+        //instace listFrequences
+        for (int i = 0; i < listaTodasFrequencias.length; i++) {
+          List<FrequenciaCelula> list = [];
 
-        List<FrequenciaCelula> list = [];
+          listaFrequenciasCelulaFiltradas
+              .add(FrequenciaModel(frequenciaCelula: list));
+        }
 
-        listaFrequenciasFiltradas.add(FrequenciaModel(frequenciaCelula: list));
+        _filterDatesCelula();
+        _createTableCelulas(type);
+      } else {
+        //instace listFrequences
+        for (int i = 0; i < listaTodasFrequencias.length; i++) {
+          List<FrequenciaCulto> list = [];
+
+          listaFrequenciasCultoFiltradas
+              .add(FrequenciaModel(frequenciaCulto: list));
+        }
+
+        _filterDatesCulto();
+        _createTableCulto(type);
       }
-
-      _filterDates();
-      _onClickGenerate();
     }).catchError((onError) {
       print('error getting frequences: ${onError.toString()}');
+
+      _showMessage('Erro ao gerar relatório, tente novamente', isError: true);
 
       _stGenerate.add(false);
     });
   }
 
-  _filterDates() {
-
+  _filterDatesCelula() {
     int countCelulas = -1;
+    countDateCelulas = 0;
 
-    frequenciasDaCelula.forEach((freq) {
+    listaTodasFrequencias.forEach((freq) {
       countCelulas++;
       freq.frequenciaCelula.forEach((freqCel) {
         DateTime dateRegister = DateTime(freqCel.dataCelula.year,
@@ -187,6 +238,10 @@ class _RelatorioFrequenciaDiscipuladorState
         if (dateRegister.isAfter(widget.dateStart) &&
             (dateRegister.isBefore(widget.dateEnd) ||
                 dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+          countDateCelulas++;
+
+          print('passou aqui: ${freqCel.dataCelula}');
+
           freqCel.membrosCelula.forEach((mem) {
             if (mem.condicaoMembro == 'Frenquentador Assiduo')
               freqCel.modelReportFrequence.totalFA++;
@@ -204,18 +259,57 @@ class _RelatorioFrequenciaDiscipuladorState
                         freqCel.modelReportFrequence.totalMB));
           });
 
-          listaFrequenciasFiltradas[countCelulas].frequenciaCelula.add(freqCel);
+          listaFrequenciasCelulaFiltradas[countCelulas]
+              .frequenciaCelula
+              .add(freqCel);
         }
+      });
+    });
 
+    print('passou quantas vezes: $countDateCelulas');
+
+  }
+
+  _filterDatesCulto() {
+    int countCultos = -1;
+    countDateCultos = 0;
+
+    listaTodasFrequencias.forEach((freq) {
+      countCultos++;
+      freq.frequenciaCulto.forEach((freqCel) {
+        DateTime dateRegister = DateTime(freqCel.dataCulto.year,
+            freqCel.dataCulto.month, freqCel.dataCulto.day);
+
+        if (dateRegister.isAfter(widget.dateStart) &&
+            (dateRegister.isBefore(widget.dateEnd) ||
+                dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+          countDateCultos++;
+
+          freqCel.membrosCulto.forEach((mem) {
+            if (mem.condicaoMembro == 'Frenquentador Assiduo')
+              freqCel.modelReportFrequence.totalFA++;
+            else if (mem.condicaoMembro == 'Membro Batizado')
+              freqCel.modelReportFrequence.totalMB++;
+
+            freqCel.modelReportFrequence.total =
+                (freqCel.modelReportFrequence.totalFA +
+                    freqCel.modelReportFrequence.totalMB);
+
+            freqCel.modelReportFrequence.totalPercent =
+                ((100 / freqCel.membrosCulto.length) *
+                    (freqCel.modelReportFrequence.totalFA +
+                        freqCel.modelReportFrequence.totalMB));
+          });
+
+          listaFrequenciasCultoFiltradas[countCultos]
+              .frequenciaCulto
+              .add(freqCel);
+        }
       });
     });
   }
 
-  _onClickGenerate() async {
-    _stGenerate.add(true);
-
-    final pdf = pw.Document();
-
+  _createTableCelulas(int type) async {
     var tableHeadersCelula = [
       'Data',
       'Batizados',
@@ -228,8 +322,7 @@ class _RelatorioFrequenciaDiscipuladorState
     var allTables = [];
     List<List<String>> dataHeaders = [];
 
-    for (int i = 0; i < frequenciasDaCelula.length; i++) {
-
+    for (int i = 0; i < listaTodasFrequencias.length; i++) {
       print('table: $i');
 
       List<List<String>> dataTable = [];
@@ -247,17 +340,15 @@ class _RelatorioFrequenciaDiscipuladorState
       int somaTotal = 0;
       double somaPercentualPresenca = 0;
 
-      listaFrequenciasFiltradas[i].frequenciaCelula.forEach((element) {
+      listaFrequenciasCelulaFiltradas[i].frequenciaCelula.forEach((element) {
         somaMB += element.modelReportFrequence.totalMB;
         somaFA += element.modelReportFrequence.totalFA;
         somaVisitantes += element.quantidadeVisitantes;
         somaTotal += element.modelReportFrequence.total;
-        somaPercentualPresenca +=
-            element.modelReportFrequence.totalPercent;
+        somaPercentualPresenca += element.modelReportFrequence.totalPercent;
 
         List<String> row = [
-          DateFormat('dd/MM/yyy')
-              .format(element.dataCelula),
+          DateFormat('dd/MM/yyy').format(element.dataCelula),
           element.modelReportFrequence.totalMB.toString(),
           element.modelReportFrequence.totalFA.toString(),
           element.quantidadeVisitantes.toString(),
@@ -268,22 +359,15 @@ class _RelatorioFrequenciaDiscipuladorState
         dataTable.add(row);
       });
 
-
       var rowFrequence = [
         'Frequencia Media Mensal',
-        (somaMB / frequenciasDaCelula[i].frequenciaCelula.length)
+        (somaMB / countDateCelulas).toStringAsFixed(2).replaceAll('.', ','),
+        (somaFA / countDateCelulas).toStringAsFixed(2).replaceAll('.', ','),
+        (somaVisitantes / countDateCelulas)
             .toStringAsFixed(2)
             .replaceAll('.', ','),
-        (somaFA / frequenciasDaCelula[i].frequenciaCelula.length)
-            .toStringAsFixed(2)
-            .replaceAll('.', ','),
-        (somaVisitantes / frequenciasDaCelula[i].frequenciaCelula.length)
-            .toStringAsFixed(2)
-            .replaceAll('.', ','),
-        (somaTotal / frequenciasDaCelula[i].frequenciaCelula.length)
-            .toStringAsFixed(2)
-            .replaceAll('.', ','),
-        '${(somaPercentualPresenca / frequenciasDaCelula[i].frequenciaCelula.length).toStringAsFixed(2).replaceAll('.', ',')}%'
+        (somaTotal / countDateCelulas).toStringAsFixed(2).replaceAll('.', ','),
+        '${(somaPercentualPresenca / countDateCelulas).toStringAsFixed(2).replaceAll('.', ',')}%'
       ];
 
       dataTable.add(rowFrequence);
@@ -302,7 +386,82 @@ class _RelatorioFrequenciaDiscipuladorState
       allTables.add(dataTable);
     }
 
-    _stGenerate.add(true);
+    _createFilePDF(dataHeaders, allTables, tableHeadersCelula, type);
+  }
+
+  _createTableCulto(int type) async {
+    var tableHeadersCelula = [
+      'Data',
+      'Batizados',
+      'Frequentadores Assíduos',
+      'Total Geral (MB+FA+V)',
+      'Percentual de Presença (MB+FA)'
+    ];
+
+    var allTables = [];
+    List<List<String>> dataHeaders = [];
+
+    for (int i = 0; i < listaTodasFrequencias.length; i++) {
+      List<List<String>> dataTable = [];
+
+      List<String> header = [
+        'Célula: ${listaCelulas[i].dadosCelula.nomeCelula}',
+        'Líder: ${listaCelulas[i].usuario.nome}'
+      ];
+
+      dataHeaders.add(header);
+
+      int somaMB = 0;
+      int somaFA = 0;
+      int somaTotal = 0;
+      double somaPercentualPresenca = 0;
+
+      listaFrequenciasCultoFiltradas[i].frequenciaCulto.forEach((element) {
+        somaMB += element.modelReportFrequence.totalMB;
+        somaFA += element.modelReportFrequence.totalFA;
+        somaTotal += element.modelReportFrequence.total;
+        somaPercentualPresenca += element.modelReportFrequence.totalPercent;
+
+        List<String> row = [
+          DateFormat('dd/MM/yyy').format(element.dataCulto),
+          element.modelReportFrequence.totalMB.toString(),
+          element.modelReportFrequence.totalFA.toString(),
+          element.modelReportFrequence.total.toString(),
+          '${element.modelReportFrequence.totalPercent.toStringAsFixed(2).replaceAll('.', ',')}%'
+        ];
+
+        dataTable.add(row);
+      });
+
+      var rowFrequence = [
+        'Frequencia Media Mensal',
+        (somaMB / countDateCultos).toStringAsFixed(2).replaceAll('.', ','),
+        (somaFA / countDateCultos).toStringAsFixed(2).replaceAll('.', ','),
+        (somaTotal / countDateCultos).toStringAsFixed(2).replaceAll('.', ','),
+        '${(somaPercentualPresenca / countDateCultos).toStringAsFixed(2).replaceAll('.', ',')}%'
+      ];
+
+      dataTable.add(rowFrequence);
+
+      var rowTotal = [
+        'Total Acumulado',
+        somaMB.toString(),
+        somaFA.toString(),
+        somaTotal.toString(),
+        '-'
+      ];
+
+      dataTable.add(rowTotal);
+
+      allTables.add(dataTable);
+    }
+
+    _createFilePDF(dataHeaders, allTables, tableHeadersCelula, type);
+  }
+
+  _createFilePDF(
+      List<List<String>> dataHeaders, allTables, tableHeadersCelula, int type) async {
+    final pdf = pw.Document();
 
     final PdfImage logoImage = PdfImage.file(
       pdf.document,
@@ -325,6 +484,12 @@ class _RelatorioFrequenciaDiscipuladorState
             border:
                 pw.BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey),
           ),
+            child: pw.Text(
+              'Relatório de Frequência de ${type == 0 ? 'Célula' : 'Culto'}',
+              style: pw.Theme.of(context)
+                  .defaultTextStyle
+                  .copyWith(color: PdfColors.grey),
+            )
         );
       },
       footer: (pw.Context context) {
@@ -345,7 +510,7 @@ class _RelatorioFrequenciaDiscipuladorState
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: <pw.Widget>[
                 pw.Text(
-                  'Relatório Cadastro de Célula',
+                  'Relatório de Frequência de ${type == 0 ? 'Célula' : 'Culto'}',
                 ),
                 pw.Container(
                     height: 100, width: 100, child: pw.Image(logoImage))
@@ -404,5 +569,19 @@ class _RelatorioFrequenciaDiscipuladorState
         ),
       ),
     );
+  }
+
+  _showMessage(String message, {bool isError = false}) =>
+      scaffoldKey?.currentState?.showSnackBar(SnackBar(
+        content: Text(message),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isError ? Colors.red : Colors.green[700],
+      ));
+
+  @override
+  void dispose() {
+    _stGenerate.close();
+    super.dispose();
   }
 }

@@ -61,8 +61,9 @@ class FrequenciaCelula {
 class FrequenciaCulto {
   DateTime dataCulto;
   List<MembroFrequencia> membrosCulto;
+  ModelReportFrequence modelReportFrequence;
 
-  FrequenciaCulto({this.dataCulto, this.membrosCulto});
+  FrequenciaCulto({this.dataCulto, this.membrosCulto, this.modelReportFrequence});
 
   FrequenciaCulto.fromMap(map) {
     this.dataCulto = map['dataCulto'].toDate();
@@ -70,6 +71,8 @@ class FrequenciaCulto {
     map['membrosCulto'].forEach((v) {
       membrosCulto.add(MembroFrequencia.fromMap(v));
     });
+
+    modelReportFrequence = ModelReportFrequence();
   }
 
   String getIndex(int index) {
