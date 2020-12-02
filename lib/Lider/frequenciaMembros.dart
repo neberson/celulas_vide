@@ -30,9 +30,9 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
       leftSymbol: "Oferta: R\$ ",
       decimalSeparator: ',',
       thousandSeparator: '.');
+
   List<Map> _membrosCelula = List<Map>();
   List<Map> _membrosRecuperado = List<Map>();
-  List<Map> _membrosCulto = List<Map>();
   int circularProgressTela = 0;
   frequenciaDAO _frequenciaDAO = new frequenciaDAO();
   Frequencia _frequenciaCelula = new Frequencia();
@@ -82,7 +82,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
       circularProgressTela = 1;
     });
     _membrosRecuperado = _membrosCelula;
-    _membrosCulto = _membrosRecuperado;
   }
 
   _recuperarListaFrequencia() async {
@@ -91,7 +90,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     });
     Map<dynamic, dynamic> dados =
         await _frequenciaDAO.recuperarMembrosFrequencia();
-    if(dados != null) {
+    if (dados != null) {
       _frequenciasCelula = _frequenciaDAO.recuperarFrequenciaCelula(dados);
       _frequenciasCulto = _frequenciaDAO.recuperarFrequenciaCulto(dados);
     }
@@ -115,9 +114,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
             _frequenciasCelula[_indexListaFrequencia]["ofertaCelula"]
                 .toString()));
 
-          _membrosStore.RemoveMembros(_membrosStore.membrosList);
+        _membrosStore.RemoveMembros(_membrosStore.membrosList);
 
-        for(Map<dynamic, dynamic> membro in _frequenciasCelula[_indexListaFrequencia]["membrosCelula"]){
+        for (Map<dynamic, dynamic> membro
+            in _frequenciasCelula[_indexListaFrequencia]["membrosCelula"]) {
           MembroStore membroStore = new MembroStore();
           membroStore.setNomeMembro(membro["nomeMembro"]);
           membroStore.setCondicaoMembro(membro["condicaoMembro"]);
@@ -146,7 +146,8 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
 
         _membrosStoreCulto.RemoveMembros(_membrosStoreCulto.membrosList);
 
-        for(Map<dynamic, dynamic> membro in _frequenciasCulto[_indexListaFrequenciaCulto]["membrosCulto"]){
+        for (Map<dynamic, dynamic> membro
+            in _frequenciasCulto[_indexListaFrequenciaCulto]["membrosCulto"]) {
           MembroStore membroStore = new MembroStore();
           membroStore.setNomeMembro(membro["nomeMembro"]);
           membroStore.setCondicaoMembro(membro["condicaoMembro"]);
@@ -154,10 +155,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
           membroStore.setStatus(membro["status"]);
 
           _membrosStoreCulto.addMembrosList(membroStore);
-       }
+        }
       } else {
         _indexListaFrequenciaCulto = -1;
-        for(MembroStore membro in _membrosStoreCulto.membrosList){
+        for (MembroStore membro in _membrosStoreCulto.membrosList) {
           membro.setFrequenciaMembro(false);
         }
       }
@@ -170,7 +171,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
       _indexListaFrequencia = -1;
       _valorOferta.updateValue(0.0);
       _quantidadeVisitantes.text = "";
-      for(MembroStore membro in _membrosStore.membrosList){
+      for (MembroStore membro in _membrosStore.membrosList) {
         membro.setFrequenciaMembro(false);
       }
     });
@@ -182,7 +183,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     setState(() {
       _indexListaFrequenciaCulto = -1;
     });
-    for(MembroStore membro in _membrosStoreCulto.membrosList){
+    for (MembroStore membro in _membrosStoreCulto.membrosList) {
       membro.setFrequenciaMembro(false);
     }
     FocusScope.of(context).requestFocus(FocusNode());
@@ -192,18 +193,18 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   void initState() {
     super.initState();
 
-    _dataCelula.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    _dataCulto.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    DateTime dateNow = DateTime.now();
+
+    _dataCelula.text = DateFormat('dd/MM/yyyy').format(dateNow);
+    _dataCulto.text = DateFormat('dd/MM/yyyy').format(dateNow);
+
+    _dataCultoSelecionada = dateNow;
+    _dataCelulaSelecionada = dateNow;
 
     _recuperarListaMembros();
     _recuperarListaFrequencia();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +287,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                 readOnly: true,
                                 onTap: () => showDialogDate(0),
                                 decoration: InputDecoration(
-                                  hintText: "Data da Célula",
+                                    hintText: "Data da Célula",
                                     hintStyle: TextStyle(color: Colors.black26),
                                     filled: true,
                                     fillColor: Colors.white,
@@ -299,9 +300,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                         horizontal: 20.0, vertical: 16.0)),
                                 onChanged: (data) {
                                   if (data.length == 10) {
-
                                     _recuperarFrequenciaData(data, context);
-
                                   }
                                 },
                               ),
@@ -335,8 +334,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                     ),
                                     contentPadding: EdgeInsets.symmetric(
                                         horizontal: 20.0, vertical: 16.0)),
-                                onTap: () {
-                                },
+                                onTap: () {},
                               ),
                             ),
                           )),
@@ -369,9 +367,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                     ),
                                     contentPadding: EdgeInsets.symmetric(
                                         horizontal: 20.0, vertical: 16.0)),
-                                onTap: () {
-
-                                },
+                                onTap: () {},
                               ),
                             ),
                           )),
@@ -429,13 +425,14 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                               _frequenciaCelula.dataFrequencia =
                                                   _dataCelulaSelecionada;
 
-
                                               _frequenciaCelula
                                                       .membrosFrequencia =
                                                   new List<Map>();
                                               _frequenciaCelula
-                                                      .membrosFrequencia
-                                                  .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStore));
+                                                  .membrosFrequencia
+                                                  .addAll(_membrosCelulaMap
+                                                      .listToMapFrequencia(
+                                                          _membrosStore));
                                               _frequenciaCelula
                                                       .ofertaFrequencia =
                                                   _valorOferta.numberValue;
@@ -449,11 +446,9 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                                       : 0;
 
                                               if (_indexListaFrequencia < 0) {
-
                                                 _frequenciasCelula.add(
                                                     _frequenciaCelula
                                                         .toMapFrequencia());
-
                                               } else {
                                                 _frequenciasCelula[
                                                         _indexListaFrequencia] =
@@ -541,8 +536,10 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(40))),
                               child: TextField(
+                                readOnly: true,
                                 keyboardType: TextInputType.number,
                                 controller: _dataCulto,
+                                onTap: () => showDialogDate(1),
                                 decoration: InputDecoration(
                                     hintText: "Data do Culto",
                                     hintStyle: TextStyle(color: Colors.black26),
@@ -571,108 +568,125 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                           height: MediaQuery.of(context).size.height,
                           width: double.infinity,
                           child: Observer(
-                            builder: (_){
+                            builder: (_) {
                               return ListView.builder(
-                                  itemCount: (presentCulto <= _membrosStoreCulto.membrosList.length)
-                                      ? _membrosStoreCulto.membrosList.length + 1
+                                  itemCount: (presentCulto <=
+                                          _membrosStoreCulto.membrosList.length)
+                                      ? _membrosStoreCulto.membrosList.length +
+                                          1
                                       : _membrosStoreCulto.membrosList.length,
                                   itemBuilder: (context, index) {
                                     presentCulto++;
-                                    return index == _membrosStoreCulto.membrosList.length
+                                    return index ==
+                                            _membrosStoreCulto
+                                                .membrosList.length
                                         ? Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 25,
-                                            left: 20,
-                                            right: 20,
-                                            bottom: 20),
-                                        child: SizedBox(
-                                          height: 50,
-                                          child: RaisedButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(40))),
-                                            color: Colors.pink,
-                                            child: Text(
-                                              "Salvar",
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 20),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                _circularProgressButton = 1;
-                                              });
-
-                                              _frequenciaCulto.dataFrequencia = _dataCultoSelecionada;
-
-
-                                              _frequenciaCulto
-                                                  .membrosFrequencia =
-                                              new List<Map>();
-                                              _frequenciaCulto.membrosFrequencia
-                                                  .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStoreCulto));
-                                              if (_indexListaFrequenciaCulto <
-                                                  0) {
-                                                _frequenciasCulto.add(
-                                                    _frequenciaCulto
-                                                        .toMapCulto());
-                                              } else {
-                                                _frequenciasCulto[
-                                                _indexListaFrequenciaCulto] =
-                                                    _frequenciaCulto
-                                                        .toMapCulto();
-                                              }
-                                              if (_indexListaFrequenciaCulto >=
-                                                  0) {
-                                                _frequenciaDAO
-                                                    .salvarFrequencia(
-                                                    _frequenciasCelula,
-                                                    _frequenciasCulto,
-                                                    1,
-                                                    _indexListaFrequenciaCulto,
-                                                    context)
-                                                    .then((valor) {
-                                                  var snackBar = SnackBar(
-                                                    duration:
-                                                    Duration(seconds: 5),
-                                                    content: Text(valor),
-                                                  );
-
-                                                  _scaffoldKey.currentState
-                                                      .showSnackBar(snackBar);
+                                            padding: EdgeInsets.only(
+                                                top: 25,
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 20),
+                                            child: SizedBox(
+                                              height: 50,
+                                              child: RaisedButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                40))),
+                                                color: Colors.pink,
+                                                child: Text(
+                                                  "Salvar",
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontSize: 20),
+                                                ),
+                                                onPressed: () {
                                                   setState(() {
-                                                    _circularProgressButton = 0;
+                                                    _circularProgressButton = 1;
                                                   });
-                                                  _ajustarCampoAposSalvarCulto();
-                                                });
-                                              } else {
-                                                _frequenciaDAO
-                                                    .salvarFrequencia(
-                                                    _frequenciasCelula,
-                                                    _frequenciasCulto,
-                                                    1,
-                                                    _frequenciasCulto.length - 1,
-                                                    context)
-                                                    .then((valor) {
-                                                  var snackBar = SnackBar(
-                                                    duration:
-                                                    Duration(seconds: 5),
-                                                    content: Text(valor),
-                                                  );
 
-                                                  _scaffoldKey.currentState
-                                                      .showSnackBar(snackBar);
-                                                  setState(() {
-                                                    _circularProgressButton = 0;
-                                                  });
-                                                  if(valor == "Frequência gravada com sucesso!") {
-                                                    _ajustarCampoAposSalvarCulto();
+                                                  _frequenciaCulto
+                                                          .dataFrequencia =
+                                                      _dataCultoSelecionada;
+
+                                                  _frequenciaCulto
+                                                          .membrosFrequencia =
+                                                      new List<Map>();
+                                                  _frequenciaCulto
+                                                      .membrosFrequencia
+                                                      .addAll(_membrosCelulaMap
+                                                          .listToMapFrequencia(
+                                                              _membrosStoreCulto));
+                                                  if (_indexListaFrequenciaCulto <
+                                                      0) {
+                                                    _frequenciasCulto.add(
+                                                        _frequenciaCulto
+                                                            .toMapCulto());
+                                                  } else {
+                                                    _frequenciasCulto[
+                                                            _indexListaFrequenciaCulto] =
+                                                        _frequenciaCulto
+                                                            .toMapCulto();
                                                   }
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        ))
+                                                  if (_indexListaFrequenciaCulto >=
+                                                      0) {
+                                                    _frequenciaDAO
+                                                        .salvarFrequencia(
+                                                            _frequenciasCelula,
+                                                            _frequenciasCulto,
+                                                            1,
+                                                            _indexListaFrequenciaCulto,
+                                                            context)
+                                                        .then((valor) {
+                                                      var snackBar = SnackBar(
+                                                        duration: Duration(
+                                                            seconds: 5),
+                                                        content: Text(valor),
+                                                      );
+
+                                                      _scaffoldKey.currentState
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                      setState(() {
+                                                        _circularProgressButton =
+                                                            0;
+                                                      });
+                                                      _ajustarCampoAposSalvarCulto();
+                                                    });
+                                                  } else {
+                                                    _frequenciaDAO
+                                                        .salvarFrequencia(
+                                                            _frequenciasCelula,
+                                                            _frequenciasCulto,
+                                                            1,
+                                                            _frequenciasCulto
+                                                                    .length -
+                                                                1,
+                                                            context)
+                                                        .then((valor) {
+                                                      var snackBar = SnackBar(
+                                                        duration: Duration(
+                                                            seconds: 5),
+                                                        content: Text(valor),
+                                                      );
+
+                                                      _scaffoldKey.currentState
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                      setState(() {
+                                                        _circularProgressButton =
+                                                            0;
+                                                      });
+                                                      if (valor ==
+                                                          "Frequência gravada com sucesso!") {
+                                                        _ajustarCampoAposSalvarCulto();
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ))
                                         : buildListCulto(context, index);
                                   });
                             },
@@ -687,36 +701,29 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     );
   }
 
-  showDialogDate(int type){
+  showDialogDate(int type) async {
 
-    var initialDate = DateTime.now();
-
-    return showModalBottomSheet(
-        context: context,
-        builder: (context){
-          return Container(
-            height: 245,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              use24hFormat: true,
-              maximumDate: initialDate,
-              initialDateTime: initialDate,
-              onDateTimeChanged: (DateTime date){
-
-                if(type == 0){
-                  _dataCelulaSelecionada = date;
-                  _dataCelula.text = DateFormat('dd/MM/yyyy').format(date);
-                }
-                else{
-                  _dataCultoSelecionada = date;
-                  _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
-                }
-
-              },
-            ),
-          );
-        }
+    FocusScope.of(context).requestFocus(FocusNode());
+    DateTime date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2001),
+      lastDate: DateTime.now(),
+      initialDatePickerMode: DatePickerMode.day,
+      initialEntryMode: DatePickerEntryMode.calendar,
+      builder: (BuildContext context, Widget child) => child,
     );
+
+    if (date != null) {
+      if (type == 0) {
+        _dataCelulaSelecionada = date;
+        _dataCelula.text = DateFormat('dd/MM/yyyy').format(date);
+      } else {
+        _dataCultoSelecionada = date;
+        _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
+      }
+    }
+
   }
 
   Widget buildList(BuildContext context, int index) {
@@ -833,12 +840,13 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                     ],
                   ),
                   Observer(
-                    builder: (_){
+                    builder: (_) {
                       return SwitchListTile(
                         activeColor: Color.fromRGBO(81, 37, 103, 1),
                         title: Text(
                           "Confirmar Presença",
-                          style: TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
+                          style:
+                              TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
                         ),
                         value: membroCulto.frequenciaMembro,
                         onChanged: membroCulto.setFrequenciaMembro,
