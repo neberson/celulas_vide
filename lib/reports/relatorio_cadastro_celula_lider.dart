@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/report_bloc.dart';
+import 'package:celulas_vide/reports/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
@@ -26,7 +26,7 @@ class RelatorioCadastroCelulaLider extends StatefulWidget {
 
 class _RelatorioCadastroCelulaLiderState extends State<RelatorioCadastroCelulaLider> {
 
-  final reportBloc = ReportBloc();
+  final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
   List<MembroCelula> _listMembersFiltered = [];

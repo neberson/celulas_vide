@@ -3,7 +3,7 @@ import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ReportBloc {
+class RelatorioBloc {
   Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
@@ -38,7 +38,8 @@ class ReportBloc {
         .document(currentUser.uid)
         .get();
 
-    return FrequenciaModel.fromMap(doc.data);
+    return doc.data != null ? FrequenciaModel.fromMap(doc.data) : FrequenciaModel(frequenciaCelula: [], frequenciaCulto: []);
+
   }
 
   Future<FrequenciaModel> getFrequenciaByCelula(String idCelula) async {

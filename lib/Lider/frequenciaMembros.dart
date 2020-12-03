@@ -205,7 +205,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     _recuperarListaFrequencia();
   }
 
-
   @override
   Widget build(BuildContext context) {
     presentCelula = 0;
@@ -417,100 +416,8 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                                               Colors.white70),
                                                       strokeWidth: 3.0,
                                                     )),
-                                            onPressed: () {
-                                              setState(() {
-                                                _circularProgressButton = 1;
-                                              });
-
-                                              _frequenciaCelula.dataFrequencia =
-                                                  _dataCelulaSelecionada;
-
-                                              _frequenciaCelula
-                                                      .membrosFrequencia =
-                                                  new List<Map>();
-                                              _frequenciaCelula
-                                                  .membrosFrequencia
-                                                  .addAll(_membrosCelulaMap
-                                                      .listToMapFrequencia(
-                                                          _membrosStore));
-                                              _frequenciaCelula
-                                                      .ofertaFrequencia =
-                                                  _valorOferta.numberValue;
-                                              _frequenciaCelula
-                                                      .quantidadeVisitantes =
-                                                  _quantidadeVisitantes.text !=
-                                                          ""
-                                                      ? int.parse(
-                                                          _quantidadeVisitantes
-                                                              .text)
-                                                      : 0;
-
-                                              if (_indexListaFrequencia < 0) {
-                                                _frequenciasCelula.add(
-                                                    _frequenciaCelula
-                                                        .toMapFrequencia());
-                                              } else {
-                                                _frequenciasCelula[
-                                                        _indexListaFrequencia] =
-                                                    _frequenciaCelula
-                                                        .toMapFrequencia();
-                                              }
-                                              if (_indexListaFrequencia >= 0) {
-                                                _frequenciaDAO
-                                                    .salvarFrequencia(
-                                                        _frequenciasCelula,
-                                                        _frequenciasCulto,
-                                                        0,
-                                                        _indexListaFrequencia,
-                                                        context)
-                                                    .then((validacao) {
-                                                  var snackBar = SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 5),
-                                                    content: Text(validacao),
-                                                  );
-
-                                                  _scaffoldKey.currentState
-                                                      .showSnackBar(snackBar);
-
-                                                  if (validacao ==
-                                                      "Frequência gravada com sucesso!") {
-                                                    _ajustarCampoAposSalvar();
-                                                  }
-
-                                                  setState(() {
-                                                    _circularProgressButton = 0;
-                                                  });
-                                                });
-                                              } else {
-                                                _frequenciaDAO
-                                                    .salvarFrequencia(
-                                                        _frequenciasCelula,
-                                                        _frequenciasCulto,
-                                                        0,
-                                                        _frequenciasCelula
-                                                                .length -
-                                                            1,
-                                                        context)
-                                                    .then((validacao) {
-                                                  var snackBar = SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 5),
-                                                    content: Text(validacao),
-                                                  );
-
-                                                  _scaffoldKey.currentState
-                                                      .showSnackBar(snackBar);
-                                                  setState(() {
-                                                    _circularProgressButton = 0;
-                                                  });
-                                                  if (validacao ==
-                                                      "Frequência gravada com sucesso!") {
-                                                    _ajustarCampoAposSalvar();
-                                                  }
-                                                });
-                                              }
-                                            },
+                                            onPressed:
+                                                _onClickSaveFrequenciaCelula,
                                           ),
                                         ))
                                     : buildList(context, index);
@@ -601,90 +508,8 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
                                                       color: Colors.white70,
                                                       fontSize: 20),
                                                 ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _circularProgressButton = 1;
-                                                  });
-
-                                                  _frequenciaCulto
-                                                          .dataFrequencia =
-                                                      _dataCultoSelecionada;
-
-                                                  _frequenciaCulto
-                                                          .membrosFrequencia =
-                                                      new List<Map>();
-                                                  _frequenciaCulto
-                                                      .membrosFrequencia
-                                                      .addAll(_membrosCelulaMap
-                                                          .listToMapFrequencia(
-                                                              _membrosStoreCulto));
-                                                  if (_indexListaFrequenciaCulto <
-                                                      0) {
-                                                    _frequenciasCulto.add(
-                                                        _frequenciaCulto
-                                                            .toMapCulto());
-                                                  } else {
-                                                    _frequenciasCulto[
-                                                            _indexListaFrequenciaCulto] =
-                                                        _frequenciaCulto
-                                                            .toMapCulto();
-                                                  }
-                                                  if (_indexListaFrequenciaCulto >=
-                                                      0) {
-                                                    _frequenciaDAO
-                                                        .salvarFrequencia(
-                                                            _frequenciasCelula,
-                                                            _frequenciasCulto,
-                                                            1,
-                                                            _indexListaFrequenciaCulto,
-                                                            context)
-                                                        .then((valor) {
-                                                      var snackBar = SnackBar(
-                                                        duration: Duration(
-                                                            seconds: 5),
-                                                        content: Text(valor),
-                                                      );
-
-                                                      _scaffoldKey.currentState
-                                                          .showSnackBar(
-                                                              snackBar);
-                                                      setState(() {
-                                                        _circularProgressButton =
-                                                            0;
-                                                      });
-                                                      _ajustarCampoAposSalvarCulto();
-                                                    });
-                                                  } else {
-                                                    _frequenciaDAO
-                                                        .salvarFrequencia(
-                                                            _frequenciasCelula,
-                                                            _frequenciasCulto,
-                                                            1,
-                                                            _frequenciasCulto
-                                                                    .length -
-                                                                1,
-                                                            context)
-                                                        .then((valor) {
-                                                      var snackBar = SnackBar(
-                                                        duration: Duration(
-                                                            seconds: 5),
-                                                        content: Text(valor),
-                                                      );
-
-                                                      _scaffoldKey.currentState
-                                                          .showSnackBar(
-                                                              snackBar);
-                                                      setState(() {
-                                                        _circularProgressButton =
-                                                            0;
-                                                      });
-                                                      if (valor ==
-                                                          "Frequência gravada com sucesso!") {
-                                                        _ajustarCampoAposSalvarCulto();
-                                                      }
-                                                    });
-                                                  }
-                                                },
+                                                onPressed:
+                                                    _onClickSaveFrequenciaCulto,
                                               ),
                                             ))
                                         : buildListCulto(context, index);
@@ -701,8 +526,126 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
     );
   }
 
-  showDialogDate(int type) async {
+  _onClickSaveFrequenciaCelula() {
 
+    setState(() {
+      _circularProgressButton = 1;
+    });
+
+    _frequenciaCelula.dataFrequencia = _dataCelulaSelecionada;
+
+    _frequenciaCelula.membrosFrequencia = new List<Map>();
+    _frequenciaCelula.membrosFrequencia
+        .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStore));
+    _frequenciaCelula.ofertaFrequencia = _valorOferta.numberValue;
+    _frequenciaCelula.quantidadeVisitantes = _quantidadeVisitantes.text != ""
+        ? int.parse(_quantidadeVisitantes.text)
+        : 0;
+
+    if (_indexListaFrequencia < 0) {
+      _frequenciasCelula.add(_frequenciaCelula.toMapFrequencia());
+    } else {
+      _frequenciasCelula[_indexListaFrequencia] =
+          _frequenciaCelula.toMapFrequencia();
+    }
+    if (_indexListaFrequencia >= 0) {
+
+      _frequenciaDAO
+          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 0,
+              _indexListaFrequencia, context)
+          .then((validacao) {
+        var snackBar = SnackBar(
+          duration: Duration(seconds: 5),
+          content: Text(validacao),
+        );
+
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+
+        if (validacao == "Frequência gravada com sucesso!") {
+          _ajustarCampoAposSalvar();
+        }
+
+        setState(() {
+          _circularProgressButton = 0;
+        });
+      });
+    } else {
+
+      _frequenciaDAO
+          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 0,
+              _frequenciasCelula.length - 1, context)
+          .then((validacao) {
+        var snackBar = SnackBar(
+          duration: Duration(seconds: 5),
+          content: Text(validacao),
+        );
+
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+        setState(() {
+          _circularProgressButton = 0;
+        });
+        if (validacao == "Frequência gravada com sucesso!") {
+          _ajustarCampoAposSalvar();
+        }
+      });
+    }
+  }
+
+  _onClickSaveFrequenciaCulto() {
+
+    setState(() {
+      _circularProgressButton = 1;
+    });
+
+    _frequenciaCulto.dataFrequencia = _dataCultoSelecionada;
+
+    _frequenciaCulto.membrosFrequencia = new List<Map>();
+    _frequenciaCulto.membrosFrequencia
+        .addAll(_membrosCelulaMap.listToMapFrequencia(_membrosStoreCulto));
+    if (_indexListaFrequenciaCulto < 0) {
+      _frequenciasCulto.add(_frequenciaCulto.toMapCulto());
+    } else {
+      _frequenciasCulto[_indexListaFrequenciaCulto] =
+          _frequenciaCulto.toMapCulto();
+    }
+    if (_indexListaFrequenciaCulto >= 0) {
+      _frequenciaDAO
+          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 1,
+              _indexListaFrequenciaCulto, context)
+          .then((valor) {
+        var snackBar = SnackBar(
+          duration: Duration(seconds: 5),
+          content: Text(valor),
+        );
+
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+        setState(() {
+          _circularProgressButton = 0;
+        });
+        _ajustarCampoAposSalvarCulto();
+      });
+    } else {
+      _frequenciaDAO
+          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 1,
+              _frequenciasCulto.length - 1, context)
+          .then((valor) {
+        var snackBar = SnackBar(
+          duration: Duration(seconds: 5),
+          content: Text(valor),
+        );
+
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+        setState(() {
+          _circularProgressButton = 0;
+        });
+        if (valor == "Frequência gravada com sucesso!") {
+          _ajustarCampoAposSalvarCulto();
+        }
+      });
+    }
+  }
+
+  showDialogDate(int type) async {
     FocusScope.of(context).requestFocus(FocusNode());
     DateTime date = await showDatePicker(
       context: context,
@@ -723,7 +666,6 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
         _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
       }
     }
-
   }
 
   Widget buildList(BuildContext context, int index) {

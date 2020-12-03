@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/report_bloc.dart';
-import 'package:celulas_vide/reports/report_frequence.dart';
+import 'package:celulas_vide/reports/relatorio_bloc.dart';
+import 'package:celulas_vide/reports/relatorio_frequencia_lider.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class _RelatorioFrequenciaDiscipuladorState
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isLoading = true;
-  final reportBloc = ReportBloc();
+  final reportBloc = RelatorioBloc();
 
   List<Celula> listaCelulas = [];
   List<FrequenciaModel> listaTodasFrequencias = [];
@@ -169,7 +169,7 @@ class _RelatorioFrequenciaDiscipuladorState
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ReportFrequence(
+                  builder: (context) => RelatorioFrequenciaLider(
                     celulaDiscipulador: celula,
                     dateStart: widget.dateStart,
                     dateEnd: widget.dateEnd,

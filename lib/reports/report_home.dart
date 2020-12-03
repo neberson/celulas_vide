@@ -1,6 +1,6 @@
 import 'package:celulas_vide/reports/relatorio_cadastro_celula_discipulador.dart';
 import 'package:celulas_vide/reports/relatorio_frequencia_discipulador.dart';
-import 'package:celulas_vide/reports/report_frequence.dart';
+import 'package:celulas_vide/reports/relatorio_frequencia_lider.dart';
 import 'package:celulas_vide/reports/report_nominal.dart';
 import 'package:celulas_vide/reports/report_offers.dart';
 import 'package:celulas_vide/reports/relatorio_cadastro_celula_lider.dart';
@@ -112,7 +112,7 @@ class _ReportHomeState extends State<ReportHome> {
       if (encargo == 'Lider') {
         print('cargo lider');
         _onClickNavegate(
-          ReportFrequence(
+          RelatorioFrequenciaLider(
             dateStart: _dateStart,
             dateEnd: _dateEnd,
           ),

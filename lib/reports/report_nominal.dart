@@ -1,7 +1,7 @@
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/pdf_generate.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/report_bloc.dart';
+import 'package:celulas_vide/reports/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
@@ -19,7 +19,7 @@ class ReportNominal extends StatefulWidget {
 class _ReportNominalState extends State<ReportNominal> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final reportBloc = ReportBloc();
+  final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
 

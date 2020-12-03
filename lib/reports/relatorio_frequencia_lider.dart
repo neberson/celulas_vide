@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/report_bloc.dart';
+import 'package:celulas_vide/reports/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
@@ -13,19 +13,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class ReportFrequence extends StatefulWidget {
-  DateTime dateStart;
-  DateTime dateEnd;
-  Celula celulaDiscipulador;
-  ReportFrequence({this.dateStart, this.dateEnd, this.celulaDiscipulador});
+class RelatorioFrequenciaLider extends StatefulWidget {
+  final DateTime dateStart;
+  final DateTime dateEnd;
+  final Celula celulaDiscipulador;
+  RelatorioFrequenciaLider({this.dateStart, this.dateEnd, this.celulaDiscipulador});
 
   @override
-  _ReportFrequenceState createState() => _ReportFrequenceState();
+  _RelatorioFrequenciaLiderState createState() => _RelatorioFrequenciaLiderState();
 }
 
-class _ReportFrequenceState extends State<ReportFrequence> {
+class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final reportBloc = ReportBloc();
+  final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
 
@@ -65,8 +65,11 @@ class _ReportFrequenceState extends State<ReportFrequence> {
 
         reportBloc.getFrequencia().then((frequencia) {
           frequenciaModel = frequencia;
-          _filterDataCelula();
-          _filterDataCulto();
+
+          if(frequencia.frequenciaCelula.isNotEmpty)
+            _filterDataCelula();
+          if(frequencia.frequenciaCulto.isNotEmpty)
+            _filterDataCulto();
 
           setState(() => isLoading = false);
         }).catchError((onError) {
@@ -451,6 +454,7 @@ class _ReportFrequenceState extends State<ReportFrequence> {
   }
 
   _tableCelula() {
+
     if (listaFrequenciaCelula.isEmpty)
       return emptyState(
           context, 'Nenhum resultado neste período', Icons.person);

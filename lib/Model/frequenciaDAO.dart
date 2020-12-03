@@ -28,8 +28,6 @@ class frequenciaDAO {
           "frequenciaCulto": frequenciaCulto
         };
 
-        print('data: ${frequenciaCelula.last['dataCelula']}');
-
         FirebaseUser usuarioAtual = await _auth.currentUser();
 
         db

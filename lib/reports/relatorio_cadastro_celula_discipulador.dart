@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/report_bloc.dart';
+import 'package:celulas_vide/reports/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
@@ -28,7 +28,7 @@ class RelatorioCadastroCelulaDiscipulador extends StatefulWidget {
 
 class _RelatorioCadastroCelulaDiscipuladorState
     extends State<RelatorioCadastroCelulaDiscipulador> {
-  final reportBloc = ReportBloc();
+  final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
   bool haveDate = true;
