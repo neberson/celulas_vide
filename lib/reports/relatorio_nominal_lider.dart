@@ -8,15 +8,13 @@ import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ReportNominal extends StatefulWidget {
-  final titleAppBar;
-  ReportNominal(this.titleAppBar);
+class RelatorioNominalLider extends StatefulWidget {
 
   @override
-  _ReportNominalState createState() => _ReportNominalState();
+  _RelatorioNominalLiderState createState() => _RelatorioNominalLiderState();
 }
 
-class _ReportNominalState extends State<ReportNominal> {
+class _RelatorioNominalLiderState extends State<RelatorioNominalLider> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final reportBloc = RelatorioBloc();
@@ -57,7 +55,7 @@ class _ReportNominalState extends State<ReportNominal> {
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
-          title: Text(widget.titleAppBar),
+          title: Text('Relatório membros da Célula'),
           backgroundColor: Theme.of(context).accentColor,
           bottom: TabBar(
             tabs: [

@@ -1,8 +1,8 @@
 import 'package:celulas_vide/reports/relatorio_cadastro_celula_discipulador.dart';
 import 'package:celulas_vide/reports/relatorio_frequencia_discipulador.dart';
 import 'package:celulas_vide/reports/relatorio_frequencia_lider.dart';
-import 'package:celulas_vide/reports/report_nominal.dart';
-import 'package:celulas_vide/reports/report_offers.dart';
+import 'package:celulas_vide/reports/relatorio_nominal_lider.dart';
+import 'package:celulas_vide/reports/relatorio_ofertas_lider.dart';
 import 'package:celulas_vide/reports/relatorio_cadastro_celula_lider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -175,7 +175,7 @@ class _ReportHomeState extends State<ReportHome> {
   _onClickReportNominal() => Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ReportNominal('Relatório membros da Célula')));
+          builder: (context) => RelatorioNominalLider()));
 
   _onClickReportOffers() async {
     var result = await _showDialogDate();
@@ -187,7 +187,7 @@ class _ReportHomeState extends State<ReportHome> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ReportOffers(
+              builder: (context) => RelatorioOfertasLider(
                     dateStart: _dateStart,
                     dateEnd: _dateEnd,
                   )));

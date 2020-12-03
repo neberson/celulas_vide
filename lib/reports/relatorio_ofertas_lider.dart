@@ -9,17 +9,17 @@ import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ReportOffers extends StatefulWidget {
+class RelatorioOfertasLider extends StatefulWidget {
 
   DateTime dateStart;
   DateTime dateEnd;
-  ReportOffers({this.dateStart, this.dateEnd});
+  RelatorioOfertasLider({this.dateStart, this.dateEnd});
 
   @override
-  _ReportOffersState createState() => _ReportOffersState();
+  _RelatorioOfertasLiderState createState() => _RelatorioOfertasLiderState();
 }
 
-class _ReportOffersState extends State<ReportOffers> {
+class _RelatorioOfertasLiderState extends State<RelatorioOfertasLider> {
   final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
@@ -61,8 +61,13 @@ class _ReportOffersState extends State<ReportOffers> {
 
   _filterDates() {
     _listAllFrequency.forEach((element) {
-      if (element.dataCelula.isAfter(widget.dateStart) &&
-          element.dataCelula.isBefore(widget.dateEnd)) {
+
+      DateTime dateComparation = DateTime(element.dataCelula.year,
+          element.dataCelula.month, element.dataCelula.day);
+
+      if (dateComparation.isAfter(widget.dateStart) &&
+          (dateComparation.isBefore(widget.dateEnd) ||
+              dateComparation.isAtSameMomentAs(widget.dateEnd))) {
         _listFrequencyFiltered.add(element);
         valueTotal += element.ofertaCelula;
       }
