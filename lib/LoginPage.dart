@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Controller/loginUsuario.dart';
-import 'package:celulas_vide/Discipulador/HomeDiscipulador.dart';
+import 'package:celulas_vide/Discipulador/home_discipulador.dart';
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Tela_Cadastrar.dart';
 import 'package:celulas_vide/repository/services.dart';

@@ -29,7 +29,6 @@ class _ReportHomeState extends State<ReportHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         title: Text('Relatórios'),
@@ -40,69 +39,66 @@ class _ReportHomeState extends State<ReportHome> {
 
   _body() {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-            padding: EdgeInsets.only(bottom: 32),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(
-                        left: 16, right: 16, top: 16, bottom: 16),
-                    child: Text(
-                      'Selecione um modelo',
-                      style: TextStyle(fontSize: 26),
-                    )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          _itemTypeReport('Cadastro\nde Célula',
-                              Icons.person_add, _onClickReportCellRegistration),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          _itemTypeReport('Nominal membros\nda Célula',
-                              Icons.supervisor_account, _onClickReportNominal),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          _itemTypeReport(
-                              'Frequencia de\nCélula e Culto',
-                              Icons.format_list_numbered,
-                              _onClickReportFrequence),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          _itemTypeReport('Ofertas\nda Célula',
-                              Icons.monetization_on, _onClickReportOffers)
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
+      child: Container(
+        margin: EdgeInsets.only(left: 16, right: 16),
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 16, bottom: 16),
+              child: Center(
+                child: Text(
+                  'Selecione um modelo',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
             ),
-          )
-        ],
+            Container(
+              height: 250,
+              child: GridView.count(
+                physics: NeverScrollableScrollPhysics(),
+               crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
+                children: [
+                  _itemTypeReport('Cadastro\nde Célula', Icons.person_add, _onClickReportCellRegistration),
+                  _itemTypeReport('Nominal membros da Célula', Icons.supervisor_account, _onClickReportNominal),
+                  _itemTypeReport('Frequência', Icons.format_list_numbered, _onClickReportFrequence),
+                  _itemTypeReport('Ofertas da Célula', Icons.monetization_on, _onClickReportOffers),
+                  if(encargo == 'Discipulador')
+                    _itemTypeReport('Projeção\nMensal', FontAwesomeIcons.calendarAlt, _onClickProjecaoMensal),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  _onClickReportFrequence() async {
+  _itemTypeReport(String title, icon, onPressed) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 25,
+          backgroundColor: Theme.of(context).buttonColor,
+          child: IconButton(
+            icon: Icon(icon, size: 25,),
+            onPressed: onPressed,
+          ),
+        ),
+        const SizedBox(height: 5.0),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+        ),
+      ],
+    );
+  }
 
+  _onClickProjecaoMensal(){
+
+  }
+
+  _onClickReportFrequence() async {
     var result = await _showDialogDate();
 
     _cDateStart.clear();
@@ -118,7 +114,7 @@ class _ReportHomeState extends State<ReportHome> {
           ),
         );
       } else if (encargo == 'Discipulador') {
-        print('cargo discipulador');
+
         _onClickNavegate(
           RelatorioFrequenciaDiscipulador(
             _dateStart,
@@ -130,7 +126,6 @@ class _ReportHomeState extends State<ReportHome> {
       _cDateStart.clear();
       _cDateEnd.clear();
     }
-
   }
 
   _onClickReportCellRegistration() async {
@@ -172,10 +167,8 @@ class _ReportHomeState extends State<ReportHome> {
     );
   }
 
-  _onClickReportNominal() => Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => RelatorioNominalLider()));
+  _onClickReportNominal() => Navigator.push(context,
+      MaterialPageRoute(builder: (context) => RelatorioNominalLider()));
 
   _onClickReportOffers() async {
     var result = await _showDialogDate();
@@ -194,35 +187,6 @@ class _ReportHomeState extends State<ReportHome> {
       _cDateStart.clear();
       _cDateEnd.clear();
     }
-  }
-
-  _itemTypeReport(String title, icon, onPressed) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            child: CircleAvatar(
-              backgroundColor: Colors.grey[200],
-              child: IconButton(
-                  icon: Icon(
-                    icon,
-                    color: Theme.of(context).accentColor,
-                    size: 26,
-                  ),
-                  onPressed: onPressed),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 15),
-          )
-        ],
-      ),
-    );
   }
 
   _showDialogDate() {
@@ -364,4 +328,3 @@ class _ReportHomeState extends State<ReportHome> {
     super.dispose();
   }
 }
-

@@ -21,7 +21,7 @@ class _HomeDiscipuladorState extends State<HomeDiscipulador> {
     Categoria("Dados das Células","/PerfilDiscipulador", icone: FontAwesomeIcons.globeAsia),
     Categoria("Membros","/MembrosDiscipulador", icone: FontAwesomeIcons.users),
     Categoria("Convites","/ConvitesDiscipulador", icone: FontAwesomeIcons.envelope),
-    Categoria("Números da célula","/ReportsHome", icone: FontAwesomeIcons.calculator),
+    Categoria("Relatórios","/ReportsHome", icone: FontAwesomeIcons.calculator),
   ];
 
   _escolhaMenuItem(String item) {
