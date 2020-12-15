@@ -1,3 +1,4 @@
+import 'package:celulas_vide/Model/Mes.dart';
 import 'package:celulas_vide/reports/relatorio_cadastro_celula_discipulador.dart';
 import 'package:celulas_vide/reports/relatorio_frequencia_discipulador.dart';
 import 'package:celulas_vide/reports/relatorio_frequencia_lider.dart';
@@ -25,6 +26,23 @@ class _ReportHomeState extends State<ReportHome> {
   final _formKey = GlobalKey<FormState>();
 
   String get encargo => widget.encargo;
+
+  List<Mes> meses = [
+    Mes(1, 'Janeiro'),
+    Mes(2, 'Fevereiro'),
+    Mes(3, 'Março'),
+    Mes(4, 'Abril'),
+    Mes(5, 'Maio'),
+    Mes(6, 'Junho'),
+    Mes(7, 'Julho'),
+    Mes(8, 'Agosto'),
+    Mes(9, 'Setembro'),
+    Mes(10, 'Outubro'),
+    Mes(11, 'Novembro'),
+    Mes(12, 'Dezembro'),
+  ];
+
+  Mes mesSelecionado = Mes(1, 'Janeiro');
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +74,19 @@ class _ReportHomeState extends State<ReportHome> {
               height: 250,
               child: GridView.count(
                 physics: NeverScrollableScrollPhysics(),
-               crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
+                crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
                 children: [
-                  _itemTypeReport('Cadastro\nde Célula', Icons.person_add, _onClickReportCellRegistration),
-                  _itemTypeReport('Nominal membros da Célula', Icons.supervisor_account, _onClickReportNominal),
-                  _itemTypeReport('Frequência', Icons.format_list_numbered, _onClickReportFrequence),
-                  _itemTypeReport('Ofertas da Célula', Icons.monetization_on, _onClickReportOffers),
-                  if(encargo == 'Discipulador')
-                    _itemTypeReport('Projeção\nMensal', FontAwesomeIcons.calendarAlt, _onClickProjecaoMensal),
+                  _itemTypeReport('Cadastro\nde Célula', Icons.person_add,
+                      _onClickReportCellRegistration),
+                  _itemTypeReport('Nominal membros da Célula',
+                      Icons.supervisor_account, _onClickReportNominal),
+                  _itemTypeReport('Frequência', Icons.format_list_numbered,
+                      _onClickReportFrequence),
+                  _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
+                      _onClickReportOffers),
+                  if (encargo == 'Discipulador')
+                    _itemTypeReport('Projeção\nMensal',
+                        FontAwesomeIcons.calendarAlt, _onClickProjecaoMensal),
                 ],
               ),
             )
@@ -80,7 +103,10 @@ class _ReportHomeState extends State<ReportHome> {
           radius: 25,
           backgroundColor: Theme.of(context).buttonColor,
           child: IconButton(
-            icon: Icon(icon, size: 25,),
+            icon: Icon(
+              icon,
+              size: 25,
+            ),
             onPressed: onPressed,
           ),
         ),
@@ -94,8 +120,70 @@ class _ReportHomeState extends State<ReportHome> {
     );
   }
 
-  _onClickProjecaoMensal(){
+  _onClickProjecaoMensal() {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              title: Text(
+                'Escolha um intervalo de datas',
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _dropDowmMeses()
+                ],
+              ),
+              actions: <Widget>[
+                Container(
+                  child: FlatButton(
+                      child: Text(
+                        'Sair',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context)),
+                ),
+                Container(
+                  child: FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        'Gerar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: _onClickGenerate),
+                )
+              ],
+            ),
+          );
+        });
+  }
 
+  _dropDowmMeses() {
+    return DropdownButtonFormField(
+      items: meses
+          .map(
+            (e) => DropdownMenuItem(
+              child: Text(e.descricao),
+              value: mesSelecionado,
+            ),
+          )
+          .toList(),
+      onChanged: (value) {
+
+        setState(() {
+          mesSelecionado = value;
+        });
+
+      },
+    );
   }
 
   _onClickReportFrequence() async {
@@ -114,7 +202,6 @@ class _ReportHomeState extends State<ReportHome> {
           ),
         );
       } else if (encargo == 'Discipulador') {
-
         _onClickNavegate(
           RelatorioFrequenciaDiscipulador(
             _dateStart,
