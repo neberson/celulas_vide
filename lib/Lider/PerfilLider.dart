@@ -219,18 +219,6 @@ class _PerfilLiderState extends State<PerfilLider> {
                     Container(
                       padding: EdgeInsets.only(top: 20),
                       height: 230,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              stops: [
-                            0.5,
-                            0.9
-                          ],
-                              colors: [
-                            Color.fromRGBO(81, 37, 103, 1),
-                            Color.fromRGBO(169, 88, 159, 1)
-                          ])),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
