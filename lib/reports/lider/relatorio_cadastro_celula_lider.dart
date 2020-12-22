@@ -387,7 +387,7 @@ class _RelatorioCadastroCelulaLiderState extends State<RelatorioCadastroCelulaLi
     ));
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/relatorio_cadastro_celula.pdf';
+    final String path = '$dir/relatorio_cadastro_celula.dart.pdf';
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
 

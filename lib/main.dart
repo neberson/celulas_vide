@@ -5,7 +5,6 @@ import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/DadosCelula.dart';
 import 'package:celulas_vide/Lider/DadosMembro.dart';
 import 'package:celulas_vide/Lider/GerenciarConvitePage.dart';
-import 'package:celulas_vide/Lider/HomeLider.dart';
 import 'package:celulas_vide/Lider/ListaMembros.dart';
 import 'package:celulas_vide/Lider/PerfilLider.dart';
 import 'package:celulas_vide/Lider/TabMembros.dart';

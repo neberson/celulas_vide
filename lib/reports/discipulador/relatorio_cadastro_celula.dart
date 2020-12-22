@@ -28,7 +28,7 @@ class RelatorioCadastroCelulaDiscipulador extends StatefulWidget {
 
 class _RelatorioCadastroCelulaDiscipuladorState
     extends State<RelatorioCadastroCelulaDiscipulador> {
-  final reportBloc = RelatorioBloc();
+  final relatorioBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
   bool haveDate = true;
@@ -44,20 +44,20 @@ class _RelatorioCadastroCelulaDiscipuladorState
 
   @override
   void initState() {
-    reportBloc.getCelulasByDiscipulador().then((celulas) {
+    relatorioBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
       _filterDates();
 
-      reportBloc.getCelula().then((value) {
+      relatorioBloc.getCelula().then((value) {
         celula = value;
 
         setState(() => isLoading = false);
       });
     }).catchError((onError) {
-      print('error getting frequencia membros: ${onError.toString()}');
+      print('error getting cadastro de celulas: ${onError.toString()}');
       setState(() {
         error =
-            'Não foi possível obter a frequencia dos membros, tente novamente.';
+            'Não foi possível obter o cadastro das células, tente novamente.';
         isLoading = false;
       });
     });

@@ -1,7 +1,7 @@
 
 import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Model/CategoriaMenu.dart';
-import 'package:celulas_vide/reports/report_home.dart';
+import 'package:celulas_vide/reports/relatorio_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -159,7 +159,7 @@ class _HomeLiderState extends State<HomeLider> {
   _onClickCategoria(Categoria categoria){
 
     if(categoria.rota == '/ReportsHome')
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportHome(encargo: 'Lider',)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RelatorioHome(encargo: 'Lider',)));
     else
       Navigator.pushNamed(context, categoria.rota);
 
