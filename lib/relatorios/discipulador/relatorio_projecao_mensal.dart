@@ -1,18 +1,18 @@
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/reports/relatorio_bloc.dart';
+import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 
-class ProjecaoMensalRelatorio extends StatefulWidget {
+class RelatorioProjecaoMensal extends StatefulWidget {
   final mes;
-  ProjecaoMensalRelatorio(this.mes);
+  RelatorioProjecaoMensal(this.mes);
 
   @override
-  _ProjecaoMensalRelatorioState createState() =>
-      _ProjecaoMensalRelatorioState();
+  _RelatorioProjecaoMensalState createState() =>
+      _RelatorioProjecaoMensalState();
 }
 
-class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
+class _RelatorioProjecaoMensalState extends State<RelatorioProjecaoMensal> {
   get mes => widget.mes;
 
   final reportBloc = RelatorioBloc();
@@ -20,11 +20,14 @@ class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
   List<Celula> listaCelulas = [];
   var mesAnterior;
 
+
+  int totalJaneiro = 0;
   int totalMesAtual = 0;
   int totalMesAnterior = 0;
   int total6Membros = 0;
   int total7A9Membros = 0;
   int totalMais10 = 0;
+  num totalCrescimento = 0;
 
   bool isLoading = true;
   var error;
@@ -57,6 +60,10 @@ class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
 
   void _filterDates() {
     listaCelulas.forEach((element) {
+
+      if(element.dadosCelula.dataCelula.month == 1)
+        totalJaneiro++;
+
       if (element.dadosCelula.dataCelula.month == mes.id) {
         totalMesAtual++;
 
@@ -69,6 +76,12 @@ class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
       } else if (element.dadosCelula.dataCelula.month == mesAnterior)
         totalMesAnterior++;
     });
+
+    if(totalJaneiro == 0)
+      totalCrescimento = 0;
+    else
+      totalCrescimento = (totalMesAtual - totalJaneiro) / totalJaneiro;
+
   }
 
   @override
@@ -106,6 +119,7 @@ class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
   }
 
   _table() {
+
     return Container(
       color: Theme.of(context).accentColor.withAlpha(60),
       margin: EdgeInsets.only(left: 8, right: 8, top: 16),
@@ -121,7 +135,7 @@ class _ProjecaoMensalRelatorioState extends State<ProjecaoMensalRelatorio> {
           ]),
           DataRow(cells: [
             DataCell(Text('Crescimento no ano')),
-            DataCell(Text('0%'))
+            DataCell(Text('${totalCrescimento.toStringAsFixed(2).replaceAll('.', ',')}%'))
           ]),
           DataRow(cells: [
             DataCell(Text('Células com até 6 membros')),

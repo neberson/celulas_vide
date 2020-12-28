@@ -1,7 +1,7 @@
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/reports/pdf_generate.dart';
-import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/relatorio_bloc.dart';
+import 'package:celulas_vide/relatorios/pdf_generate.dart';
+import 'package:celulas_vide/relatorios/pdf_viewer.dart';
+import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';

@@ -1,7 +1,7 @@
 
 import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Model/CategoriaMenu.dart';
-import 'package:celulas_vide/reports/relatorio_home.dart';
+import 'package:celulas_vide/relatorios/relatorio_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeLider extends StatefulWidget {
 
-  String encargo;
+  final String encargo;
 
   HomeLider({this.encargo});
 

@@ -11,12 +11,13 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-class frequenciaMembros extends StatefulWidget {
+class FrequenciaMembros extends StatefulWidget {
+
   @override
-  _frequenciaMembrosState createState() => _frequenciaMembrosState();
+  _FrequenciaMembrosState createState() => _FrequenciaMembrosState();
 }
 
-class _frequenciaMembrosState extends State<frequenciaMembros> {
+class _FrequenciaMembrosState extends State<FrequenciaMembros> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   int _circularProgressButton = 0;
   int _indexListaFrequencia = -1;
@@ -34,7 +35,7 @@ class _frequenciaMembrosState extends State<frequenciaMembros> {
   List<Map> _membrosCelula = List<Map>();
   List<Map> _membrosRecuperado = List<Map>();
   int circularProgressTela = 0;
-  frequenciaDAO _frequenciaDAO = new frequenciaDAO();
+  FrequenciaDAO _frequenciaDAO = new FrequenciaDAO();
   Frequencia _frequenciaCelula = new Frequencia();
   Frequencia _frequenciaCulto = new Frequencia();
 

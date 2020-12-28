@@ -59,7 +59,7 @@ class _PerfilLiderState extends State<PerfilLider> {
     });
   }
 
-  Future _uploadImagem() {
+  _uploadImagem() {
     FirebaseStorage storage = FirebaseStorage.instance;
     StorageReference pastaRaiz = storage.ref();
     StorageReference arquivo =
@@ -67,12 +67,12 @@ class _PerfilLiderState extends State<PerfilLider> {
 
     StorageUploadTask task = arquivo.putFile(_imagem);
 
-    task.events.listen((StorageTaskEvent) {
-      if (StorageTaskEvent.type == StorageTaskEventType.progress) {
+    task.events.listen((storageTaskEvent) {
+      if (storageTaskEvent.type == StorageTaskEventType.progress) {
         setState(() {
           _subindoImagem = true;
         });
-      } else if (StorageTaskEvent.type == StorageTaskEventType.success) {
+      } else if (storageTaskEvent.type == StorageTaskEventType.success) {
         setState(() {
           _subindoImagem = false;
         });

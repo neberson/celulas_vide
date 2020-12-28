@@ -33,18 +33,18 @@ class _DadosCelulaState extends State<DadosCelula> {
   TextEditingController _dataInicioCelula = TextEditingController();
   TextEditingController _dataUltimaMultiplicacao = TextEditingController();
   TextEditingController _dataProximaMultiplicao = TextEditingController();
-  var _CEP = MaskedTextController(mask: '00000000');
+  var _cep = MaskedTextController(mask: '00000000');
   var date;
   var dateInicioCelula;
   var dateCelulaUltimaMultiplicacao;
   var dateProximaMultiplicao;
   TextEditingController _nomeCelula = TextEditingController();
-  TextEditingController _LOGRADOURO = TextEditingController();
-  TextEditingController _NUMERO = TextEditingController();
-  TextEditingController _COMPLEMENTO = TextEditingController();
-  TextEditingController _BAIRRO = TextEditingController();
-  TextEditingController _CIDADE = TextEditingController();
-  TextEditingController _ESTADO = TextEditingController();
+  TextEditingController _logradouro = TextEditingController();
+  TextEditingController _numero = TextEditingController();
+  TextEditingController _complemento = TextEditingController();
+  TextEditingController _bairro = TextEditingController();
+  TextEditingController _cidade = TextEditingController();
+  TextEditingController _estado = TextEditingController();
   TextEditingController _anfitriao = TextEditingController();
 
   var _fNomeAnfitriao = FocusNode();
@@ -60,19 +60,19 @@ class _DadosCelulaState extends State<DadosCelula> {
   var _fEstado = FocusNode();
   var _fHorario = FocusNode();
 
-  celulaDAO _salvarCelula = new celulaDAO();
+  CelulaDAO _salvarCelula = new CelulaDAO();
 
   _buscarCEP(String cep) async {
-    var CEP = new via_cep();
-    print(CEP.getLocalidade());
+    var cep = new via_cep();
+    print(cep.getLocalidade());
 
-    if (CEP.getResponse() == 200) {
+    if (cep.getResponse() == 200) {
       setState(() {
-        _LOGRADOURO.text = CEP.getLogradouro();
-        _COMPLEMENTO.text = CEP.getComplemento();
-        _BAIRRO.text = CEP.getBairro();
-        _CIDADE.text = CEP.getLocalidade();
-        _ESTADO.text = CEP.getUF();
+        _logradouro.text = cep.getLogradouro();
+        _complemento.text = cep.getComplemento();
+        _bairro.text = cep.getBairro();
+        _cidade.text = cep.getLocalidade();
+        _estado.text = cep.getUF();
       });
     }
   }
@@ -104,13 +104,13 @@ class _DadosCelulaState extends State<DadosCelula> {
         _dataProximaMultiplicao.text = DateFormat('dd/MM/yyyy').format(dados["dataProximaMultiplicacao"].toDate());
         dateProximaMultiplicao = dados["dataProximaMultiplicacao"].toDate();
       }
-      _CEP.text = dados["CEP"];
-      _LOGRADOURO.text = dados["logradouro"];
-      _NUMERO.text = dados["numero"];
-      _COMPLEMENTO.text = dados["complemento"];
-      _BAIRRO.text = dados["bairro"];
-      _CIDADE.text = dados["cidade"];
-      _ESTADO.text = dados["estado"];
+      _cep.text = dados["CEP"];
+      _logradouro.text = dados["logradouro"];
+      _numero.text = dados["numero"];
+      _complemento.text = dados["complemento"];
+      _bairro.text = dados["bairro"];
+      _cidade.text = dados["cidade"];
+      _estado.text = dados["estado"];
     }
   }
 
@@ -436,7 +436,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fRua),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                controller: _CEP,
+                controller: _cep,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -473,7 +473,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (text)=> FocusScope.of(context).requestFocus(_fNumero),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
-                controller: _LOGRADOURO,
+                controller: _logradouro,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -504,7 +504,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fComplemento),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
-                controller: _NUMERO,
+                controller: _numero,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -535,7 +535,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fBairro),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
-                controller: _COMPLEMENTO,
+                controller: _complemento,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -566,7 +566,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fCidade),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
-                controller: _BAIRRO,
+                controller: _bairro,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -597,7 +597,7 @@ class _DadosCelulaState extends State<DadosCelula> {
                 onFieldSubmitted: (text) => FocusScope.of(context).requestFocus(_fEstado),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
-                controller: _CIDADE,
+                controller: _cidade,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -626,7 +626,7 @@ class _DadosCelulaState extends State<DadosCelula> {
               child: TextFormField(
                 focusNode: _fEstado,
                 keyboardType: TextInputType.text,
-                controller: _ESTADO,
+                controller: _estado,
                 cursorColor: Colors.white,
                 style: TextStyle(
                   color: Colors.white,
@@ -696,13 +696,13 @@ class _DadosCelulaState extends State<DadosCelula> {
                           dateCelulaUltimaMultiplicacao;
                       celula.proximaMultiplicacao =
                           dateProximaMultiplicao;
-                      celula.cep = _CEP.text;
-                      celula.logradouro = _LOGRADOURO.text;
-                      celula.numero = _NUMERO.text;
-                      celula.complemento = _COMPLEMENTO.text;
-                      celula.bairro = _BAIRRO.text;
-                      celula.cidade = _CIDADE.text;
-                      celula.estado = _ESTADO.text;
+                      celula.cep = _cep.text;
+                      celula.logradouro = _logradouro.text;
+                      celula.numero = _numero.text;
+                      celula.complemento = _complemento.text;
+                      celula.bairro = _bairro.text;
+                      celula.cidade = _cidade.text;
+                      celula.estado = _estado.text;
 
                       _salvarCelula
                           .salvarDados(celula, context)

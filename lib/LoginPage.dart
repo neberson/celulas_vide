@@ -1,7 +1,7 @@
 import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Discipulador/home_discipulador.dart';
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/Tela_Cadastrar.dart';
+import 'package:celulas_vide/CadastroPage.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
 import 'package:flutter/material.dart';
@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage>
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Tela_Cadastrar()),
+                                    builder: (context) => CadastroPage()),
                               );
                             },
                           )
@@ -312,14 +312,14 @@ class _LoginPageState extends State<LoginPage>
   _loadingSplash() {
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
               margin: EdgeInsets.only(top: 32),
               child: Image.asset("images/logo-01.png")),
           Container(
               margin: EdgeInsets.only(bottom: 64),
-              child: CircularProgressIndicator())
+              child: Center(child: CircularProgressIndicator()))
         ],
       ),
     );

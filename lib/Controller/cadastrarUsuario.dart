@@ -3,29 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class cadastrarUsuario {
+
+
+class CadastroUsuarioBloc {
 
   FirebaseAuth auth = FirebaseAuth.instance;
-
-  String validarCampos(String nome, String email, String senha, String encargo){
-    if(nome.length > 3){
-      if(email.isNotEmpty && email.contains("@")){
-        if(senha.length >= 8 ){
-
-        }else{
-          return "Preencha uma senha com 8 ou mais caracteres";
-        }
-      }else{
-        return "Preencha o email utilizando um @";
-      }
-
-    }else{
-      return "Preencha um nome com mais de 3 caracteres";
-    }
-
-
-
-  }
 
   Future<String> novoUsuario(Usuario user,BuildContext context) async {
     String _authValidation;

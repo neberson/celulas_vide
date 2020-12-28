@@ -1,11 +1,11 @@
-import 'package:celulas_vide/reports/discipulador/relatorio_projecao_mensal';
 import 'package:celulas_vide/Model/Mes.dart';
-import 'package:celulas_vide/reports/discipulador/relatorio_cadastro_celula.dart';
-import 'package:celulas_vide/reports/discipulador/relatorio_frequencia.dart';
-import 'package:celulas_vide/reports/lider/relatorio_cadastro_celula_lider.dart';
-import 'package:celulas_vide/reports/lider/relatorio_frequencia_lider.dart';
-import 'package:celulas_vide/reports/lider/relatorio_nominal_lider.dart';
-import 'package:celulas_vide/reports/lider/relatorio_ofertas_lider.dart';
+import 'package:celulas_vide/relatorios/discipulador/relatorio_cadastro_celula.dart';
+import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia.dart';
+import 'package:celulas_vide/relatorios/discipulador/relatorio_projecao_mensal.dart';
+import 'package:celulas_vide/relatorios/lider/relatorio_cadastro_celula_lider.dart';
+import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
+import 'package:celulas_vide/relatorios/lider/relatorio_nominal_lider.dart';
+import 'package:celulas_vide/relatorios/lider/relatorio_ofertas_lider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -128,71 +128,65 @@ class _RelatorioHomeState extends State<RelatorioHome> {
         builder: (BuildContext context) {
           return Form(
             key: _formKey,
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return WillPopScope(
-                  onWillPop: () async => false,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    title: Text(
-                      'Escolha o mês para filtrar',
-                    ),
-                    content: Container(
-                      // height: MediaQuery.of(context).size.height / 3,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [_dropDowmMeses(setState)],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      Container(
-                        child: FlatButton(
-                            child: Text(
-                              'Sair',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                              ),
-                            ),
-                            onPressed: () {
-
-                              Navigator.pop(context);
-
-                              mesSelecionado = null;
-
-
-
-                            }),
-                      ),
-                      Container(
-                        child: FlatButton(
-                            color: Theme.of(context).accentColor,
-                            child: Text(
-                              'Gerar',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: _onClickGenerateProjecaoMensal),
-                      )
-                    ],
+            child: StatefulBuilder(builder: (context, setState) {
+              return WillPopScope(
+                onWillPop: () async => false,
+                child: AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                );
-              }
-            ),
+                  title: Text(
+                    'Escolha o mês para filtrar',
+                  ),
+                  content: Container(
+                    // height: MediaQuery.of(context).size.height / 3,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [_dropDowmMeses(setState)],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    Container(
+                      child: FlatButton(
+                          child: Text(
+                            'Sair',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+
+                            mesSelecionado = null;
+                          }),
+                    ),
+                    Container(
+                      child: FlatButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Gerar',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: _onClickGenerateProjecaoMensal),
+                    )
+                  ],
+                ),
+              );
+            }),
           );
         });
   }
 
   void _onClickGenerateProjecaoMensal() {
-
-    if(_formKey.currentState.validate()){
-
+    if (_formKey.currentState.validate()) {
       //close dialog
       Navigator.pop(context);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ProjecaoMensalRelatorio(mesSelecionado)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => RelatorioProjecaoMensal(mesSelecionado)));
     }
-
   }
 
   _dropDowmMeses(setState) {
@@ -215,7 +209,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
         );
       }).toList(),
       onChanged: (novoValor) {
-        setState((){
+        setState(() {
           mesSelecionado = novoValor;
         });
       },
@@ -451,6 +445,4 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     _cDateEnd.dispose();
     super.dispose();
   }
-
-
 }

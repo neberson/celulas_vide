@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/reports/pdf_viewer.dart';
-import 'package:celulas_vide/reports/relatorio_bloc.dart';
+import 'package:celulas_vide/relatorios/pdf_viewer.dart';
+import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
@@ -16,8 +16,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class RelatorioCadastroCelulaDiscipulador extends StatefulWidget {
-  DateTime dateStart;
-  DateTime dateEnd;
+  final DateTime dateStart;
+  final DateTime dateEnd;
 
   RelatorioCadastroCelulaDiscipulador(this.dateStart, this.dateEnd);
 

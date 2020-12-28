@@ -2,7 +2,7 @@ import 'package:celulas_vide/Model/Celula.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-class celulaDAO {
+class CelulaDAO {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;

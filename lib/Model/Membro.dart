@@ -9,7 +9,7 @@ class Membro {
   bool cursao;
   bool ctl;
   bool encontroDeus;
-  bool Seminario;
+  bool seminario;
   bool consolidado;
   bool dizimista;
 

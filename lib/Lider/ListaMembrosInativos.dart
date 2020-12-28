@@ -9,13 +9,14 @@ class ListaMembrosInativos extends StatefulWidget {
 }
 
 class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
-  List<Map> Membros = List<Map>();
+  List<Map> membros = List<Map>();
+
   int circularProgressTela = 0;
-  membrosDAO _membroDAO = new membrosDAO();
+  MembrosDAO _membroDAO = new MembrosDAO();
   _recuperarListaMembros() async {
     int contador = 0;
-    Membros = await _membroDAO.recuperarMembros();
-    for (Map<dynamic, dynamic> membro in Membros) {
+    membros = await _membroDAO.recuperarMembros();
+    for (Map<dynamic, dynamic> membro in membros) {
       if (membro["status"] == 1) {
         contador = 1;
       }
@@ -24,7 +25,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
     setState(() {
       if (contador == 0) {
         setState(() {
-          Membros = [];
+          membros = [];
         });
       }
     });
@@ -79,7 +80,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
               padding: EdgeInsets.only(top: 10),
               height: MediaQuery.of(context).size.height,
               width: double.infinity,
-              child: Membros.isEmpty
+              child: membros.isEmpty
                   ? Center(
                       child: Padding(
                       padding: EdgeInsets.all(25),
@@ -91,9 +92,9 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                               color: Colors.white)),
                     ))
                   : ListView.builder(
-                      itemCount: Membros.length,
+                      itemCount: membros.length,
                       itemBuilder: (context, index) {
-                        if (Membros[index]["status"] == 1) {
+                        if (membros[index]["status"] == 1) {
                           return buildList(context, index);
                         } else {
                           return Container();
@@ -126,8 +127,8 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        Membros[index]["nomeMembro"] != null
-                            ? Membros[index]["nomeMembro"]
+                        membros[index]["nomeMembro"] != null
+                            ? membros[index]["nomeMembro"]
                             : "",
                         style: TextStyle(
                             color: Color.fromRGBO(81, 37, 103, 1),
@@ -148,7 +149,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                             width: 5,
                           ),
                           Text(
-                            Membros[index]["condicaoMembro"],
+                            membros[index]["condicaoMembro"],
                             style: TextStyle(
                                 color: Color.fromRGBO(81, 37, 103, 1),
                                 fontSize: 13,
@@ -171,7 +172,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                           ),
                           Flexible(
                             child: Text(
-                              Membros[index]["enderecoMembro"],
+                              membros[index]["enderecoMembro"],
                               style: TextStyle(
                                   color: Color.fromRGBO(81, 37, 103, 1),
                                   fontSize: 13,
@@ -194,7 +195,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                             width: 5,
                           ),
                           Text(
-                            Membros[index]["telefoneMembro"],
+                            membros[index]["telefoneMembro"],
                             style: TextStyle(
                                 color: Color.fromRGBO(81, 37, 103, 1),
                                 fontSize: 13,
@@ -239,9 +240,9 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                                       color: Colors.white70, fontSize: 20),
                                 ),
                                 onPressed: () {
-                                  Membros[index]["status"] = 0;
+                                  membros[index]["status"] = 0;
                                   _membroDAO.ativarInativarMembro(
-                                      Membros, context);
+                                      membros, context);
                                 },
                               ),
                             )
@@ -255,7 +256,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
             )));
   }
 
-  Widget _exibirDialogoExcluir(int indice) {
+  _exibirDialogoExcluir(int indice) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -263,7 +264,7 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
             title: Text("Excluir Membro"),
             content: Text(
               "Confirma a exclusão do membro " +
-                  Membros[indice]["nomeMembro"] +
+                  membros[indice]["nomeMembro"] +
                   "?",
               style: TextStyle(fontSize: 20),
             ),
@@ -278,9 +279,9 @@ class _ListaMembrosInativosState extends State<ListaMembrosInativos> {
                 ),
                 onPressed: () {
                   setState(() {
-                    Membros.removeAt(indice);
+                    membros.removeAt(indice);
                   });
-                  _membroDAO.excluirDados(Membros, context);
+                  _membroDAO.excluirDados(membros, context);
                 },
               ),
               FlatButton(

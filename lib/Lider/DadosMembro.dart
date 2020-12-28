@@ -29,7 +29,7 @@ class _DadosMembroState extends State<DadosMembro> {
   TextEditingController _dataNascimento = TextEditingController();
   var _telefone = new MaskedTextController(mask: '(00)00000-0000');
   MembroCelula _membro = new MembroCelula();
-  membrosDAO _membroDAO = new membrosDAO();
+  MembrosDAO _membroDAO = new MembrosDAO();
   List<Map> _membros = List<Map>();
   var _fTelefone = FocusNode();
   var _fEndereco = FocusNode();

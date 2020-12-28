@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-class frequenciaDAO {
+class FrequenciaDAO {
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;
   String _idUsuarioLogado;

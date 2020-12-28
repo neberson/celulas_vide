@@ -44,7 +44,7 @@ void main()  {
           '/ListaMembros': (context) => ListaMembros(),
           '/DadosMembro':(context) => DadosMembro(),
           '/DadosCelula': (context) => DadosCelula(),
-          '/frequenciaMembros': (context) => frequenciaMembros(),
+          '/frequenciaMembros': (context) => FrequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
           '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
