@@ -6,9 +6,12 @@ import 'package:celulas_vide/relatorios/lider/relatorio_cadastro_celula_lider.da
 import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_nominal_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_ofertas_lider.dart';
+import 'package:celulas_vide/relatorios/weeks_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:week_of_year/week_of_year.dart';
+import 'package:date_util/date_util.dart';
 
 class RelatorioHome extends StatefulWidget {
   final String encargo;
@@ -178,6 +181,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
   }
 
   void _onClickGenerateProjecaoMensal() {
+
     if (_formKey.currentState.validate()) {
       //close dialog
       Navigator.pop(context);
