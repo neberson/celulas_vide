@@ -21,7 +21,7 @@ void main()  {
   runApp(
       MaterialApp(
         theme: ThemeData(
-          primaryColor: Color.fromRGBO(81, 37, 0, 1),
+          primaryColor: Color.fromRGBO(81, 37, 103, 1),
           accentColor: Color.fromRGBO(81, 37, 103, 1),
           backgroundColor: Color.fromRGBO(81, 37, 103, 1),
           primarySwatch: createMaterialColor (Color.fromRGBO(81, 37, 103, 1)),
@@ -35,7 +35,7 @@ void main()  {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
-          const Locale('pt', 'BR')
+          Locale('pt', 'BR')
         ],
         initialRoute: '/',
         routes: {

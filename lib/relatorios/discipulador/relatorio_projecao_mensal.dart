@@ -2,10 +2,11 @@ import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RelatorioProjecaoMensal extends StatefulWidget {
-  final mes;
-  RelatorioProjecaoMensal(this.mes);
+  final DateTime dateMonth;
+  RelatorioProjecaoMensal(this.dateMonth);
 
   @override
   _RelatorioProjecaoMensalState createState() =>
@@ -13,7 +14,7 @@ class RelatorioProjecaoMensal extends StatefulWidget {
 }
 
 class _RelatorioProjecaoMensalState extends State<RelatorioProjecaoMensal> {
-  get mes => widget.mes;
+  DateTime get dateMonth => widget.dateMonth;
 
   final reportBloc = RelatorioBloc();
 
@@ -34,10 +35,10 @@ class _RelatorioProjecaoMensalState extends State<RelatorioProjecaoMensal> {
 
   @override
   void initState() {
-    if (mes.id == 1)
+    if (dateMonth.month == 1)
       mesAnterior = 12;
     else
-      mesAnterior = mes.id - 1;
+      mesAnterior = dateMonth.month - 1;
 
     reportBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
@@ -64,7 +65,7 @@ class _RelatorioProjecaoMensalState extends State<RelatorioProjecaoMensal> {
       if(element.dadosCelula.dataCelula.month == 1)
         totalJaneiro++;
 
-      if (element.dadosCelula.dataCelula.month == mes.id) {
+      if (element.dadosCelula.dataCelula.month == dateMonth.month) {
         totalMesAtual++;
 
         if (element.membros.length <= 6) total6Membros++;
@@ -108,7 +109,7 @@ class _RelatorioProjecaoMensalState extends State<RelatorioProjecaoMensal> {
             margin: EdgeInsets.only(left: 16, top: 10),
             child: Center(
                 child: Text(
-              'Valores referentes a ${mes.descricao} de ${DateTime.now().year}',
+              'Valores referentes a ${DateFormat.yMMMM('pt').format(dateMonth)}',
               style: TextStyle(fontSize: 16),
             )),
           ),
