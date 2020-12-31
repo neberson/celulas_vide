@@ -11,7 +11,9 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
+
   CadastroUsuarioBloc cadastro = new CadastroUsuarioBloc();
+
   Usuario _user = new Usuario();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -289,14 +291,12 @@ class _CadastroPageState extends State<CadastroPage> {
                         onPressed: () {
                           _user.nome = _controllerNome.text;
                           _user.email = _controllerEmail.text;
-                          _user.senha =  _controllerSenha.text;
-                          _user.confirmarSenha = _controllerConfirmarSenha.text;
                           _user.encargo = _encargoSelecionado;
 
                           setState(() {
                             circularProgress = 1;
                           });
-                          cadastro.novoUsuario(_user, context).then((valor){
+                          cadastro.novoUsuario(_user, _controllerSenha.text, _controllerConfirmarSenha.text).then((valor){
                             setState(() {
                               circularProgress = 0;
                             });

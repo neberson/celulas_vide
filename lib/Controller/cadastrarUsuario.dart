@@ -1,30 +1,29 @@
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 
 
 class CadastroUsuarioBloc {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future<String> novoUsuario(Usuario user,BuildContext context) async {
+  Future<String> novoUsuario(Usuario user, String password, String confirmPassword) async {
     String _authValidation;
     if(user.nome.isEmpty){
       _authValidation = "Preencha o campo Nome!";
     }else if(user.email.isEmpty ){
       _authValidation = "Preencha o campo E-mail!";
-    }else if(user.senha.isEmpty ){
+    }else if(password.isEmpty ){
       _authValidation = "Preencha o campo Senha, com mais de 6 caracteres!";
-    }else if(user.confirmarSenha.isEmpty ){
+    }else if(confirmPassword.isEmpty ){
       _authValidation = "Preencha o campo Confirmar Senha, com a mesma senha do campo Senha!";
-    }else if(user.confirmarSenha != user.senha ){
+    }else if(confirmPassword != password ){
       _authValidation = "Confirmar Senha, está diferente do campo Senha";
     }else if(user.encargo == null){
       _authValidation = "Selecione um encargo para prosseguir!";
     }else{
-      await auth.createUserWithEmailAndPassword(email: user.email, password: user.senha).then((firebaseUser){
+      await auth.createUserWithEmailAndPassword(email: user.email, password: password).then((firebaseUser){
         Firestore db =  Firestore.instance;
 
         db.collection("Celula")

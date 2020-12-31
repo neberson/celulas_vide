@@ -31,10 +31,10 @@ class LoginUsuario {
     return Celula.fromMap(doc.data);
   }
 
- Future<String> logarUsuario(Usuario user, BuildContext context)  async {
+ Future<String> logarUsuario(Usuario user, String password)  async {
     String _authValidation;
     try {
-      await auth.signInWithEmailAndPassword(email: user.email, password: user.senha);
+      await auth.signInWithEmailAndPassword(email: user.email, password: password);
       _authValidation = "logado";
     }catch(erro){
       switch(erro.code){

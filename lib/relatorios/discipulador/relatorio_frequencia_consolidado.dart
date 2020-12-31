@@ -1,4 +1,5 @@
 import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Model/FrequenciaModel.dart';
 import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
@@ -22,6 +23,7 @@ class _RelatorioFrequenciaConsolidadoState
   final relatorioBloc = RelatorioBloc();
 
   List<Celula> listaCelulas = [];
+  List<FrequenciaModel> listaTodasFrequencias = [];
   bool isLoading = true;
   var error;
 
@@ -29,6 +31,12 @@ class _RelatorioFrequenciaConsolidadoState
   void initState() {
     relatorioBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
+
+      relatorioBloc.getAllFrequenciasByCelulas(listaCelulas).then((value) {
+        listaTodasFrequencias = List.from(value);
+      });
+
+      filterData();
 
       setState(() => isLoading = false);
     }).catchError((onError) {
@@ -41,6 +49,10 @@ class _RelatorioFrequenciaConsolidadoState
     });
 
     super.initState();
+  }
+
+  filterData() {
+
   }
 
   @override
@@ -88,12 +100,12 @@ class _RelatorioFrequenciaConsolidadoState
           DataColumn(label: Text('Líder')),
           DataColumn(label: Text('Célula'))
         ],
-        rows: listaCelulas.map((e) => DataRow(
-          cells: [
-            DataCell(Text(e.usuario.nome)),
-            DataCell(Text(e.dadosCelula.nomeCelula))
-          ]
-        )).toList(),
+        rows: listaCelulas
+            .map((e) => DataRow(cells: [
+                  DataCell(Text(e.usuario.nome)),
+                  DataCell(Text(e.dadosCelula.nomeCelula))
+                ]))
+            .toList(),
       ),
     );
   }

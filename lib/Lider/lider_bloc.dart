@@ -49,14 +49,14 @@ class LiderBloc {
 
       await Firestore.instance
           .collection('Celula')
-          .document(celulaDestinatario.usuario.idUsuario)
+          .document(celulaDestinatario.idDocument)
           .updateData({
         'convitesRecebidos':
             FieldValue.arrayUnion([conviteDestinatario.toMap()])
       });
 
       conviteRemetente = Convite(
-          idUsuario: celulaDestinatario.usuario.idUsuario,
+          idUsuario: celulaDestinatario.idDocument,
           nomeIntegrante: celulaDestinatario.usuario.nome,
           status: 0,
           createdAt: date);
@@ -85,7 +85,7 @@ class LiderBloc {
     //atualiza o array de convites do destinatario
     await Firestore.instance
         .collection('Celula')
-        .document(celulaDestinatario.usuario.idUsuario)
+        .document(celulaDestinatario.idDocument)
         .updateData({
       'convitesRecebidos':
           celulaDestinatario.convitesRecebidos.map((e) => e.toMap()).toList()
@@ -118,7 +118,7 @@ class LiderBloc {
     //atualiza o array de convites do destinatario
     await Firestore.instance
         .collection('Celula')
-        .document(celulaDestinatario.usuario.idUsuario)
+        .document(celulaDestinatario.idDocument)
         .updateData({
       'convitesRecebidos':
       celulaDestinatario.convitesRecebidos.map((e) => e.toMap()).toList(),

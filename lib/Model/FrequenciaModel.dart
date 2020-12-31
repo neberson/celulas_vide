@@ -1,12 +1,16 @@
 import 'package:intl/intl.dart';
 
 class FrequenciaModel {
+  String idFrequencia;
   List<FrequenciaCelula> frequenciaCelula;
   List<FrequenciaCulto> frequenciaCulto;
 
-  FrequenciaModel({this.frequenciaCelula, this.frequenciaCulto});
+  FrequenciaModel({this.frequenciaCelula, this.frequenciaCulto, this.idFrequencia});
 
   FrequenciaModel.fromMap(map) {
+
+
+
     frequenciaCelula = [];
 
     map['frequenciaCelula'].forEach((v) {

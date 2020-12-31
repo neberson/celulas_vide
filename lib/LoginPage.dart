@@ -282,10 +282,9 @@ class _LoginPageState extends State<LoginPage>
     if(_formKey.currentState.validate()){
 
       _user.email = _controllerEmail.text;
-      _user.senha = _controllerSenha.text;
       setState(() => loadingSave = !loadingSave);
       _loginUsuario
-          .logarUsuario(_user, context)
+          .logarUsuario(_user, _controllerSenha.text)
           .then((valor) {
         setState(() => loadingSave = !loadingSave);
         if (valor == "logado") {

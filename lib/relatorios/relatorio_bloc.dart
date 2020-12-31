@@ -57,7 +57,7 @@ class RelatorioBloc {
     for (int i = 0; i < listaCelulas.length; i++) {
       var docFrequence = await Firestore.instance
           .collection('frequencia')
-          .document(listaCelulas[i].usuario.idUsuario)
+          .document(listaCelulas[i].idDocument)
           .get();
 
       if(docFrequence.exists && docFrequence.data != null)

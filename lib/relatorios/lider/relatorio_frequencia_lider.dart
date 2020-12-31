@@ -97,7 +97,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
     this.celula = widget.celulaDiscipulador;
 
     reportBloc
-        .getFrequenciaByCelula(celula.usuario.idUsuario)
+        .getFrequenciaByCelula(celula.idDocument)
         .then((frequencia) {
       frequenciaModel = frequencia;
 

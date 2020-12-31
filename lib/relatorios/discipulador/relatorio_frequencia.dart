@@ -240,8 +240,6 @@ class _RelatorioFrequenciaDiscipuladorState
                 dateRegister.isAtSameMomentAs(widget.dateEnd))) {
           countDateCelulas++;
 
-          print('passou aqui: ${freqCel.dataCelula}');
-
           freqCel.membrosCelula.forEach((mem) {
             if (mem.condicaoMembro == 'Frenquentador Assiduo')
               freqCel.modelReportFrequence.totalFA++;

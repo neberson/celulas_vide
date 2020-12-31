@@ -3,6 +3,8 @@ import 'package:celulas_vide/stores/membro_store.dart';
 import 'package:intl/intl.dart';
 
 class Celula {
+
+  String idDocument;
   Usuario usuario;
   List<MembroCelula> membros;
   DadosCelulaBEAN dadosCelula;
@@ -12,7 +14,8 @@ class Celula {
   ModeloRelatorioCadastro modeloRelatorioCadastro;
 
   Celula(
-      {this.usuario,
+      {this.idDocument,
+      this.usuario,
       this.membros,
       this.dadosCelula,
       this.celulasMonitoradas,
@@ -21,6 +24,7 @@ class Celula {
       this.modeloRelatorioCadastro});
 
   Celula.fromMap(map) {
+    this.idDocument = map['idCelula'];
     this.usuario = Usuario.fromMap(map['Usuario']);
     membros = List<MembroCelula>();
 
@@ -45,7 +49,6 @@ class Celula {
       this.conviteRealizado = Convite.fromMap(map['conviteRealizado']);
 
     modeloRelatorioCadastro = ModeloRelatorioCadastro();
-
   }
 }
 
@@ -215,11 +218,8 @@ class MembroCelula {
 }
 
 class Usuario {
-  String idUsuario;
   String nome;
   String email;
-  String senha;
-  String confirmarSenha;
   String encargo;
   String urlImagem;
   String discipulador;
@@ -231,8 +231,6 @@ class Usuario {
   Usuario(
       {this.nome,
       this.email,
-      this.senha,
-      this.confirmarSenha,
       this.encargo,
       this.urlImagem,
       this.discipulador,
@@ -244,7 +242,6 @@ class Usuario {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "Usuario": {
-        "idUsuario": this.idUsuario,
         "nome": this.nome,
         "email": this.email,
         "encargo": this.encargo,
@@ -261,7 +258,6 @@ class Usuario {
   }
 
   Usuario.fromMap(map) {
-    this.idUsuario = map['idUsuario'];
     this.nome = map['nome'];
     this.email = map['email'];
     this.encargo = map['encargo'];
@@ -347,6 +343,7 @@ class ModeloRelatorioCadastro {
   int totalLiderTreinamento;
   int totalAnteriores;
   double porcentagemCrescimento;
+  int totalCelulasMes;
 
   ModeloRelatorioCadastro(
       {this.nomeCelula,
@@ -361,12 +358,13 @@ class ModeloRelatorioCadastro {
       this.totalDesativados = 0,
       this.totalLiderTreinamento = 0,
       this.totalAnteriores = 0,
-      this.porcentagemCrescimento = 0});
+      this.porcentagemCrescimento = 0,
+      this.totalCelulasMes = 0});
 
   getIndex(int index) {
     switch (index) {
       case 0:
-        return totalMb+totalFA;
+        return totalMb + totalFA;
       case 1:
         return totalFA;
       case 2:
@@ -394,5 +392,4 @@ class ModeloRelatorioCadastro {
     }
     return '';
   }
-
 }
