@@ -1,6 +1,6 @@
-
 import 'package:celulas_vide/relatorios/discipulador/relatorio_cadastro_celula.dart';
 import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia.dart';
+import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia_consolidado.dart';
 import 'package:celulas_vide/relatorios/discipulador/relatorio_projecao_mensal.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_cadastro_celula_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
@@ -13,7 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-
 class RelatorioHome extends StatefulWidget {
   final String encargo;
   RelatorioHome({this.encargo});
@@ -21,7 +20,6 @@ class RelatorioHome extends StatefulWidget {
   @override
   _RelatorioHomeState createState() => _RelatorioHomeState();
 }
-
 
 class _RelatorioHomeState extends State<RelatorioHome> {
   DateTime _dateStart;
@@ -74,10 +72,13 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                   _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
                       _onClickReportOffers),
                   if (encargo == 'Discipulador')
+                    _itemTypeReport('Projeção\nMensal',
+                        FontAwesomeIcons.calendarAlt, _onClickProjecaoMensal),
+                  if (encargo == 'Discipulador')
                     _itemTypeReport(
-                      'Projeção\nMensal',
-                      FontAwesomeIcons.calendarAlt,
-                      _onClickProjecaoMensal,
+                      'Consolidado\nFrequência',
+                      Icons.format_list_numbered,
+                      _onClickConsolidado,
                     ),
                 ],
               ),
@@ -112,29 +113,36 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     );
   }
 
-  _onClickProjecaoMensal() {
+  _onClickConsolidado() async {
+    var date = await _showPickerMonth();
 
-
-    showMonthPicker(
-      context: context,
-      firstDate: DateTime(2020, 09, 01),
-      lastDate: DateTime.now(),
-      initialDate: DateTime.now(),
-
-      locale: Locale("pt"),
-    ).then((date) {
-      if (date != null) _onClickGenerateProjecaoMensal(date);
-    });
-
+    if (date != null)
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => RelatorioFrequenciaConsolidado(date)));
   }
 
-  void _onClickGenerateProjecaoMensal(date) {
+  _onClickProjecaoMensal() async {
+    var date = await _showPickerMonth();
 
+    if (date != null)
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => RelatorioProjecaoMensal(date)));
+  }
 
+  Future<DateTime> _showPickerMonth() async {
+    DateTime date = await showMonthPicker(
+      context: context,
+      firstDate: DateTime(2020, 09, 01),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now(),
+      locale: Locale("pt"),
+    );
+
+    return date;
   }
 
   _onClickReportFrequence() async {
@@ -146,14 +154,14 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     if (result != null) {
       if (encargo == 'Lider') {
         print('cargo lider');
-        _onClickNavegate(
+        _onClickNavigator(
           RelatorioFrequenciaLider(
             dateStart: _dateStart,
             dateEnd: _dateEnd,
           ),
         );
       } else if (encargo == 'Discipulador') {
-        _onClickNavegate(
+        _onClickNavigator(
           RelatorioFrequenciaDiscipulador(
             _dateStart,
             _dateEnd,
@@ -175,7 +183,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     if (result != null) {
       if (encargo == 'Lider') {
         print('cargo lider');
-        _onClickNavegate(
+        _onClickNavigator(
           RelatorioCadastroCelulaLider(
             dateStart: _dateStart,
             dateEnd: _dateEnd,
@@ -183,7 +191,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
         );
       } else if (encargo == 'Discipulador') {
         print('cargo discipulador');
-        _onClickNavegate(
+        _onClickNavigator(
           RelatorioCadastroCelulaDiscipulador(
             _dateStart,
             _dateEnd,
@@ -196,7 +204,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     }
   }
 
-  _onClickNavegate(page) {
+  _onClickNavigator(page) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -260,7 +268,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                   child: Column(
                     children: [
                       TextFormField(
-                        onTap: () => _showDataPicker(0),
+                        onTap: () => _showDatePicker(0),
                         controller: _cDateStart,
                         validator: (text) =>
                             text.isEmpty ? 'Informe a data inicial' : null,
@@ -283,7 +291,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                         height: 10,
                       ),
                       TextFormField(
-                        onTap: () => _showDataPicker(1),
+                        onTap: () => _showDatePicker(1),
                         controller: _cDateEnd,
                         validator: (text) =>
                             text.isEmpty ? 'Informe a data final' : null,
@@ -336,7 +344,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     if (_formKey.currentState.validate()) Navigator.pop(context, true);
   }
 
-  _showDataPicker(int field) async {
+  _showDatePicker(int field) async {
     FocusScope.of(context).requestFocus(FocusNode());
     DateTime date = await showDatePicker(
       context: context,
