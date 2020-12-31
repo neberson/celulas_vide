@@ -3,7 +3,6 @@ import 'package:celulas_vide/stores/membro_store.dart';
 import 'package:intl/intl.dart';
 
 class Celula {
-
   String idDocument;
   Usuario usuario;
   List<MembroCelula> membros;
@@ -49,6 +48,24 @@ class Celula {
       this.conviteRealizado = Convite.fromMap(map['conviteRealizado']);
 
     modeloRelatorioCadastro = ModeloRelatorioCadastro();
+  }
+
+  Map<String, dynamic> toMap() {
+
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['idDocument'] = this.idDocument;
+    data['usuario'] = this.usuario.toMap();
+    data['membros'] =
+        membros != null ? membros.map((e) => e.toMap()).toList() : [];
+    data['dadosCelula'] = dadosCelula != null ? dadosCelula.toMap() : null;
+    data['celulasMonitoradas'] = celulasMonitoradas != null
+        ? celulasMonitoradas.map((e) => e.toMap()).toList()
+        : [];
+    data['convitesRecebidos'] = convitesRecebidos != null ? convitesRecebidos.map((e) => e.toMap()).toList() : [];
+    data['conviteRealizado'] = conviteRealizado != null ? conviteRealizado.toMap() : null;
+
+    return data;
   }
 }
 
@@ -241,7 +258,6 @@ class Usuario {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      "Usuario": {
         "nome": this.nome,
         "email": this.email,
         "encargo": this.encargo,
@@ -251,7 +267,6 @@ class Usuario {
         "pastorIgreja": this.pastorIgreja,
         "igreja": this.igreja,
         "emailConvidado": this.emailConvidado
-      }
     };
 
     return map;

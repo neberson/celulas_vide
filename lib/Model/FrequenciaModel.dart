@@ -9,8 +9,6 @@ class FrequenciaModel {
 
   FrequenciaModel.fromMap(map) {
 
-
-
     frequenciaCelula = [];
 
     map['frequenciaCelula'].forEach((v) {
@@ -22,6 +20,19 @@ class FrequenciaModel {
       frequenciaCulto.add(new FrequenciaCulto.fromMap(v));
     });
   }
+
+  Map<String, dynamic> toMap(){
+
+   final Map<String, dynamic> data = Map<String, dynamic>();
+
+   data['idFrequencia'] = this.idFrequencia;
+   data['frequenciaCelula'] = [];
+   data['frequenciaCulto'] = [];
+
+   return data;
+
+  }
+
 }
 
 class FrequenciaCelula {
@@ -50,6 +61,8 @@ class FrequenciaCelula {
     modelReportFrequence = ModelReportFrequence();
 
   }
+
+
 
   String getIndex(int index) {
     switch (index) {
