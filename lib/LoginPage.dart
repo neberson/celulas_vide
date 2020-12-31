@@ -1,7 +1,7 @@
+import 'package:celulas_vide/CadastroPage.dart';
 import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Discipulador/home_discipulador.dart';
 import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/CadastroPage.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
 import 'package:flutter/material.dart';

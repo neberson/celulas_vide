@@ -6,7 +6,6 @@ import 'package:celulas_vide/relatorios/lider/relatorio_cadastro_celula_lider.da
 import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_nominal_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_ofertas_lider.dart';
-import 'package:celulas_vide/relatorios/weeks_calculator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,15 +57,16 @@ class _RelatorioHomeState extends State<RelatorioHome> {
               ),
             ),
             Container(
-              height: 250,
-              child: GridView.count(
+              height: MediaQuery.of(context).size.height / 2,
+              child: GridView(
                 physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
+                //crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: encargo == 'Discipulador' ? 3 : 2 ),
                 children: [
                   _itemTypeReport('Cadastro\nde Célula', Icons.person_add,
                       _onClickReportCellRegistration),
-                  _itemTypeReport('Nominal membros da Célula',
-                      Icons.supervisor_account, _onClickReportNominal),
+                  _itemTypeReport('Nominal membros\nda Célula',
+                      Icons.supervisor_account, _onClickRelatorioNominal),
                   _itemTypeReport('Frequência', Icons.format_list_numbered,
                       _onClickReportFrequence),
                   _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
@@ -213,7 +213,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     );
   }
 
-  _onClickReportNominal() => Navigator.push(context,
+  _onClickRelatorioNominal() => Navigator.push(context,
       MaterialPageRoute(builder: (context) => RelatorioNominalLider()));
 
   _onClickReportOffers() async {
