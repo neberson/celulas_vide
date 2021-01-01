@@ -7,7 +7,7 @@ import 'package:share/share.dart' as sh;
 
 class PdfViewerPage extends StatefulWidget {
   final String path;
-  bool isLandscape;
+  final bool isLandscape;
 
   PdfViewerPage({this.path, this.isLandscape = false});
 

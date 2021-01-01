@@ -4,11 +4,12 @@ import 'package:celulas_vide/repository/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RelatorioBloc {
+
   Future<Celula> getCelula() async {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .get();
 
@@ -19,8 +20,8 @@ class RelatorioBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var docMembros = await Firestore.instance
-        .collection('Celula')
-        .where('Usuario.encargo', isEqualTo: 'Lider')
+        .collection('Celulas')
+        .where('usuario.encargo', isEqualTo: 'Lider')
         .where('conviteRealizado.idUsuario', isEqualTo: currentUser.uid)
         .getDocuments();
 
@@ -34,7 +35,7 @@ class RelatorioBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await Firestore.instance
-        .collection('frequencia')
+        .collection('Frequencias')
         .document(currentUser.uid)
         .get();
 
@@ -44,7 +45,7 @@ class RelatorioBloc {
 
   Future<FrequenciaModel> getFrequenciaByCelula(String idCelula) async {
     var doc = await Firestore.instance
-        .collection('frequencia')
+        .collection('Frequencias')
         .document(idCelula)
         .get();
 
@@ -56,8 +57,8 @@ class RelatorioBloc {
 
     for (int i = 0; i < listaCelulas.length; i++) {
       var docFrequence = await Firestore.instance
-          .collection('frequencia')
-          .document(listaCelulas[i].idDocument)
+          .collection('Frequencias')
+          .document(listaCelulas[i].idDocumento)
           .get();
 
       if(docFrequence.exists && docFrequence.data != null)

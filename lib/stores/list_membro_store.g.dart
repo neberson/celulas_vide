@@ -24,11 +24,11 @@ mixin _$ListMembroStore on _ListMembroStore, Store {
   }
 
   @override
-  void RemoveMembros(ObservableList<MembroStore> membros) {
+  void removeMembros(ObservableList<MembroStore> membros) {
     final _$actionInfo = _$_ListMembroStoreActionController.startAction(
         name: '_ListMembroStore.RemoveMembros');
     try {
-      return super.RemoveMembros(membros);
+      return super.removeMembros(membros);
     } finally {
       _$_ListMembroStoreActionController.endAction(_$actionInfo);
     }

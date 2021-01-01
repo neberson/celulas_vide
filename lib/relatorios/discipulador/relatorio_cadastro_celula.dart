@@ -46,7 +46,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
   void initState() {
     relatorioBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
-      _filterDates();
+      _filterData();
 
       relatorioBloc.getCelula().then((value) {
         celula = value;
@@ -65,15 +65,17 @@ class _RelatorioCadastroCelulaDiscipuladorState
     super.initState();
   }
 
-  _filterDates() {
+  _filterData() {
     listaCelulas.forEach((cel) {
       for (int i = 0; i < cel.membros.length; i++) {
-        DateTime dateRegister = DateTime(cel.membros[i].dataCadastro.year,
-            cel.membros[i].dataCadastro.month, cel.membros[i].dataCadastro.day);
 
-        if (dateRegister.isAfter(widget.dateStart) &&
-            (dateRegister.isBefore(widget.dateEnd) ||
-                dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+        DateTime dateComparation = DateTime(cel.membros[i].dataCadastro.year,
+            cel.membros[i].dataCadastro.month, cel.membros[i].dataCadastro.day, 0, 0, 0);
+
+        if ((dateComparation.isAfter(widget.dateStart) ||
+            dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+            (dateComparation.isBefore(widget.dateEnd) ||
+                dateComparation.isAtSameMomentAs(widget.dateEnd))) {
           haveDate = true;
           countMemberInDate++;
 

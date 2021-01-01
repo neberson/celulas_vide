@@ -17,10 +17,12 @@ class RelatorioFrequenciaLider extends StatefulWidget {
   final DateTime dateStart;
   final DateTime dateEnd;
   final Celula celulaDiscipulador;
-  RelatorioFrequenciaLider({this.dateStart, this.dateEnd, this.celulaDiscipulador});
+  RelatorioFrequenciaLider(
+      {this.dateStart, this.dateEnd, this.celulaDiscipulador});
 
   @override
-  _RelatorioFrequenciaLiderState createState() => _RelatorioFrequenciaLiderState();
+  _RelatorioFrequenciaLiderState createState() =>
+      _RelatorioFrequenciaLiderState();
 }
 
 class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
@@ -66,10 +68,8 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
         reportBloc.getFrequencia().then((frequencia) {
           frequenciaModel = frequencia;
 
-          if(frequencia.frequenciaCelula.isNotEmpty)
-            _filterDataCelula();
-          if(frequencia.frequenciaCulto.isNotEmpty)
-            _filterDataCulto();
+          if (frequencia.frequenciaCelula.isNotEmpty) _filterDataCelula();
+          if (frequencia.frequenciaCulto.isNotEmpty) _filterDataCulto();
 
           setState(() => isLoading = false);
         }).catchError((onError) {
@@ -96,9 +96,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
   _setDataCelulaDiscipulador() {
     this.celula = widget.celulaDiscipulador;
 
-    reportBloc
-        .getFrequenciaByCelula(celula.idDocument)
-        .then((frequencia) {
+    reportBloc.getFrequenciaByCelula(celula.idDocumento).then((frequencia) {
       frequenciaModel = frequencia;
 
       _filterDataCelula();
@@ -116,15 +114,16 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
   }
 
   _filterDataCelula() {
+
     frequenciaModel.frequenciaCelula.forEach((element) {
 
       DateTime dateComparation = DateTime(element.dataCelula.year,
-          element.dataCelula.month, element.dataCelula.day);
+          element.dataCelula.month, element.dataCelula.day, 0, 0, 0);
 
-      if (dateComparation.isAfter(widget.dateStart) &&
+      if ((dateComparation.isAfter(widget.dateStart) ||
+          dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
           (dateComparation.isBefore(widget.dateEnd) ||
-              dateComparation.isAtSameMomentAs(widget.dateEnd))){
-
+              dateComparation.isAtSameMomentAs(widget.dateEnd))) {
         listaFrequenciaCelula.add(element);
 
         listVisitantes.add(element.quantidadeVisitantes);
@@ -156,8 +155,14 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
     listTotalPercent.clear();
 
     frequenciaModel.frequenciaCulto.forEach((element) {
-      if (element.dataCulto.isAfter(widget.dateStart) ||
-          element.dataCulto.isAtSameMomentAs(widget.dateEnd)) {
+      DateTime dateComparation = DateTime(element.dataCulto.year,
+          element.dataCulto.month, element.dataCulto.day, 0, 0, 0);
+
+      if ((dateComparation.isAfter(widget.dateStart) ||
+          dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+          (dateComparation.isBefore(widget.dateEnd) ||
+              dateComparation.isAtSameMomentAs(widget.dateEnd))) {
+
         listaFrequenciaCulto.add(element);
 
         totalMb = 0;
@@ -454,7 +459,6 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
   }
 
   _tableCelula() {
-
     if (listaFrequenciaCelula.isEmpty)
       return emptyState(
           context, 'Nenhum resultado neste período', Icons.person);

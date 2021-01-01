@@ -1,37 +1,37 @@
 import 'package:celulas_vide/Model/Celula.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+
 class CelulaDAO {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;
-  Future<String> salvarDados(DadosCelulaBEAN celula, BuildContext context) async {
+  Future<String> salvarDados(DadosCelulaBEAN dadosCelula) async {
 
       String _validacao;
       FirebaseUser usuarioAtual = await _auth.currentUser();
-      print("Tipo da célula "+celula.tipoCelula);
-      if(celula.tipoCelula.isEmpty){
+      print("Tipo da célula "+dadosCelula.tipoCelula);
+      if(dadosCelula.tipoCelula.isEmpty){
 
-        print("Célula nulla"+celula.tipoCelula);
+        print("Célula nulla"+dadosCelula.tipoCelula);
         _validacao = "Selecione o tipo da Célula!";
 
-      }else if(celula.diaCelula.isEmpty){
+      }else if(dadosCelula.diaCelula.isEmpty){
         _validacao = "Informe o dia da Célula!";
-      }else if(celula.horarioCelula.isEmpty){
-         print(celula.tipoCelula);
-         print(celula.horarioCelula);
+      }else if(dadosCelula.horarioCelula.isEmpty){
+         print(dadosCelula.tipoCelula);
+         print(dadosCelula.horarioCelula);
         _validacao = "Informe o horário da Célula!";
-      }else if(celula.dataCelula == null){
+      }else if(dadosCelula.dataCelula == null){
         _validacao = "Informe o data que iniciou a Célula!";
-      }else if(celula.ultimaMultiplicacao == null){
+      }else if(dadosCelula.ultimaMultiplicacao == null){
         _validacao = "Informe a data da útilma Multiplicação!";
-      }else if(celula.proximaMultiplicacao == null){
+      }else if(dadosCelula.proximaMultiplicacao == null){
         _validacao = "Informe a data da próxima multiplicação!";
       }else{
-          db.collection("Celula")
+          db.collection("Celulas")
             .document(usuarioAtual.uid)
-            .updateData( celula.toMap());
+            .updateData({'dadosCelula': dadosCelula.toMap()});
 
           _validacao = "Dados gravados com sucesso!";
       }
@@ -43,9 +43,9 @@ class CelulaDAO {
 
     FirebaseUser usuarioAtual = await _auth.currentUser();
 
-    DocumentSnapshot snapshot = await db.collection("Celula").document(usuarioAtual.uid).get();
+    DocumentSnapshot snapshot = await db.collection("Celulas").document(usuarioAtual.uid).get();
 
-    Map<String, dynamic> dados = snapshot.data["DadosCelula"];
+    Map<String, dynamic> dados = snapshot.data["dadosCelula"];
 
     return dados;
   }

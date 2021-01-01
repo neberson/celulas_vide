@@ -232,12 +232,14 @@ class _RelatorioFrequenciaDiscipuladorState
     listaTodasFrequencias.forEach((freq) {
       countCelulas++;
       freq.frequenciaCelula.forEach((freqCel) {
-        DateTime dateRegister = DateTime(freqCel.dataCelula.year,
-            freqCel.dataCelula.month, freqCel.dataCelula.day);
 
-        if (dateRegister.isAfter(widget.dateStart) &&
-            (dateRegister.isBefore(widget.dateEnd) ||
-                dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+        DateTime dateComparation = DateTime(freqCel.dataCelula.year,
+            freqCel.dataCelula.month, freqCel.dataCelula.day, 0, 0, 0);
+
+        if ((dateComparation.isAfter(widget.dateStart) ||
+            dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+            (dateComparation.isBefore(widget.dateEnd) ||
+                dateComparation.isAtSameMomentAs(widget.dateEnd))) {
           countDateCelulas++;
 
           freqCel.membrosCelula.forEach((mem) {
@@ -275,12 +277,14 @@ class _RelatorioFrequenciaDiscipuladorState
     listaTodasFrequencias.forEach((freq) {
       countCultos++;
       freq.frequenciaCulto.forEach((freqCel) {
-        DateTime dateRegister = DateTime(freqCel.dataCulto.year,
-            freqCel.dataCulto.month, freqCel.dataCulto.day);
 
-        if (dateRegister.isAfter(widget.dateStart) &&
-            (dateRegister.isBefore(widget.dateEnd) ||
-                dateRegister.isAtSameMomentAs(widget.dateEnd))) {
+        DateTime dateComparation = DateTime(freqCel.dataCulto.year,
+            freqCel.dataCulto.month, freqCel.dataCulto.day, 0, 0, 0);
+
+        if ((dateComparation.isAfter(widget.dateStart) ||
+            dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+            (dateComparation.isBefore(widget.dateEnd) ||
+                dateComparation.isAtSameMomentAs(widget.dateEnd))) {
           countDateCultos++;
 
           freqCel.membrosCulto.forEach((mem) {

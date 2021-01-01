@@ -680,32 +680,32 @@ class _DadosCelulaState extends State<DadosCelula> {
                         circularProgress = 1;
                       });
 
-                      var celula = new DadosCelulaBEAN();
+                      var dadosCelula = new DadosCelulaBEAN();
 
-                      celula.anfitriao = _anfitriao.text;
-                      celula.nomeCelula = _nomeCelula.text;
-                      celula.tipoCelula = _tipoCelulaSelecionado == null
+                      dadosCelula.anfitriao = _anfitriao.text;
+                      dadosCelula.nomeCelula = _nomeCelula.text;
+                      dadosCelula.tipoCelula = _tipoCelulaSelecionado == null
                           ? ""
                           : _tipoCelulaSelecionado.toString();
-                      celula.diaCelula = _diaCelulaSelecionado == null
+                      dadosCelula.diaCelula = _diaCelulaSelecionado == null
                           ? ""
                           : _diaCelulaSelecionado.toString();
-                      celula.horarioCelula = _horarioCelula.text;
-                      celula.dataCelula = dateInicioCelula;
-                      celula.ultimaMultiplicacao =
+                      dadosCelula.horarioCelula = _horarioCelula.text;
+                      dadosCelula.dataCelula = dateInicioCelula;
+                      dadosCelula.ultimaMultiplicacao =
                           dateCelulaUltimaMultiplicacao;
-                      celula.proximaMultiplicacao =
+                      dadosCelula.proximaMultiplicacao =
                           dateProximaMultiplicao;
-                      celula.cep = _cep.text;
-                      celula.logradouro = _logradouro.text;
-                      celula.numero = _numero.text;
-                      celula.complemento = _complemento.text;
-                      celula.bairro = _bairro.text;
-                      celula.cidade = _cidade.text;
-                      celula.estado = _estado.text;
+                      dadosCelula.cep = _cep.text;
+                      dadosCelula.logradouro = _logradouro.text;
+                      dadosCelula.numero = _numero.text;
+                      dadosCelula.complemento = _complemento.text;
+                      dadosCelula.bairro = _bairro.text;
+                      dadosCelula.cidade = _cidade.text;
+                      dadosCelula.estado = _estado.text;
 
                       _salvarCelula
-                          .salvarDados(celula, context)
+                          .salvarDados(dadosCelula)
                           .then((valor) {
                         var snackBar = SnackBar(
                           duration: Duration(seconds: 5),

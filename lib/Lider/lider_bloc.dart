@@ -7,7 +7,7 @@ class LiderBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .get();
 
@@ -20,9 +20,9 @@ class LiderBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var docUsuarioDestinatario = await Firestore.instance
-        .collection('Celula')
-        .where('Usuario.email', isEqualTo: email)
-        .where('Usuario.encargo', isEqualTo: 'Discipulador')
+        .collection('Celulas')
+        .where('usuario.email', isEqualTo: email)
+        .where('usuario.encargo', isEqualTo: 'Discipulador')
         .limit(1)
         .getDocuments();
 
@@ -33,7 +33,7 @@ class LiderBloc {
           Celula.fromMap(docUsuarioDestinatario.documents.first.data);
 
       var docUsuarioRemetente = await Firestore.instance
-          .collection('Celula')
+          .collection('Celulas')
           .document(currentUser.uid)
           .get();
 
@@ -48,21 +48,21 @@ class LiderBloc {
           createdAt: date);
 
       await Firestore.instance
-          .collection('Celula')
-          .document(celulaDestinatario.idDocument)
+          .collection('Celulas')
+          .document(celulaDestinatario.idDocumento)
           .updateData({
         'convitesRecebidos':
             FieldValue.arrayUnion([conviteDestinatario.toMap()])
       });
 
       conviteRemetente = Convite(
-          idUsuario: celulaDestinatario.idDocument,
+          idUsuario: celulaDestinatario.idDocumento,
           nomeIntegrante: celulaDestinatario.usuario.nome,
           status: 0,
           createdAt: date);
 
       await Firestore.instance
-          .collection('Celula')
+          .collection('Celulas')
           .document(currentUser.uid)
           .updateData({'conviteRealizado': conviteRemetente.toMap()});
     }
@@ -75,7 +75,7 @@ class LiderBloc {
 
     //deleta convite no destinatario
     var docDestinatario = await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(conviteRealizado.idUsuario)
         .get();
     Celula celulaDestinatario = Celula.fromMap(docDestinatario.data);
@@ -84,8 +84,8 @@ class LiderBloc {
 
     //atualiza o array de convites do destinatario
     await Firestore.instance
-        .collection('Celula')
-        .document(celulaDestinatario.idDocument)
+        .collection('Celulas')
+        .document(celulaDestinatario.idDocumento)
         .updateData({
       'convitesRecebidos':
           celulaDestinatario.convitesRecebidos.map((e) => e.toMap()).toList()
@@ -93,7 +93,7 @@ class LiderBloc {
 
     //remove o convite do remetente
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({'conviteRealizado': null});
   }
@@ -104,7 +104,7 @@ class LiderBloc {
 
     //deleta convite no destinatario
     var docDestinatario = await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(conviteRealizado.idUsuario)
         .get();
 
@@ -117,8 +117,8 @@ class LiderBloc {
 
     //atualiza o array de convites do destinatario
     await Firestore.instance
-        .collection('Celula')
-        .document(celulaDestinatario.idDocument)
+        .collection('Celulas')
+        .document(celulaDestinatario.idDocumento)
         .updateData({
       'convitesRecebidos':
       celulaDestinatario.convitesRecebidos.map((e) => e.toMap()).toList(),
@@ -128,7 +128,7 @@ class LiderBloc {
 
     //remove o convite do remetente
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({'conviteRealizado': null});
 

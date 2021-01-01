@@ -26,7 +26,7 @@ class LoginUsuario {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await
-    Firestore.instance.collection('Celula').document(currentUser.uid).get();
+    Firestore.instance.collection('Celulas').document(currentUser.uid).get();
 
     return Celula.fromMap(doc.data);
   }

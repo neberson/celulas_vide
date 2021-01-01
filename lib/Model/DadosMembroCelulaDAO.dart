@@ -17,17 +17,12 @@ class MembrosDAO {
     }else if(membros[indice]["condicaoMembro"]==null){
       _validacao = "Informe a condição do Membro!";
     }else{
-      Map <String, dynamic> mapMembros = {
-        "Membros" : membros
-      };
-
-
 
       FirebaseUser usuarioAtual = await _auth.currentUser();
 
-      db.collection("Celula")
+      db.collection("Celulas")
           .document(usuarioAtual.uid)
-          .updateData(mapMembros);
+          .updateData({'membros': membros});
       _validacao = "Dados salvos com sucesso!";
       Navigator.pop(context);
       Navigator.pop(context);
@@ -39,17 +34,12 @@ class MembrosDAO {
 
   Future<String> ativarInativarMembro(List<Map> membros, BuildContext context) async {
 
-    Map <String, dynamic> mapMembros = {
-      "Membros" : membros
-    };
-
-
     String _validacao;
     FirebaseUser usuarioAtual = await _auth.currentUser();
 
-    db.collection("Celula")
+    db.collection("Celulas")
         .document(usuarioAtual.uid)
-        .updateData(mapMembros);
+        .updateData({'membros': membros});
     _validacao = "Dados salvos com sucesso!";
     Navigator.pop(context);
     Navigator.pushNamed(context, "/TabMembro");
@@ -58,17 +48,12 @@ class MembrosDAO {
 
   Future<String> excluirDados(List<Map> membros, BuildContext context) async {
 
-    Map <String, dynamic> mapMembros = {
-      "Membros" : membros
-    };
-
-
     String _validacao;
     FirebaseUser usuarioAtual = await _auth.currentUser();
 
-    db.collection("Celula")
+    db.collection("Celulas")
         .document(usuarioAtual.uid)
-        .updateData(mapMembros);
+        .updateData({'membros': membros});
     _validacao = "Dados salvos com sucesso!";
     Navigator.of(context).pop();
     return _validacao;
@@ -76,12 +61,12 @@ class MembrosDAO {
   
   Future<List<Map>> recuperarMembros() async {
     FirebaseUser usuarioAtual = await _auth.currentUser();
-    DocumentSnapshot snapshot = await db.collection("Celula").document(usuarioAtual.uid).get();
+    DocumentSnapshot snapshot = await db.collection("Celulas").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
 
     List<Map> membros = List<Map>();
-    if(dados["Membros"] != null) {
-      for (Map<dynamic, dynamic> membro in dados["Membros"]) {
+    if(dados["membros"] != null) {
+      for (Map<dynamic, dynamic> membro in dados["membros"]) {
           membros.add(membro);
       }
     }
@@ -91,12 +76,12 @@ class MembrosDAO {
 
   Future<List<Map>> recuperarMembrosAtivos() async {
     FirebaseUser usuarioAtual = await _auth.currentUser();
-    DocumentSnapshot snapshot = await db.collection("Celula").document(usuarioAtual.uid).get();
+    DocumentSnapshot snapshot = await db.collection("Celulas").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
 
     List<Map> membros = List<Map>();
-    if(dados["Membros"] != null) {
-      for (Map<dynamic, dynamic> membro in dados["Membros"]) {
+    if(dados["membros"] != null) {
+      for (Map<dynamic, dynamic> membro in dados["membros"]) {
         if(membro["status"] == 0){
           membros.add(membro);
         }
@@ -107,13 +92,13 @@ class MembrosDAO {
 
   Future<List<Map>> recuperarMembrosInativos() async {
     FirebaseUser usuarioAtual = await _auth.currentUser();
-    DocumentSnapshot snapshot = await db.collection("Celula").document(usuarioAtual.uid).get();
+    DocumentSnapshot snapshot = await db.collection("Celulas").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
 
     List<Map> membros = List<Map>();
     int contador = 0;
-    if(dados["Membros"] != null) {
-      for (Map<dynamic, dynamic> membro in dados["Membros"]) {
+    if(dados["membros"] != null) {
+      for (Map<dynamic, dynamic> membro in dados["membros"]) {
         if(membro["status"] == 1){
           membros.add(membro);
           membros.insert(contador, membro);

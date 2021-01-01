@@ -27,7 +27,7 @@ class CadastroUsuarioBloc {
       await auth
           .createUserWithEmailAndPassword(email: user.email, password: password)
           .then((firebaseUser) async {
-        var celula = Celula(idDocument: firebaseUser.user.uid, usuario: user);
+        var celula = Celula(idDocumento: firebaseUser.user.uid, usuario: user);
 
         print('encargo: ${user.encargo}');
 
@@ -39,8 +39,8 @@ class CadastroUsuarioBloc {
         if(user.encargo == 'Lider')
           await Firestore.instance
             .collection('Frequencias')
-            .document(celula.idDocument)
-            .setData(FrequenciaModel(idFrequencia: celula.idDocument).toMap());
+            .document(celula.idDocumento)
+            .setData(FrequenciaModel(idFrequencia: celula.idDocumento).toMap());
 
        _authValidation = "cadastrado";
 

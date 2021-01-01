@@ -52,7 +52,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
               child: Center(
                 child: Text(
                   'Selecione um modelo',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 22),
                 ),
               ),
             ),
@@ -63,12 +63,12 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                 //crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: encargo == 'Discipulador' ? 3 : 2 ),
                 children: [
-                  _itemTypeReport('Cadastro\nde Célula', Icons.person_add,
-                      _onClickReportCellRegistration),
-                  _itemTypeReport('Nominal membros\nda Célula',
+                  _itemTypeReport('Cadastro de Célula', Icons.person_add,
+                      _onClickCadastroCelula),
+                  _itemTypeReport('Nominal membros da Célula',
                       Icons.supervisor_account, _onClickRelatorioNominal),
                   _itemTypeReport('Frequência', Icons.format_list_numbered,
-                      _onClickReportFrequence),
+                      _onClickRelatorioFrequencia),
                   _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
                       _onClickReportOffers),
                   if (encargo == 'Discipulador')
@@ -90,26 +90,34 @@ class _RelatorioHomeState extends State<RelatorioHome> {
   }
 
   _itemTypeReport(String title, icon, onPressed) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 25,
-          backgroundColor: Theme.of(context).buttonColor,
-          child: IconButton(
-            icon: Icon(
-              icon,
-              size: 25,
+    return Container(
+      margin: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor.withAlpha(90),
+        borderRadius: BorderRadius.circular(10)
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 25,
+            backgroundColor: Theme.of(context).buttonColor,
+            child: IconButton(
+              icon: Icon(
+                icon,
+                size: 25,
+              ),
+              onPressed: onPressed,
             ),
-            onPressed: onPressed,
           ),
-        ),
-        const SizedBox(height: 5.0),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
-        ),
-      ],
+          const SizedBox(height: 5.0),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.black),
+          ),
+        ],
+      ),
     );
   }
 
@@ -145,7 +153,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     return date;
   }
 
-  _onClickReportFrequence() async {
+  _onClickRelatorioFrequencia() async {
     var result = await _showDialogDate();
 
     _cDateStart.clear();
@@ -174,7 +182,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     }
   }
 
-  _onClickReportCellRegistration() async {
+  _onClickCadastroCelula() async {
     var result = await _showDialogDate();
 
     _cDateStart.clear();

@@ -15,7 +15,7 @@ abstract class _ListMembroStore with Store {
   }
 
   @action
-  void RemoveMembros(ObservableList<MembroStore> membros){
+  void removeMembros(ObservableList<MembroStore> membros){
     membrosList.removeRange(0, membros.length);
   }
 

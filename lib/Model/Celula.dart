@@ -3,7 +3,7 @@ import 'package:celulas_vide/stores/membro_store.dart';
 import 'package:intl/intl.dart';
 
 class Celula {
-  String idDocument;
+  String idDocumento;
   Usuario usuario;
   List<MembroCelula> membros;
   DadosCelulaBEAN dadosCelula;
@@ -13,7 +13,7 @@ class Celula {
   ModeloRelatorioCadastro modeloRelatorioCadastro;
 
   Celula(
-      {this.idDocument,
+      {this.idDocumento,
       this.usuario,
       this.membros,
       this.dadosCelula,
@@ -23,19 +23,19 @@ class Celula {
       this.modeloRelatorioCadastro});
 
   Celula.fromMap(map) {
-    this.idDocument = map['idCelula'];
-    this.usuario = Usuario.fromMap(map['Usuario']);
+    this.idDocumento = map['idDocumento'];
+    this.usuario = Usuario.fromMap(map['usuario']);
     membros = List<MembroCelula>();
 
-    if (map.containsKey('Membros'))
-      map['Membros']
+    if (map['membros'] != null)
+      map['membros']
           .forEach((element) => membros.add(MembroCelula.fromMap(element)));
 
-    if (map.containsKey('DadosCelula'))
-      this.dadosCelula = DadosCelulaBEAN.fromMap(map['DadosCelula']);
+    if (map['dadosCelula'] != null)
+      this.dadosCelula = DadosCelulaBEAN.fromMap(map['dadosCelula']);
 
     celulasMonitoradas = [];
-    if (map.containsKey('celulasMonitoradas'))
+    if (map['celulasMonitoradas'] != null)
       map['celulasMonitoradas'].forEach((element) =>
           celulasMonitoradas.add(CelulaMonitorada.fromMap(element)));
 
@@ -51,10 +51,9 @@ class Celula {
   }
 
   Map<String, dynamic> toMap() {
-
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data['idDocument'] = this.idDocument;
+    data['idDocumento'] = this.idDocumento;
     data['usuario'] = this.usuario.toMap();
     data['membros'] =
         membros != null ? membros.map((e) => e.toMap()).toList() : [];
@@ -62,8 +61,11 @@ class Celula {
     data['celulasMonitoradas'] = celulasMonitoradas != null
         ? celulasMonitoradas.map((e) => e.toMap()).toList()
         : [];
-    data['convitesRecebidos'] = convitesRecebidos != null ? convitesRecebidos.map((e) => e.toMap()).toList() : [];
-    data['conviteRealizado'] = conviteRealizado != null ? conviteRealizado.toMap() : null;
+    data['convitesRecebidos'] = convitesRecebidos != null
+        ? convitesRecebidos.map((e) => e.toMap()).toList()
+        : [];
+    data['conviteRealizado'] =
+        conviteRealizado != null ? conviteRealizado.toMap() : null;
 
     return data;
   }
@@ -90,23 +92,21 @@ class DadosCelulaBEAN {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      "DadosCelula": {
-        "nomeCelula": this.nomeCelula,
-        "nomeAnfitriao": this.anfitriao,
-        "tipoCelula": this.tipoCelula,
-        "diaCelula": this.diaCelula,
-        "horarioCelula": this.horarioCelula,
-        "dataInicioCelula": this.dataCelula,
-        "dataUltimaMulplicacao": this.ultimaMultiplicacao,
-        "dataProximaMultiplicacao": this.proximaMultiplicacao,
-        "CEP": this.cep,
-        "logradouro": this.logradouro,
-        "numero": this.numero,
-        "complemento": this.complemento,
-        "bairro": this.bairro,
-        "cidade": this.cidade,
-        "estado": this.estado
-      }
+      "nomeCelula": this.nomeCelula,
+      "nomeAnfitriao": this.anfitriao,
+      "tipoCelula": this.tipoCelula,
+      "diaCelula": this.diaCelula,
+      "horarioCelula": this.horarioCelula,
+      "dataInicioCelula": this.dataCelula,
+      "dataUltimaMulplicacao": this.ultimaMultiplicacao,
+      "dataProximaMultiplicacao": this.proximaMultiplicacao,
+      "cep": this.cep,
+      "logradouro": this.logradouro,
+      "numero": this.numero,
+      "complemento": this.complemento,
+      "bairro": this.bairro,
+      "cidade": this.cidade,
+      "estado": this.estado
     };
 
     return map;
@@ -121,7 +121,7 @@ class DadosCelulaBEAN {
     this.dataCelula = map['dataInicioCelula'].toDate();
     this.ultimaMultiplicacao = map['dataUltimaMulplicacao'].toDate();
     this.proximaMultiplicacao = map['dataProximaMultiplicacao'].toDate();
-    this.cep = map['CEP'];
+    this.cep = map['cep'];
     this.logradouro = map['logradouro'];
     this.numero = map['numero'];
     this.complemento = map['complemento'];
@@ -258,15 +258,15 @@ class Usuario {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-        "nome": this.nome,
-        "email": this.email,
-        "encargo": this.encargo,
-        "urlImagem": this.urlImagem,
-        "discipulador": this.discipulador,
-        "pastorRede": this.pastorRede,
-        "pastorIgreja": this.pastorIgreja,
-        "igreja": this.igreja,
-        "emailConvidado": this.emailConvidado
+      "nome": this.nome,
+      "email": this.email,
+      "encargo": this.encargo,
+      "urlImagem": this.urlImagem,
+      "discipulador": this.discipulador,
+      "pastorRede": this.pastorRede,
+      "pastorIgreja": this.pastorIgreja,
+      "igreja": this.igreja,
+      "emailConvidado": this.emailConvidado
     };
 
     return map;

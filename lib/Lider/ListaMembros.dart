@@ -105,9 +105,6 @@ class _ListaMembrosState extends State<ListaMembros> {
     return GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, "/DadosMembro", arguments: index);
-          /*Navigator.push(context, CupertinoPageRoute(
-          builder: (context) => DadosMembro()
-        ));*/
         },
         child: Container(
             decoration: BoxDecoration(

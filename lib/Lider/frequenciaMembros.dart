@@ -115,7 +115,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
             _frequenciasCelula[_indexListaFrequencia]["ofertaCelula"]
                 .toString()));
 
-        _membrosStore.RemoveMembros(_membrosStore.membrosList);
+        _membrosStore.removeMembros(_membrosStore.membrosList);
 
         for (Map<dynamic, dynamic> membro
             in _frequenciasCelula[_indexListaFrequencia]["membrosCelula"]) {
@@ -145,7 +145,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
         _indexListaFrequenciaCulto =
             _frequenciasCulto.indexWhere((dado) => dado["dataCulto"] == data);
 
-        _membrosStoreCulto.RemoveMembros(_membrosStoreCulto.membrosList);
+        _membrosStoreCulto.removeMembros(_membrosStoreCulto.membrosList);
 
         for (Map<dynamic, dynamic> membro
             in _frequenciasCulto[_indexListaFrequenciaCulto]["membrosCulto"]) {
@@ -194,7 +194,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
   void initState() {
     super.initState();
 
-    DateTime dateNow = DateTime.now();
+    DateTime dateNow = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
 
     _dataCelula.text = DateFormat('dd/MM/yyyy').format(dateNow);
     _dataCulto.text = DateFormat('dd/MM/yyyy').format(dateNow);
@@ -552,8 +552,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
     if (_indexListaFrequencia >= 0) {
 
       _frequenciaDAO
-          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 0,
-              _indexListaFrequencia, context)
+          .salvarFrequencia(_frequenciasCelula, 0,
+              _indexListaFrequencia)
           .then((validacao) {
         var snackBar = SnackBar(
           duration: Duration(seconds: 5),
@@ -573,8 +573,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
     } else {
 
       _frequenciaDAO
-          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 0,
-              _frequenciasCelula.length - 1, context)
+          .salvarFrequencia(_frequenciasCelula, 0,
+              _frequenciasCelula.length - 1)
           .then((validacao) {
         var snackBar = SnackBar(
           duration: Duration(seconds: 5),
@@ -611,8 +611,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
     }
     if (_indexListaFrequenciaCulto >= 0) {
       _frequenciaDAO
-          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 1,
-              _indexListaFrequenciaCulto, context)
+          .salvarFrequencia(_frequenciasCulto, 1,
+              _indexListaFrequenciaCulto)
           .then((valor) {
         var snackBar = SnackBar(
           duration: Duration(seconds: 5),
@@ -627,8 +627,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
       });
     } else {
       _frequenciaDAO
-          .salvarFrequencia(_frequenciasCelula, _frequenciasCulto, 1,
-              _frequenciasCulto.length - 1, context)
+          .salvarFrequencia(_frequenciasCulto, 1,
+              _frequenciasCulto.length - 1)
           .then((valor) {
         var snackBar = SnackBar(
           duration: Duration(seconds: 5),
@@ -660,10 +660,10 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
 
     if (date != null) {
       if (type == 0) {
-        _dataCelulaSelecionada = date;
+        _dataCelulaSelecionada = DateTime(date.year, date.month, date.day, 0, 0, 0);
         _dataCelula.text = DateFormat('dd/MM/yyyy').format(date);
       } else {
-        _dataCultoSelecionada = date;
+        _dataCelulaSelecionada = DateTime(date.year, date.month, date.day, 0, 0, 0);
         _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
       }
     }

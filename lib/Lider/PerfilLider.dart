@@ -102,9 +102,9 @@ class _PerfilLiderState extends State<PerfilLider> {
     Firestore db = Firestore.instance;
 
     DocumentSnapshot snapshot =
-        await db.collection("Celula").document(_idUsuarioLogado).get();
+        await db.collection("Celulas").document(_idUsuarioLogado).get();
 
-    Map<String, dynamic> dados = snapshot.data["Usuario"];
+    Map<String, dynamic> dados = snapshot.data["usuario"];
     _nomeUsuario.text = dados["nome"];
     _emailUsuario.text = dados["email"];
     _nomeDiscipulador.text = dados["discipulador"];
@@ -139,6 +139,7 @@ class _PerfilLiderState extends State<PerfilLider> {
     setState(() {
       circularProgressButton = 1;
     });
+
     Firestore db = Firestore.instance;
     String nome = _nomeUsuario.text;
     String nomeDiscipulador = _nomeDiscipulador.text;
@@ -147,26 +148,25 @@ class _PerfilLiderState extends State<PerfilLider> {
     String nomeIgreja = _nomeIgreja.text;
     String encargo = _encargo.text;
     String email = _emailUsuario.text;
+
     Map<String, dynamic> dadosAtualizar = {
-      "Usuario": {
-        "email": email,
-        "nome": nome,
+      "email": email,
+      "nome": nome,
       "discipulador": nomeDiscipulador,
       "pastorRede": nomePastorRede,
       "pastorIgreja": nomePastorIgreja,
       "igreja": nomeIgreja,
       "encargo": encargo,
       "urlImagem": _urlImagemRecuperada
-      }
     };
 
     if (nome.isEmpty) {
       _validacao = "Preencha o campo Nome!";
     } else {
       db
-          .collection("Celula")
+          .collection("Celulas")
           .document(_idUsuarioLogado)
-          .updateData(dadosAtualizar);
+          .updateData({'usuario': dadosAtualizar});
 
       _validacao = "Dados gravados com sucesso!";
     }
@@ -358,36 +358,38 @@ class _PerfilLiderState extends State<PerfilLider> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 30,  left: 45, right: 15, bottom: 15),
+                      padding: EdgeInsets.only(
+                          top: 30, left: 45, right: 15, bottom: 15),
                       child: TextFormField(
                         controller: _emailUsuario,
                         enabled: false,
                         cursorColor: Colors.white,
                         style: TextStyle(
-                          color: Colors.white,
-                          decorationColor: Colors.white,
-                          fontSize: 18
-                        ),
+                            color: Colors.white,
+                            decorationColor: Colors.white,
+                            fontSize: 18),
                         decoration: InputDecoration(
                           labelText: "E-mail",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
                         controller: _nomeUsuario,
                         cursorColor: Colors.white,
@@ -398,28 +400,32 @@ class _PerfilLiderState extends State<PerfilLider> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Nome",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
-                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fDiscipulador),
+                        onFieldSubmitted: (String text) =>
+                            FocusScope.of(context).requestFocus(_fDiscipulador),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
                         textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (String text) => FocusScope.of(context).requestFocus(_fPastorRede),
+                        onFieldSubmitted: (String text) =>
+                            FocusScope.of(context).requestFocus(_fPastorRede),
                         controller: _nomeDiscipulador,
                         focusNode: _fDiscipulador,
                         cursorColor: Colors.white,
@@ -429,17 +435,19 @@ class _PerfilLiderState extends State<PerfilLider> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Discipulador",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
@@ -457,24 +465,26 @@ class _PerfilLiderState extends State<PerfilLider> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Pastor de Rede",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
                         controller: _nomePastorIgreja,
                         cursorColor: Colors.white,
@@ -484,24 +494,26 @@ class _PerfilLiderState extends State<PerfilLider> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Pastor de Igreja",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(  left: 15, right: 15, bottom: 15),
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: TextFormField(
                         controller: _nomeIgreja,
                         cursorColor: Colors.white,
@@ -511,17 +523,19 @@ class _PerfilLiderState extends State<PerfilLider> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Nome da Igreja",
-                          labelStyle:
-                          TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                          labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(25.0),
                           ),
                         ),
@@ -573,6 +587,5 @@ class _PerfilLiderState extends State<PerfilLider> {
                   ],
                 ),
               ));
-
   }
 }

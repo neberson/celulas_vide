@@ -2,57 +2,40 @@ import 'package:celulas_vide/Model/Celula.dart';
 import 'package:celulas_vide/Model/FrequenciaCelulaBEAN.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 
 class FrequenciaDAO {
-
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;
   String _idUsuarioLogado;
   String _nomeLider;
   String _encargoLider;
 
-  Future<String> salvarFrequencia(
-      List<Map> frequenciaCelula,
-      List<Map> frequenciaCulto,
-      int tipoFrequencia,
-      int indice,
-      BuildContext context) async {
+  Future<String> salvarFrequencia(List<Map> frequencia, int tipoFrequencia,
+      int indice) async {
     String _validacao;
     if (tipoFrequencia == 0) {
-      if (frequenciaCelula[indice]["quantidadeVisitantes"] == null ||
-          frequenciaCelula[indice]["quantidadeVisitantes"] == "") {
+      if (frequencia[indice]["quantidadeVisitantes"] == null ||
+          frequencia[indice]["quantidadeVisitantes"] == "") {
         _validacao = "Preecha o campo Quantidade de Visitantes!";
       } else {
-        Map<String, dynamic> mapMembros = {
-          "frequenciaCelula": frequenciaCelula,
-          "frequenciaCulto": frequenciaCulto
-        };
-
         FirebaseUser usuarioAtual = await _auth.currentUser();
 
         db
-            .collection("frequencia")
+            .collection("Frequencias")
             .document(usuarioAtual.uid)
-            .setData(mapMembros);
+            .updateData({'frequenciaCelula': frequencia});
         _validacao = "Frequência gravada com sucesso!";
       }
     } else {
       print("Indice da lista" + indice.toString());
 
-        Map<String, dynamic> mapMembros = {
-          "frequenciaCelula": frequenciaCelula,
-          "frequenciaCulto": frequenciaCulto
-        };
+      FirebaseUser usuarioAtual = await _auth.currentUser();
 
-        FirebaseUser usuarioAtual = await _auth.currentUser();
-
-        db
-            .collection("frequencia")
-            .document(usuarioAtual.uid)
-            .setData(mapMembros);
-        _validacao = "Frequência gravada com sucesso!";
-
+      db
+          .collection("Frequencias")
+          .document(usuarioAtual.uid)
+          .updateData({'frequenciaCulto': frequencia});
+      _validacao = "Frequência gravada com sucesso!";
     }
 
     return _validacao;
@@ -65,11 +48,11 @@ class FrequenciaDAO {
     Firestore db = Firestore.instance;
 
     DocumentSnapshot snapshot =
-        await db.collection("Celula").document(_idUsuarioLogado).get();
+        await db.collection("Celulas").document(_idUsuarioLogado).get();
 
     Map<String, dynamic> dados = snapshot.data;
-    _nomeLider = dados["Usuario"]["nome"];
-    _encargoLider = dados["Usuario"]["encargo"];
+    _nomeLider = dados["usuario"]["nome"];
+    _encargoLider = dados["usuario"]["encargo"];
   }
 
   Future<List<Map>> recuperarMembros() async {
@@ -77,7 +60,7 @@ class FrequenciaDAO {
     MembroCelula membroCelula = new MembroCelula();
     FirebaseUser usuarioAtual = await _auth.currentUser();
     DocumentSnapshot snapshot =
-        await db.collection("Celula").document(usuarioAtual.uid).get();
+        await db.collection("Celulas").document(usuarioAtual.uid).get();
     Map<String, dynamic> dados = snapshot.data;
 
     List<Map> membros = List<Map>();
@@ -88,8 +71,8 @@ class FrequenciaDAO {
 
     membros.add(membroCelula.toMapFrequencia());
 
-    if (dados["Membros"] != null) {
-      for (Map<dynamic, dynamic> membro in dados["Membros"]) {
+    if (dados["membros"] != null) {
+      for (Map<dynamic, dynamic> membro in dados["membros"]) {
         membroCelula.nomeMembro = membro["nomeMembro"];
         membroCelula.condicaoMembro = membro["condicaoMembro"];
         membroCelula.status = membro["status"];

@@ -63,11 +63,13 @@ class _RelatorioOfertasLiderState extends State<RelatorioOfertasLider> {
     _listAllFrequency.forEach((element) {
 
       DateTime dateComparation = DateTime(element.dataCelula.year,
-          element.dataCelula.month, element.dataCelula.day);
+          element.dataCelula.month, element.dataCelula.day, 0, 0, 0);
 
-      if (dateComparation.isAfter(widget.dateStart) &&
+      if ((dateComparation.isAfter(widget.dateStart) ||
+          dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
           (dateComparation.isBefore(widget.dateEnd) ||
               dateComparation.isAtSameMomentAs(widget.dateEnd))) {
+
         _listFrequencyFiltered.add(element);
         valueTotal += element.ofertaCelula;
       }
