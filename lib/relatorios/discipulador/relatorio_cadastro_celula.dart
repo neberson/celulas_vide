@@ -128,7 +128,7 @@ class _RelatorioCadastroCelulaDiscipuladorState
         title: Text('Cadastro de Célula'),
       ),
       body: isLoading
-          ? loading()
+          ? loadingProgress()
           : error != null
               ? stateError(context, error)
               : _table(),

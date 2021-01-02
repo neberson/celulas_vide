@@ -53,7 +53,7 @@ class _ConvitesDiscipuladorState extends State<ConvitesDiscipulador> {
           ),
         ),
         body: isLoading
-            ? loading()
+            ? loadingProgress()
             : error != null
                 ? stateError(context, error)
                 : TabBarView(children: [

@@ -62,7 +62,7 @@ class _RelatorioFrequenciaConsolidadoState
         title: Text('Frequência consolidado'),
       ),
       body: isLoading
-          ? loading()
+          ? loadingProgress()
           : error != null
               ? stateError(context, error)
               : _body(),

@@ -437,7 +437,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
               ],
             )),
         body: isLoading
-            ? loading()
+            ? loadingProgress()
             : error != null
                 ? stateError(context, error)
                 : TabBarView(children: [_tableCelula(), _tableCulto()]),

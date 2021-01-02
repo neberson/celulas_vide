@@ -59,7 +59,7 @@ class _PerfilDiscipuladorState extends State<PerfilDiscipulador> {
           backgroundColor: Color.fromRGBO(81, 37, 103, 1),
           elevation: 0,
         ),
-        body: isLoading ? loading() : _body());
+        body: isLoading ? loadingProgress() : _body());
   }
 
   _body() {

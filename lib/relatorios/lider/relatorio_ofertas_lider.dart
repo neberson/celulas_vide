@@ -86,7 +86,7 @@ class _RelatorioOfertasLiderState extends State<RelatorioOfertasLider> {
         title: Text('Ofertas da Célula'),
       ),
       body: isLoading
-          ? loading()
+          ? loadingProgress()
           : error != null
               ? stateError(context, error)
               : _table(),

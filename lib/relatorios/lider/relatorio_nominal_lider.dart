@@ -69,7 +69,7 @@ class _RelatorioNominalLiderState extends State<RelatorioNominalLider> {
           ),
         ),
         body: isLoading
-            ? loading()
+            ? loadingProgress()
             : error != null
                 ? stateError(context, error)
                 : TabBarView(children: [

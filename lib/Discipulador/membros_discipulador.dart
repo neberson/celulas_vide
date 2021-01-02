@@ -56,7 +56,7 @@ class _MembrosDiscipuladorState extends State<MembrosDiscipulador> {
           ),
         ),
         body: isLoading
-            ? loading()
+            ? loadingProgress()
             : error != null
             ? stateError(context, error)
             : TabBarView(children: [

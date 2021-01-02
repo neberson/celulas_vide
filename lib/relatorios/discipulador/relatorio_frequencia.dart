@@ -73,7 +73,7 @@ class _RelatorioFrequenciaDiscipuladorState
       appBar: AppBar(
         title: Text('Células supervisionadas'),
       ),
-      body: isLoading ? loading() : _body(),
+      body: isLoading ? loadingProgress() : _body(),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:celulas_vide/Discipulador/convites_page.dart';
 import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/dados_celula.dart';
 import 'package:celulas_vide/Lider/dados_membro.dart';
+import 'package:celulas_vide/Lider/frequencia/frequencias_tabview.dart';
 import 'package:celulas_vide/Lider/gerenciar_convites.dart';
 import 'package:celulas_vide/Lider/lista_membros.dart';
 import 'package:celulas_vide/Lider/perfil_lider.dart';
@@ -44,6 +45,7 @@ void main()  {
           '/ListaMembros': (context) => ListaMembros(),
           '/DadosMembro':(context) => DadosMembro(),
           '/DadosCelula': (context) => DadosCelula(),
+          '/frequenciasTabView': (context) => FrequenciasTabView(),
           '/frequenciaMembros': (context) => FrequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
           '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
@@ -58,6 +60,7 @@ void main()  {
 }
 
 MaterialColor createMaterialColor(Color color) {
+
   List strengths = <double>[.05];
   Map swatch = <int, Color>{};
   final int r = color.red, g = color.green, b = color.blue;

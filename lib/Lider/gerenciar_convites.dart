@@ -59,7 +59,7 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
         title: Text('Gerenciar convite'),
         backgroundColor: Theme.of(context).accentColor,
       ),
-      body: isLoading ? loading(colorElement: Colors.white) : _body(),
+      body: isLoading ? loadingProgress(colorElement: Colors.white) : _body(),
     );
   }
 

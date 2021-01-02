@@ -26,7 +26,7 @@ class _HomeLiderState extends State<HomeLider> {
     Categoria("Membros", "/TabMembro", icone: FontAwesomeIcons.userFriends),
     Categoria("Convites", "/VinculoDiscipulado",
         icone: FontAwesomeIcons.envelope),
-    Categoria("Presença", "/frequenciaMembros",
+    Categoria("Presença", "/frequenciasTabView",
         icone: FontAwesomeIcons.bookmark),
     Categoria("Relatórios", "/ReportsHome", icone: FontAwesomeIcons.calculator),
   ];
