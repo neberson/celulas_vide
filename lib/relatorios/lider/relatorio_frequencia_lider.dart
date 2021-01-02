@@ -121,7 +121,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
           element.dataCelula.month, element.dataCelula.day, 0, 0, 0);
 
       if ((dateComparation.isAfter(widget.dateStart) ||
-          dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+          dateComparation.isAtSameMomentAs(widget.dateStart)) &&
           (dateComparation.isBefore(widget.dateEnd) ||
               dateComparation.isAtSameMomentAs(widget.dateEnd))) {
         listaFrequenciaCelula.add(element);
@@ -159,7 +159,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
           element.dataCulto.month, element.dataCulto.day, 0, 0, 0);
 
       if ((dateComparation.isAfter(widget.dateStart) ||
-          dateComparation.isAtSameMomentAs(widget.dateEnd)) &&
+          dateComparation.isAtSameMomentAs(widget.dateStart)) &&
           (dateComparation.isBefore(widget.dateEnd) ||
               dateComparation.isAtSameMomentAs(widget.dateEnd))) {
 

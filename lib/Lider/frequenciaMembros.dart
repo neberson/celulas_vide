@@ -660,10 +660,10 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
 
     if (date != null) {
       if (type == 0) {
-        _dataCelulaSelecionada = DateTime(date.year, date.month, date.day, 0, 0, 0);
+        _dataCelulaSelecionada = date;
         _dataCelula.text = DateFormat('dd/MM/yyyy').format(date);
       } else {
-        _dataCelulaSelecionada = DateTime(date.year, date.month, date.day, 0, 0, 0);
+        _dataCelulaSelecionada = date;
         _dataCulto.text = DateFormat('dd/MM/yyyy').format(date);
       }
     }

@@ -309,18 +309,16 @@ class _LoginPageState extends State<LoginPage>
   }
 
   _loadingSplash() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(top: 32),
-              child: Image.asset("images/logo-01.png")),
-          Container(
-              margin: EdgeInsets.only(bottom: 64),
-              child: Center(child: CircularProgressIndicator()))
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            margin: EdgeInsets.only(top: 32),
+            child: Image.asset("images/logo-01.png")),
+        Container(
+            margin: EdgeInsets.only(bottom: 64),
+            child: Center(child: CircularProgressIndicator()))
+      ],
     );
   }
 }

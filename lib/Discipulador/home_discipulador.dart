@@ -1,6 +1,7 @@
 import 'package:celulas_vide/Controller/loginUsuario.dart';
 import 'package:celulas_vide/Model/CategoriaMenu.dart';
 import 'package:celulas_vide/relatorios/relatorio_home.dart';
+import 'package:celulas_vide/widgets/dialog_decision.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,11 +24,6 @@ class _HomeDiscipuladorState extends State<HomeDiscipulador> {
     Categoria("Convites","/ConvitesDiscipulador", icone: FontAwesomeIcons.envelope),
     Categoria("Relatórios","/ReportsHome", icone: FontAwesomeIcons.calculator),
   ];
-
-  _escolhaMenuItem(String item) {
-    _loginUsuario.logoff();
-    Navigator.pushReplacementNamed(context, '/');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +50,9 @@ class _HomeDiscipuladorState extends State<HomeDiscipulador> {
           ),
           elevation: 0,
           actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: _escolhaMenuItem,
-              itemBuilder: (context){
-                return [
-                  PopupMenuItem<String>(
-                    value: 'Sair',
-                    child: Text('Sair'),
-                  )
-                ];
-              },
+            IconButton(
+              icon: FaIcon(FontAwesomeIcons.signOutAlt),
+              onPressed: _onClickLogout,
             )
           ],
         ),
@@ -117,6 +106,18 @@ class _HomeDiscipuladorState extends State<HomeDiscipulador> {
         ),
       ),
     );
+  }
+
+  _onClickLogout() async {
+    var result = await showDialogDecision(context,
+        message: 'Deseja realmente sair do aplicativo ?',
+        icon: Icons.info,
+        title: 'Sair');
+
+    if (result != null) {
+      _loginUsuario.logoff();
+      Navigator.pushReplacementNamed(context, '/');
+    }
   }
 
   Widget _buildCategoriaItem(Categoria categoria){
