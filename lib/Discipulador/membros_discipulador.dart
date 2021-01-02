@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Discipulador/discipulador_bloc.dart';
-import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';

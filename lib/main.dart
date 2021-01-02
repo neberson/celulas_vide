@@ -1,15 +1,15 @@
 
-import 'package:celulas_vide/Discipulador/MembrosDiscipulador.dart';
+import 'package:celulas_vide/Discipulador/membros_discipulador.dart';
 import 'package:celulas_vide/Discipulador/convites_page.dart';
 import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
-import 'package:celulas_vide/Lider/DadosCelula.dart';
-import 'package:celulas_vide/Lider/DadosMembro.dart';
-import 'package:celulas_vide/Lider/GerenciarConvitePage.dart';
-import 'package:celulas_vide/Lider/ListaMembros.dart';
-import 'package:celulas_vide/Lider/PerfilLider.dart';
-import 'package:celulas_vide/Lider/TabMembros.dart';
-import 'package:celulas_vide/Lider/frequenciaMembros.dart';
-import 'package:celulas_vide/LoginPage.dart';
+import 'package:celulas_vide/Lider/dados_celula.dart';
+import 'package:celulas_vide/Lider/dados_membro.dart';
+import 'package:celulas_vide/Lider/gerenciar_convites.dart';
+import 'package:celulas_vide/Lider/lista_membros.dart';
+import 'package:celulas_vide/Lider/perfil_lider.dart';
+import 'package:celulas_vide/Lider/tab_membros.dart';
+import 'package:celulas_vide/Lider/frequencia_membros.dart';
+import 'package:celulas_vide/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

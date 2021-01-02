@@ -1,5 +1,5 @@
 import 'package:celulas_vide/Lider/lider_bloc.dart';
-import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/setup/connection.dart';
 import 'package:celulas_vide/widgets/dialog_base.dart';
 import 'package:celulas_vide/widgets/dialog_decision.dart';

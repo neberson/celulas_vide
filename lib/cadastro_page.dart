@@ -1,6 +1,6 @@
-import 'package:celulas_vide/Controller/cadastrarUsuario.dart';
-import 'package:celulas_vide/Lider/HomeLider.dart';
-import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Controller/cadastrar_usuario.dart';
+import 'package:celulas_vide/Lider/home_lider.dart';
+import 'package:celulas_vide/Model/celula.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';

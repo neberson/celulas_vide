@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:celulas_vide/Model/Celula.dart';
+import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/setup/connection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

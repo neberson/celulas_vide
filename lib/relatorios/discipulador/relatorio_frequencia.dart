@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:celulas_vide/Model/Celula.dart';
-import 'package:celulas_vide/Model/FrequenciaModel.dart';
+import 'package:celulas_vide/Model/celula.dart';
+import 'package:celulas_vide/Model/frequencia_model.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
 import 'package:celulas_vide/relatorios/pdf_viewer.dart';
 import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
