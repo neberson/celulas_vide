@@ -1,4 +1,6 @@
 import 'package:celulas_vide/Lider/frequencia/frequencia_bloc.dart';
+import 'package:celulas_vide/Lider/frequencia/frequencia_celula_form.dart';
+import 'package:celulas_vide/Lider/frequencia/frequencia_culto_form.dart';
 import 'package:celulas_vide/Model/frequencia_model.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
@@ -56,13 +58,18 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
         body: TabBarView(
           children: [_body(0), _body(1)],
         ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          backgroundColor: Theme.of(context).accentColor,
+          onPressed: _showModalSheet,
+        ),
       ),
     );
   }
 
   _body(int type) {
     if (isLoading)
-      return loadingProgress(title: 'Carregando membros');
+      return loadingProgress(title: 'Carregando frequências');
     else if (error != null) return stateError(context, error);
 
     if (type == 0)
@@ -183,4 +190,48 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
   void _onClickItemCulto() {}
 
   void onClickItemCelula() {}
+
+  _showModalSheet() {
+    return showModalBottomSheet(
+        isDismissible: true,
+        enableDrag: false,
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+        builder: (context) {
+          return Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 4),
+                  child: Center(
+                    child: Text('Registrar frequência de',
+                        style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+                ListTile(
+                  title: Text('Célula'),
+                  leading: Icon(Icons.supervisor_account),
+                  trailing: Icon(Icons.keyboard_arrow_right),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FrequenciaCelulaForm(frequenciaModel)));
+                  }
+                ),
+                ListTile(
+                  leading: FaIcon(FontAwesomeIcons.church),
+                  title: Text('Culto'),
+                  trailing: Icon(Icons.keyboard_arrow_right),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FrequenciaCultoForm(frequenciaModel)));
+                  }
+                )
+              ],
+            ),
+          );
+        });
+  }
 }

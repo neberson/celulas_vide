@@ -23,7 +23,7 @@ void main()  {
       MaterialApp(
         theme: ThemeData(
           primaryColor: Color.fromRGBO(81, 37, 103, 1),
-          accentColor: Color.fromRGBO(81, 37, 103, 1),
+          accentColor: Colors.pink,
           backgroundColor: Color.fromRGBO(81, 37, 103, 1),
           primarySwatch: createMaterialColor (Color.fromRGBO(81, 37, 103, 1)),
           appBarTheme: AppBarTheme(
