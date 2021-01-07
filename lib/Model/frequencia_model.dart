@@ -2,18 +2,18 @@ import 'package:intl/intl.dart';
 
 class FrequenciaModel {
   String idFrequencia;
-  List<FrequenciaCelula> frequenciaCelula;
+  List<FrequenciaCelulaModel> frequenciaCelula;
   List<FrequenciaCulto> frequenciaCulto;
 
-  FrequenciaModel({this.frequenciaCelula, this.frequenciaCulto, this.idFrequencia});
+  FrequenciaModel(
+      {this.frequenciaCelula, this.frequenciaCulto, this.idFrequencia});
 
   FrequenciaModel.fromMap(map) {
-
     idFrequencia = map['idFrequencia'];
     frequenciaCelula = [];
 
     map['frequenciaCelula'].forEach((v) {
-      frequenciaCelula.add(new FrequenciaCelula.fromMap(v));
+      frequenciaCelula.add(new FrequenciaCelulaModel.fromMap(v));
     });
 
     frequenciaCulto = [];
@@ -22,35 +22,35 @@ class FrequenciaModel {
     });
   }
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
 
-   final Map<String, dynamic> data = Map<String, dynamic>();
+    data['idFrequencia'] = this.idFrequencia;
+    data['frequenciaCelula'] = [];
+    data['frequenciaCulto'] = [];
 
-   data['idFrequencia'] = this.idFrequencia;
-   data['frequenciaCelula'] = [];
-   data['frequenciaCulto'] = [];
-
-   return data;
-
+    return data;
   }
-
 }
 
-class FrequenciaCelula {
+class FrequenciaCelulaModel {
+  String idFrequenciaDia;
   DateTime dataCelula;
   var ofertaCelula;
   List<MembroFrequencia> membrosCelula;
   int quantidadeVisitantes;
   ModelReportFrequence modelReportFrequence;
 
-  FrequenciaCelula(
-      {this.dataCelula,
-      this.ofertaCelula,
-      this.membrosCelula,
-      this.quantidadeVisitantes,
-      this.modelReportFrequence});
+  FrequenciaCelulaModel({
+    this.dataCelula,
+    this.ofertaCelula,
+    this.membrosCelula,
+    this.quantidadeVisitantes,
+    this.modelReportFrequence,
+    this.idFrequenciaDia,
+  });
 
-  FrequenciaCelula.fromMap(map) {
+  FrequenciaCelulaModel.fromMap(map) {
     this.dataCelula = map['dataCelula'].toDate();
     this.ofertaCelula = map['ofertaCelula'];
     membrosCelula = List();
@@ -58,12 +58,21 @@ class FrequenciaCelula {
       membrosCelula.add(MembroFrequencia.fromMap(v));
     });
     this.quantidadeVisitantes = map['quantidadeVisitantes'];
-
+    this.idFrequenciaDia = map['idFrequenciaDia'];
     modelReportFrequence = ModelReportFrequence();
-
   }
 
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
 
+    data['dataCelula'] = this.dataCelula;
+    data['ofertaCelula'] = this.ofertaCelula;
+    data['membrosCelula'] = this.membrosCelula.map((e) => e.toMap()).toList();
+    data['quantidadeVisitantes'] = this.quantidadeVisitantes;
+    data['idFrequenciaDia'] = this.idFrequenciaDia;
+
+    return data;
+  }
 
   String getIndex(int index) {
     switch (index) {
@@ -81,7 +90,8 @@ class FrequenciaCulto {
   List<MembroFrequencia> membrosCulto;
   ModelReportFrequence modelReportFrequence;
 
-  FrequenciaCulto({this.dataCulto, this.membrosCulto, this.modelReportFrequence});
+  FrequenciaCulto(
+      {this.dataCulto, this.membrosCulto, this.modelReportFrequence});
 
   FrequenciaCulto.fromMap(map) {
     this.dataCulto = map['dataCulto'].toDate();
@@ -121,6 +131,18 @@ class MembroFrequencia {
     this.frequenciaMembro = map['frequenciaMembro'];
     this.condicaoMembro = map['condicaoMembro'];
   }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+
+    data['status'] = this.status;
+    data['nomeMembro'] = this.nomeMembro;
+    data['frequenciaMembro'] = this.frequenciaMembro;
+    data['condicaoMembro'] = this.condicaoMembro;
+
+    return data;
+  }
+
 }
 
 class ModelReportFrequence {
@@ -131,7 +153,7 @@ class ModelReportFrequence {
   double totalMediaPeriodo;
 
   ModelReportFrequence(
-      {this.totalMB =0,
+      {this.totalMB = 0,
       this.totalFA = 0,
       this.total = 0,
       this.totalPercent = 0,

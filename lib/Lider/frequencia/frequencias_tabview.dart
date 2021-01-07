@@ -18,22 +18,9 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
   final _bloc = FrequenciaBloc();
   FrequenciaModel frequenciaModel;
 
-  bool isLoading = true;
-  var error;
-
   @override
   void initState() {
-    _bloc.getFrequencia().then((freq) {
-      frequenciaModel = freq;
-
-      setState(() => isLoading = false);
-    }).catchError((onError) {
-      print('error getting frequencia; ${onError.toString()}');
-      error =
-          'Não foi possível obter a frequência dos membros, tente novamente';
-
-      setState(() => isLoading = false);
-    });
+    _bloc.listenFrequencia();
     super.initState();
   }
 
@@ -68,14 +55,24 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
   }
 
   _body(int type) {
-    if (isLoading)
-      return loadingProgress(title: 'Carregando frequências');
-    else if (error != null) return stateError(context, error);
+    return StreamBuilder<FrequenciaModel>(
+        stream: _bloc.streamFrequencia,
+        builder: (context, snapshot) {
+          if (snapshot.hasError)
+            return stateError(context, snapshot.error);
+          else if (snapshot.hasData) {
+            frequenciaModel = snapshot.data;
 
-    if (type == 0)
-      return _itensCelula();
-    else
-      return _itensCulto();
+            print('tem dado');
+
+            if (type == 0)
+              return _itensCelula();
+            else
+              return _itensCulto();
+          }
+          else
+            return loadingProgress(title: 'Carregando frequências');
+        });
   }
 
   _itensCelula() {
@@ -89,7 +86,7 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
               .map((e) => Card(
                     elevation: 8,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(8)),
                     margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                     child: ListTile(
                       leading: FaIcon(
@@ -212,26 +209,39 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                   ),
                 ),
                 ListTile(
-                  title: Text('Célula'),
-                  leading: Icon(Icons.supervisor_account),
-                  trailing: Icon(Icons.keyboard_arrow_right),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FrequenciaCelulaForm(frequenciaModel)));
-                  }
-                ),
+                    title: Text('Célula'),
+                    leading: Icon(Icons.supervisor_account),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FrequenciaCelulaForm(frequenciaModel)));
+                    }),
                 ListTile(
-                  leading: FaIcon(FontAwesomeIcons.church),
-                  title: Text('Culto'),
-                  trailing: Icon(Icons.keyboard_arrow_right),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FrequenciaCultoForm(frequenciaModel)));
-                  }
-                )
+                    leading: FaIcon(FontAwesomeIcons.church),
+                    title: Text('Culto'),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FrequenciaCultoForm(frequenciaModel)));
+                    })
               ],
             ),
           );
         });
   }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+
 }

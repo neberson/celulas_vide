@@ -1,5 +1,5 @@
-import 'package:celulas_vide/stores/list_membro_store.dart';
-import 'package:celulas_vide/stores/membro_store.dart';
+import 'package:celulas_vide/Lider/frequencia/store/list_membro_store.dart';
+import 'package:celulas_vide/Lider/frequencia/store/membro_store.dart';
 import 'package:intl/intl.dart';
 
 class Celula {
@@ -202,7 +202,7 @@ class MembroCelula {
   List<Map<dynamic, dynamic>> listToMapFrequencia(
       ListMembroStore membrosStore) {
     List<Map> membrosMap = new List<Map>();
-    for (MembroStore membro in membrosStore.membrosList) {
+    for (MembroStore membro in membrosStore.membros) {
       Map<String, dynamic> map = {
         "nomeMembro": membro.nomeMembro,
         "condicaoMembro": membro.condicaoMembro,

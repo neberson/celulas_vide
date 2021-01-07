@@ -21,18 +21,15 @@ class _FrequenciaCultoFormState extends State<FrequenciaCultoForm> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            title: Wrap(
-              children: [
-                Text('Registrar Frequencia de Culto'),
-              ],
-            ),
+    return Scaffold(
+        appBar: AppBar(
+          title: Wrap(
+            children: [
+              Text('Registrar Frequencia de Culto'),
+            ],
           ),
-          body: _body()
-      ),
+        ),
+        body: _body()
     );
   }
 

@@ -26,7 +26,7 @@ mixin _$ListMembroStore on _ListMembroStore, Store {
   @override
   void removeMembros(ObservableList<MembroStore> membros) {
     final _$actionInfo = _$_ListMembroStoreActionController.startAction(
-        name: '_ListMembroStore.RemoveMembros');
+        name: '_ListMembroStore.removeMembros');
     try {
       return super.removeMembros(membros);
     } finally {

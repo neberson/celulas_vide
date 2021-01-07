@@ -1,8 +1,8 @@
 import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/Model/frequencia_celula_bean.dart';
 import 'package:celulas_vide/Model/frequencia_dao.dart';
-import 'package:celulas_vide/stores/list_membro_store.dart';
-import 'package:celulas_vide/stores/membro_store.dart';
+import 'package:celulas_vide/Lider/frequencia/store/list_membro_store.dart';
+import 'package:celulas_vide/Lider/frequencia/store/membro_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,13 +61,13 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
         MembroStore membroStore = new MembroStore();
         membroStore.setNomeMembro(membro["nomeMembro"]);
         membroStore.setCondicaoMembro(membro["condicaoMembro"]);
-        membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
+        // membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
         membroStore.setStatus(membro["status"]);
 
         MembroStore membroStoreCulto = new MembroStore();
         membroStoreCulto.setNomeMembro(membro["nomeMembro"]);
         membroStoreCulto.setCondicaoMembro(membro["condicaoMembro"]);
-        membroStoreCulto.setFrequenciaMembro(membro["frequenciaMembro"]);
+        // membroStoreCulto.setFrequenciaMembro(membro["frequenciaMembro"]);
         membroStoreCulto.setStatus(membro["status"]);
 
         _membrosStore.addMembrosList(membroStore);
@@ -115,14 +115,14 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
             _frequenciasCelula[_indexListaFrequencia]["ofertaCelula"]
                 .toString()));
 
-        _membrosStore.removeMembros(_membrosStore.membrosList);
+        _membrosStore.removeMembros(_membrosStore.membros);
 
         for (Map<dynamic, dynamic> membro
             in _frequenciasCelula[_indexListaFrequencia]["membrosCelula"]) {
           MembroStore membroStore = new MembroStore();
           membroStore.setNomeMembro(membro["nomeMembro"]);
           membroStore.setCondicaoMembro(membro["condicaoMembro"]);
-          membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
+          // membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
           membroStore.setStatus(membro["status"]);
 
           _membrosStore.addMembrosList(membroStore);
@@ -145,22 +145,22 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
         _indexListaFrequenciaCulto =
             _frequenciasCulto.indexWhere((dado) => dado["dataCulto"] == data);
 
-        _membrosStoreCulto.removeMembros(_membrosStoreCulto.membrosList);
+        _membrosStoreCulto.removeMembros(_membrosStoreCulto.membros);
 
         for (Map<dynamic, dynamic> membro
             in _frequenciasCulto[_indexListaFrequenciaCulto]["membrosCulto"]) {
           MembroStore membroStore = new MembroStore();
           membroStore.setNomeMembro(membro["nomeMembro"]);
           membroStore.setCondicaoMembro(membro["condicaoMembro"]);
-          membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
+          // membroStore.setFrequenciaMembro(membro["frequenciaMembro"]);
           membroStore.setStatus(membro["status"]);
 
           _membrosStoreCulto.addMembrosList(membroStore);
         }
       } else {
         _indexListaFrequenciaCulto = -1;
-        for (MembroStore membro in _membrosStoreCulto.membrosList) {
-          membro.setFrequenciaMembro(false);
+        for (MembroStore membro in _membrosStoreCulto.membros) {
+          membro.setFrequenciaMembro();
         }
       }
     }
@@ -172,8 +172,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
       _indexListaFrequencia = -1;
       _valorOferta.updateValue(0.0);
       _quantidadeVisitantes.text = "";
-      for (MembroStore membro in _membrosStore.membrosList) {
-        membro.setFrequenciaMembro(false);
+      for (MembroStore membro in _membrosStore.membros) {
+        // membro.setFrequenciaMembro(false);
       }
     });
     FocusScope.of(context).requestFocus(FocusNode());
@@ -184,8 +184,8 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
     setState(() {
       _indexListaFrequenciaCulto = -1;
     });
-    for (MembroStore membro in _membrosStoreCulto.membrosList) {
-      membro.setFrequenciaMembro(false);
+    for (MembroStore membro in _membrosStoreCulto.membros) {
+      membro.setFrequenciaMembro();
     }
     FocusScope.of(context).requestFocus(FocusNode());
   }
@@ -380,12 +380,12 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
                           width: double.infinity,
                           child: ListView.builder(
                               itemCount: (presentCelula <=
-                                      _membrosStore.membrosList.length)
-                                  ? _membrosStore.membrosList.length + 1
-                                  : _membrosStore.membrosList.length,
+                                      _membrosStore.membros.length)
+                                  ? _membrosStore.membros.length + 1
+                                  : _membrosStore.membros.length,
                               itemBuilder: (context, index) {
                                 presentCelula++;
-                                return index == _membrosStore.membrosList.length
+                                return index == _membrosStore.membros.length
                                     ? Padding(
                                         padding: EdgeInsets.only(
                                             top: 25,
@@ -479,15 +479,15 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
                             builder: (_) {
                               return ListView.builder(
                                   itemCount: (presentCulto <=
-                                          _membrosStoreCulto.membrosList.length)
-                                      ? _membrosStoreCulto.membrosList.length +
+                                          _membrosStoreCulto.membros.length)
+                                      ? _membrosStoreCulto.membros.length +
                                           1
-                                      : _membrosStoreCulto.membrosList.length,
+                                      : _membrosStoreCulto.membros.length,
                                   itemBuilder: (context, index) {
                                     presentCulto++;
                                     return index ==
                                             _membrosStoreCulto
-                                                .membrosList.length
+                                                .membros.length
                                         ? Padding(
                                             padding: EdgeInsets.only(
                                                 top: 25,
@@ -670,7 +670,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
   }
 
   Widget buildList(BuildContext context, int index) {
-    final membro = _membrosStore.membrosList[index];
+    final membro = _membrosStore.membros[index];
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
@@ -724,7 +724,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
                               TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
                         ),
                         value: membro.frequenciaMembro,
-                        onChanged: membro.setFrequenciaMembro,
+                        onChanged: (value) => membro.setFrequenciaMembro,
                       );
                     },
                   )
@@ -736,7 +736,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
   }
 
   Widget buildListCulto(BuildContext context, int index) {
-    final membroCulto = _membrosStoreCulto.membrosList[index];
+    final membroCulto = _membrosStoreCulto.membros[index];
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
@@ -792,7 +792,7 @@ class _FrequenciaMembrosState extends State<FrequenciaMembros> {
                               TextStyle(color: Color.fromRGBO(81, 37, 103, 1)),
                         ),
                         value: membroCulto.frequenciaMembro,
-                        onChanged: membroCulto.setFrequenciaMembro,
+                        onChanged: (value) => membroCulto.setFrequenciaMembro,
                       );
                     },
                   )

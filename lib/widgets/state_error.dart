@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'margin_setup.dart';
 
-stateError(context, error) {
+stateError(context, error, {icon = Icons.error}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
@@ -16,7 +16,7 @@ stateError(context, error) {
           child: CircleAvatar(
             backgroundColor: Colors.black12,
             child: Icon(
-              Icons.error,
+              icon,
               size: 50,
               color: Colors.black54,
             ),

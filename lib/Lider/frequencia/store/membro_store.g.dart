@@ -94,11 +94,11 @@ mixin _$MembroStore on _MembroStore, Store {
   }
 
   @override
-  void setFrequenciaMembro(bool valor) {
+  void setFrequenciaMembro() {
     final _$actionInfo = _$_MembroStoreActionController.startAction(
         name: '_MembroStore.setFrequenciaMembro');
     try {
-      return super.setFrequenciaMembro(valor);
+      return super.setFrequenciaMembro();
     } finally {
       _$_MembroStoreActionController.endAction(_$actionInfo);
     }
