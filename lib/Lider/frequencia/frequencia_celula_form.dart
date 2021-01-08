@@ -3,6 +3,7 @@ import 'package:celulas_vide/Lider/frequencia/store/list_membro_store.dart';
 import 'package:celulas_vide/Lider/frequencia/store/membro_store.dart';
 import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/Model/frequencia_model.dart';
+import 'package:celulas_vide/widgets/dialog_decision.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
@@ -14,9 +15,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 
 class FrequenciaCelulaForm extends StatefulWidget {
-
   final FrequenciaModel frequenciaModel;
-  FrequenciaCelulaForm(this.frequenciaModel);
+  final int indexFrequencia;
+  FrequenciaCelulaForm(this.frequenciaModel, {this.indexFrequencia});
 
   @override
   _FrequenciaCelulaFormState createState() => _FrequenciaCelulaFormState();
@@ -30,6 +31,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
   Celula celula;
 
   FrequenciaModel get frequenciaModel => widget.frequenciaModel;
+  int get indexFrequencia => widget.indexFrequencia;
 
   DateTime dateCelula;
 
@@ -45,27 +47,56 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
 
   @override
   void initState() {
-    DateTime currentMoment = DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+    if (indexFrequencia != null) {
+      dateCelula = frequenciaModel.frequenciaCelula[indexFrequencia].dataCelula;
+      _cDateCelula.text = DateFormat('dd/MM/yyyy').format(dateCelula);
+      _cOferta.text = frequenciaModel
+          .frequenciaCelula[indexFrequencia].ofertaCelula
+          .toStringAsFixed(2)
+          .replaceAll('.', ',');
+      _cVisitantes.text = frequenciaModel
+          .frequenciaCelula[indexFrequencia].quantidadeVisitantes
+          .toString();
 
-    for (var element in frequenciaModel.frequenciaCelula) {
-      DateTime date = DateTime(element.dataCelula.year,
-          element.dataCelula.month, element.dataCelula.day, 0, 0, 0);
+      _fetchMembros();
+    } else {
+      DateTime currentMoment = DateTime(DateTime.now().year,
+          DateTime.now().month, DateTime.now().day, 0, 0, 0);
 
-      if (date.isAtSameMomentAs(currentMoment)) {
-        canRecord = false;
-        break;
+      for (var element in frequenciaModel.frequenciaCelula) {
+        DateTime date = DateTime(element.dataCelula.year,
+            element.dataCelula.month, element.dataCelula.day, 0, 0, 0);
+
+        if (date.isAtSameMomentAs(currentMoment)) {
+          canRecord = false;
+          break;
+        }
       }
+
+      if (canRecord) {
+        dateCelula = DateTime.now();
+        _cDateCelula.text = DateFormat('dd/MM/yyyy').format(dateCelula);
+        getMembros();
+      } else
+        setState(() => isLoading = false);
     }
 
-    if (canRecord) {
-      dateCelula = DateTime.now();
-      _cDateCelula.text = DateFormat('dd/MM/yyyy').format(dateCelula);
-      getMembros();
-    } else
-      setState(() => isLoading = false);
-
     super.initState();
+  }
+
+  _fetchMembros() {
+    frequenciaModel.frequenciaCelula[indexFrequencia].membrosCelula
+        .forEach((element) {
+      var membroStore = MembroStore(
+          condicaoMembro: element.condicaoMembro,
+          nomeMembro: element.nomeMembro,
+          status: element.status,
+          frequenciaMembro: element.frequenciaMembro);
+
+      membrosList.addMembrosList(membroStore);
+    });
+
+    setState(() => isLoading = false);
   }
 
   getMembros() {
@@ -155,15 +186,18 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
               color: Theme.of(context).accentColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              child: !loadingSave ? Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white),
-              ) : Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-              onPressed: _onClickSalvar,
+              child: !loadingSave
+                  ? Text(
+                      'Salvar',
+                      style: TextStyle(color: Colors.white),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+              onPressed:
+                  indexFrequencia != null ? _onClickEditar : _onClickSalvar,
             ),
           )
         ],
@@ -210,8 +244,28 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
     }
   }
 
-  _onClickSalvar() {
+  _onClickSalvar() async {
+    bool isEmpty = membrosList.membros
+                .where((element) => !element.frequenciaMembro)
+                .toList()
+                .length ==
+            membrosList.membros.length
+        ? true
+        : false;
 
+    if (isEmpty) {
+      var result = await showDialogDecision(
+        context,
+        title: 'Ausência de membros',
+        message: 'Deseja registrar a frequência sem ninguém presente ?',
+      );
+
+      if (result != null) _saveFrequence();
+    } else
+      _saveFrequence();
+  }
+
+  _saveFrequence() {
     setState(() => loadingSave = true);
 
     var membrosFrequencia = <MembroFrequencia>[];
@@ -235,15 +289,74 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
     );
 
     _bloc.salvarFrequencia(frequenciaCelula).then((_) {
-
       setState(() => loadingSave = false);
       Navigator.pop(context);
     }).catchError((onError) {
-
       setState(() => loadingSave = false);
 
       print('error saving frequence: ${onError.toString()}');
       _showMessage('Não foi possível salvar a frequência, tente novamente',
+          isError: true);
+    });
+  }
+
+  _onClickEditar() async {
+    bool isEmpty = membrosList.membros
+                .where((element) => !element.frequenciaMembro)
+                .toList()
+                .length ==
+            membrosList.membros.length
+        ? true
+        : false;
+
+    if (isEmpty) {
+      var result = await showDialogDecision(
+        context,
+        title: 'Ausência de membros',
+        message: 'Deseja registrar a frequência sem ninguém presente ?',
+      );
+
+      if (result != null) _saveEdition();
+    } else
+      _saveEdition();
+  }
+
+  _saveEdition() {
+    setState(() => loadingSave = true);
+
+    var membrosFrequencia = <MembroFrequencia>[];
+
+    membrosList.membros.forEach((element) {
+      var membro = MembroFrequencia(
+        status: element.status,
+        nomeMembro: element.nomeMembro,
+        condicaoMembro: element.condicaoMembro,
+        frequenciaMembro: element.frequenciaMembro,
+      );
+
+      membrosFrequencia.add(membro);
+    });
+
+    var frequenciaCelula = FrequenciaCelulaModel(
+      dataCelula: dateCelula,
+      membrosCelula: membrosFrequencia,
+      ofertaCelula: _cOferta.numberValue,
+      idFrequenciaDia:
+          frequenciaModel.frequenciaCelula[indexFrequencia].idFrequenciaDia,
+      quantidadeVisitantes:
+          _cVisitantes.text.trim().isEmpty ? 0 : int.parse(_cVisitantes.text),
+    );
+
+    frequenciaModel.frequenciaCelula[indexFrequencia] = frequenciaCelula;
+
+    _bloc.editarFrequencia(frequenciaModel.frequenciaCelula).then((_) {
+      setState(() => loadingSave = false);
+      _showMessage('Frequencia alterada com sucesso');
+    }).catchError((onError) {
+      setState(() => loadingSave = false);
+
+      print('error saving frequence: ${onError.toString()}');
+      _showMessage('Não foi possível editar a frequência, tente novamente',
           isError: true);
     });
   }
@@ -268,5 +381,4 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
     _cOferta.dispose();
     super.dispose();
   }
-
 }

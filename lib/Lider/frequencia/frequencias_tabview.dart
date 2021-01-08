@@ -91,7 +91,6 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Wrap(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Data da célula: ',
@@ -115,7 +114,7 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                           Text('Visitantes: ${e.quantidadeVisitantes} '),
                         ],
                       ),
-                      onTap: onClickItemCelula,
+                      onTap: () => onClickItemCelula(frequenciaModel.frequenciaCelula.indexOf(e)),
                     ),
                   ))
               .toList(),
@@ -179,7 +178,15 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
 
   void _onClickItemCulto() {}
 
-  void onClickItemCelula() {}
+  void onClickItemCelula(int indexFrequencia) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FrequenciaCelulaForm(
+                  frequenciaModel,
+                  indexFrequencia: indexFrequencia,
+                )));
+  }
 
   _showModalSheet() {
     return showModalBottomSheet(

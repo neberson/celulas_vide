@@ -36,7 +36,7 @@ class FrequenciaModel {
 class FrequenciaCelulaModel {
   String idFrequenciaDia;
   DateTime dataCelula;
-  var ofertaCelula;
+  num ofertaCelula;
   List<MembroFrequencia> membrosCelula;
   int quantidadeVisitantes;
   ModelReportFrequence modelReportFrequence;

@@ -56,4 +56,14 @@ class FrequenciaBloc {
 
   dispose() => _streamFrequencia.close();
 
+  Future editarFrequencia(List<FrequenciaCelulaModel> frequenciaCelulas) async {
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore.instance
+        .collection('Frequencias')
+        .document(currentUser.uid)
+        .updateData({
+      'frequenciaCelula': frequenciaCelulas.map((e) => e.toMap()).toList()
+    });
+  }
 }
