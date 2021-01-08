@@ -13,7 +13,7 @@ class FrequenciaBloc {
   listenFrequencia() async {
     var currentUser = await getCurrentUserFirebase();
 
-    var doc = await Firestore.instance
+    Firestore.instance
         .collection('Frequencias')
         .document(currentUser.uid)
         .snapshots()

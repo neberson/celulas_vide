@@ -2,7 +2,7 @@ import 'package:celulas_vide/Model/frequencia_model.dart';
 import 'package:flutter/material.dart';
 
 class FrequenciaCultoForm extends StatefulWidget {
-  FrequenciaModel frequenciaModel;
+  final FrequenciaModel frequenciaModel;
   FrequenciaCultoForm(this.frequenciaModel);
 
   @override

@@ -42,9 +42,23 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [_body(0), _body(1)],
-        ),
+        body: StreamBuilder<FrequenciaModel>(
+            stream: _bloc.streamFrequencia,
+            builder: (context, snapshot) {
+              if (snapshot.hasError)
+                return stateError(context, snapshot.error);
+              else if (snapshot.hasData) {
+                frequenciaModel = snapshot.data;
+
+                return TabBarView(
+                  children: [
+                    _itensCelula(),
+                    _itensCulto(),
+                  ],
+                );
+              } else
+                return loadingProgress(title: 'Carregando frequências');
+            }),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: Theme.of(context).accentColor,
@@ -52,27 +66,6 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
         ),
       ),
     );
-  }
-
-  _body(int type) {
-    return StreamBuilder<FrequenciaModel>(
-        stream: _bloc.streamFrequencia,
-        builder: (context, snapshot) {
-          if (snapshot.hasError)
-            return stateError(context, snapshot.error);
-          else if (snapshot.hasData) {
-            frequenciaModel = snapshot.data;
-
-            print('tem dado');
-
-            if (type == 0)
-              return _itensCelula();
-            else
-              return _itensCulto();
-          }
-          else
-            return loadingProgress(title: 'Carregando frequências');
-        });
   }
 
   _itensCelula() {
@@ -243,5 +236,4 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
     _bloc.dispose();
     super.dispose();
   }
-
 }

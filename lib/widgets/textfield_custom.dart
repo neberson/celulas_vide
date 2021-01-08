@@ -10,7 +10,7 @@ class TextFieldCustom extends StatelessWidget {
   final bool readOnly;
   final Function onTap;
   final TextInputType textInputType;
-  List<TextInputFormatter> inputFormaters;
+  final List<TextInputFormatter> inputFormaters;
 
   TextFieldCustom(this.controller, this.label,
       {this.validator,

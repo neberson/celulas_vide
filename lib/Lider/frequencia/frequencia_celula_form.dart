@@ -14,7 +14,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 
 class FrequenciaCelulaForm extends StatefulWidget {
-  FrequenciaModel frequenciaModel;
+
+  final FrequenciaModel frequenciaModel;
   FrequenciaCelulaForm(this.frequenciaModel);
 
   @override
