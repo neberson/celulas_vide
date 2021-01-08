@@ -1,5 +1,4 @@
-import 'package:celulas_vide/Lider/frequencia/store/list_membro_store.dart';
-import 'package:celulas_vide/Lider/frequencia/store/membro_store.dart';
+
 import 'package:intl/intl.dart';
 
 class Celula {
@@ -187,32 +186,6 @@ class MembroCelula {
     this.dizimistaMembro = map['dizimistaMembro'];
     this.dataCadastro = map['dataCadastro'].toDate();
     this.status = map['status'];
-  }
-
-  Map<String, dynamic> toMapFrequencia() {
-    Map<String, dynamic> map = {
-      "nomeMembro": this.nomeMembro,
-      "condicaoMembro": this.condicaoMembro,
-      "frequenciaMembro": this.frequenciaMembro,
-      "status": this.status
-    };
-    return map;
-  }
-
-  List<Map<dynamic, dynamic>> listToMapFrequencia(
-      ListMembroStore membrosStore) {
-    List<Map> membrosMap = new List<Map>();
-    for (MembroStore membro in membrosStore.membros) {
-      Map<String, dynamic> map = {
-        "nomeMembro": membro.nomeMembro,
-        "condicaoMembro": membro.condicaoMembro,
-        "frequenciaMembro": membro.frequenciaMembro,
-        "status": membro.status
-      };
-
-      membrosMap.add(map);
-    }
-    return membrosMap;
   }
 
   String getIndex(int index) {

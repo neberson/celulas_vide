@@ -9,7 +9,6 @@ import 'package:celulas_vide/Lider/gerenciar_convites.dart';
 import 'package:celulas_vide/Lider/lista_membros.dart';
 import 'package:celulas_vide/Lider/perfil_lider.dart';
 import 'package:celulas_vide/Lider/tab_membros.dart';
-import 'package:celulas_vide/Lider/frequencia_membros.dart';
 import 'package:celulas_vide/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,7 +45,6 @@ void main()  {
           '/DadosMembro':(context) => DadosMembro(),
           '/DadosCelula': (context) => DadosCelula(),
           '/frequenciasTabView': (context) => FrequenciasTabView(),
-          '/frequenciaMembros': (context) => FrequenciaMembros(),
           '/TabMembro': (context) => TabMembro(),
           '/VinculoDiscipulado': (context) => GerenciarConvitePage(),
           '/PerfilDiscipulador': (context) => PerfilDiscipulador(),
