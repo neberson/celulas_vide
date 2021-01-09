@@ -18,8 +18,16 @@ class FrequenciaBloc {
         .document(currentUser.uid)
         .snapshots()
         .listen((event) {
-      if (!_streamFrequencia.isClosed)
-        _streamFrequencia.add(FrequenciaModel.fromMap(event.data));
+      if (!_streamFrequencia.isClosed) {
+        var frequenciaModel = FrequenciaModel.fromMap(event.data);
+
+        frequenciaModel.frequenciaCelula
+            .sort((a, b) => b.dataCelula.compareTo(a.dataCelula));
+        frequenciaModel.frequenciaCulto
+            .sort((a, b) => b.dataCulto.compareTo(a.dataCulto));
+
+        _streamFrequencia.add(frequenciaModel);
+      }
     }).onError((handleError) {
       if (!_streamFrequencia.isClosed)
         _streamFrequencia
@@ -38,45 +46,80 @@ class FrequenciaBloc {
     return Celula.fromMap(doc.data);
   }
 
-  Future salvarFrequencia(FrequenciaCelulaModel frequenciaCelulaModel) async {
+  Future salvarFrequenciaCelula(FrequenciaCelula frequenciaCelula) async {
     var currentUser = await getCurrentUserFirebase();
 
-    frequenciaCelulaModel.idFrequenciaDia =
+    frequenciaCelula.idFrequenciaDia =
         Firestore.instance.collection('Frequencias').document().documentID;
-
-    print('id da frequencia: ${frequenciaCelulaModel.idFrequenciaDia}');
 
     await Firestore.instance
         .collection('Frequencias')
         .document(currentUser.uid)
         .updateData({
-      'frequenciaCelula': FieldValue.arrayUnion([frequenciaCelulaModel.toMap()])
+      'frequenciaCelula': FieldValue.arrayUnion([frequenciaCelula.toMap()])
     });
   }
 
   dispose() => _streamFrequencia.close();
 
-  Future editarFrequencia(List<FrequenciaCelulaModel> frequenciaCelulas) async {
+  Future editarFrequenciaCelula(
+      List<FrequenciaCelula> frequencias) async {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
         .collection('Frequencias')
         .document(currentUser.uid)
         .updateData({
-      'frequenciaCelula': frequenciaCelulas.map((e) => e.toMap()).toList()
+      'frequenciaCelula': frequencias.map((e) => e.toMap()).toList()
     });
   }
 
-  Future apagarFrequencia(List<FrequenciaCelulaModel> frequenciaCelulas) async {
-
+  Future apagarFrequenciaCelula(
+      List<FrequenciaCelula> frequencias) async {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
         .collection('Frequencias')
         .document(currentUser.uid)
         .updateData({
-      'frequenciaCelula': frequenciaCelulas.map((e) => e.toMap()).toList()
+      'frequenciaCelula': frequencias.map((e) => e.toMap()).toList()
     });
+  }
 
+  Future salvarFrequenciaCulto(FrequenciaCulto frequenciaCulto) async {
+    var currentUser = await getCurrentUserFirebase();
+
+    frequenciaCulto.idFrequenciaDia =
+        Firestore.instance.collection('Frequencias').document().documentID;
+
+    await Firestore.instance
+        .collection('Frequencias')
+        .document(currentUser.uid)
+        .updateData({
+      'frequenciaCulto': FieldValue.arrayUnion([frequenciaCulto.toMap()])
+    });
+  }
+
+  Future editarFrequenciaCulto(List<FrequenciaCulto> frequencias) async {
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore.instance
+        .collection('Frequencias')
+        .document(currentUser.uid)
+        .updateData({
+      'frequenciaCulto': frequencias.map((e) => e.toMap()).toList()
+    });
+  }
+
+  Future apagarFrequenciaCulto(
+      List<FrequenciaCulto> frequencias) async {
+    var currentUser = await getCurrentUserFirebase();
+
+    await Firestore.instance
+        .collection('Frequencias')
+        .document(currentUser.uid)
+        .updateData({
+      'frequenciaCulto': frequencias.map((e) => e.toMap()).toList()
+    });
   }
 }

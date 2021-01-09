@@ -196,7 +196,7 @@ class _RelatorioFrequenciaDiscipuladorState
       if (type == 0) {
         //instace listFrequences
         for (int i = 0; i < listaTodasFrequencias.length; i++) {
-          List<FrequenciaCelulaModel> list = [];
+          List<FrequenciaCelula> list = [];
 
           listaFrequenciasCelulaFiltradas
               .add(FrequenciaModel(frequenciaCelula: list));

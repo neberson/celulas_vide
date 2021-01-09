@@ -23,8 +23,8 @@ class _RelatorioOfertasLiderState extends State<RelatorioOfertasLider> {
   final reportBloc = RelatorioBloc();
   bool isLoading = true;
   var error;
-  List<FrequenciaCelulaModel> _listAllFrequency = [];
-  List<FrequenciaCelulaModel> _listFrequencyFiltered = [];
+  List<FrequenciaCelula> _listAllFrequency = [];
+  List<FrequenciaCelula> _listFrequencyFiltered = [];
   double valueTotal = 0;
   double media;
 

@@ -112,7 +112,8 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                                 children: [
                                   Text('Presença de membros: '),
                                   Text(e.membrosCelula
-                                      .where((element) => element.frequenciaMembro)
+                                      .where(
+                                          (element) => element.frequenciaMembro)
                                       .toList()
                                       .length
                                       .toString()),
@@ -121,15 +122,25 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                               Text('Visitantes: ${e.quantidadeVisitantes} '),
                             ],
                           ),
-                          onTap: () => onClickItemCelula(frequenciaModel.frequenciaCelula.indexOf(e)),
+                          onTap: () => onClickItemCelula(
+                              frequenciaModel.frequenciaCelula.indexOf(e)),
                         ),
                         Container(
                           height: 40,
                           alignment: Alignment.bottomLeft,
                           child: FlatButton.icon(
-                            label: Text('Apagar', style: TextStyle(color: Theme.of(context).accentColor,),),
-                            icon: Icon(Icons.delete, color: Theme.of(context).accentColor,),
-                            onPressed: () => _onClickDeleteFrequence(frequenciaModel.frequenciaCelula.indexOf(e)),
+                            label: Text(
+                              'Apagar',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            icon: Icon(
+                              Icons.delete,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            onPressed: () => _onClickDeleteFrequenciaCelula(
+                                frequenciaModel.frequenciaCelula.indexOf(e)),
                           ),
                         ),
                       ],
@@ -153,40 +164,64 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                    child: ListTile(
-                      leading: FaIcon(
-                        FontAwesomeIcons.calendarAlt,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      trailing: Icon(Icons.keyboard_arrow_right_rounded),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Wrap(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: FaIcon(
+                            FontAwesomeIcons.calendarAlt,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          trailing: Icon(Icons.keyboard_arrow_right_rounded),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Data do culto: ',
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor),
+                              Wrap(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Data do culto: ',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  Text(DateFormat('dd/MM/yyyy')
+                                      .format(e.dataCulto)),
+                                ],
                               ),
-                              Text(
-                                  DateFormat('dd/MM/yyyy').format(e.dataCulto)),
+                              Wrap(
+                                children: [
+                                  Text('Presença de membros: '),
+                                  Text(e.membrosCulto
+                                      .where(
+                                          (element) => element.frequenciaMembro)
+                                      .toList()
+                                      .length
+                                      .toString()),
+                                ],
+                              ),
                             ],
                           ),
-                          Wrap(
-                            children: [
-                              Text('Presença de membros: '),
-                              Text(e.membrosCulto
-                                  .where((element) => element.frequenciaMembro)
-                                  .toList()
-                                  .length
-                                  .toString()),
-                            ],
+                          onTap: () => _onClickItemCulto(
+                              frequenciaModel.frequenciaCulto.indexOf(e)),
+                        ),
+                        Container(
+                          height: 40,
+                          alignment: Alignment.bottomLeft,
+                          child: FlatButton.icon(
+                            label: Text(
+                              'Apagar',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            icon: Icon(
+                              Icons.delete,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            onPressed: () => _onClickDeleteFrequenciaCulto(
+                                frequenciaModel.frequenciaCulto.indexOf(e)),
                           ),
-                        ],
-                      ),
-                      onTap: _onClickItemCulto,
+                        ),
+                      ],
                     ),
                   ))
               .toList(),
@@ -194,34 +229,57 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
       );
   }
 
-  void _onClickDeleteFrequence(int indexFrequencia) async {
+  void _onClickDeleteFrequenciaCulto(int indexFrequencia) async {
+    var result = await showDialogDecision(context,
+        title: 'Apagar frequência',
+        message:
+            'Esta ação não pode ser desfeita. Deseja realmente apagar esta frequência ?',
+        icon: Icons.warning,
+        colorIcon: Theme.of(context).accentColor);
 
-    var result = await showDialogDecision(
-      context,
-      title: 'Apagar frequência',
-      message: 'Esta ação não pode ser desfeita. Deseja realmente apagar esta frequência ?',
-      icon: Icons.warning,
-      colorIcon: Theme.of(context).accentColor
-    );
+    if (result != null) {
+      frequenciaModel.frequenciaCulto.removeAt(indexFrequencia);
 
-    if(result != null){
-
-      frequenciaModel.frequenciaCelula.removeAt(indexFrequencia);
-
-      _bloc.apagarFrequencia(frequenciaModel.frequenciaCelula).then((_) {
-
+      _bloc.apagarFrequenciaCulto(frequenciaModel.frequenciaCulto).then((_) {
         _showMessage('Frequencia apagada com sucesso');
       }).catchError((onError) {
-
         print('error saving frequence: ${onError.toString()}');
         _showMessage('Não foi possível apagar a frequência, tente novamente',
             isError: true);
       });
     }
-
   }
 
-  void _onClickItemCulto() {}
+  void _onClickDeleteFrequenciaCelula(int indexFrequencia) async {
+    var result = await showDialogDecision(context,
+        title: 'Apagar frequência',
+        message:
+            'Esta ação não pode ser desfeita. Deseja realmente apagar esta frequência ?',
+        icon: Icons.warning,
+        colorIcon: Theme.of(context).accentColor);
+
+    if (result != null) {
+      frequenciaModel.frequenciaCelula.removeAt(indexFrequencia);
+
+      _bloc.apagarFrequenciaCelula(frequenciaModel.frequenciaCelula).then((_) {
+        _showMessage('Frequencia apagada com sucesso');
+      }).catchError((onError) {
+        print('error saving frequence: ${onError.toString()}');
+        _showMessage('Não foi possível apagar a frequência, tente novamente',
+            isError: true);
+      });
+    }
+  }
+
+  void _onClickItemCulto(int indexFrequencia) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FrequenciaCultoForm(
+                  frequenciaModel,
+                  indexFrequencia: indexFrequencia,
+                )));
+  }
 
   void onClickItemCelula(int indexFrequencia) {
     Navigator.push(
@@ -295,7 +353,6 @@ class _FrequenciasTabViewState extends State<FrequenciasTabView> {
       ),
     );
   }
-
 
   @override
   void dispose() {

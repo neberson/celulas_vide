@@ -34,7 +34,7 @@ class _RelatorioFrequenciaLiderState extends State<RelatorioFrequenciaLider> {
   Celula celula;
 
   FrequenciaModel frequenciaModel;
-  List<FrequenciaCelulaModel> listaFrequenciaCelula = [];
+  List<FrequenciaCelula> listaFrequenciaCelula = [];
   List<FrequenciaCulto> listaFrequenciaCulto = [];
 
   List<int> listBatizados = [];

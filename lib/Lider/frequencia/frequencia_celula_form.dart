@@ -116,7 +116,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
     }).catchError((onError) {
       print('error getting celula: ${onError.toString()}');
 
-      error = 'Não foi possível obter os membros da célula, tente novamente';
+      error = 'Não foi possível obter os membros, tente novamente';
 
       setState(() => isLoading = false);
     });
@@ -280,7 +280,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
       membrosFrequencia.add(membro);
     });
 
-    var frequenciaCelula = FrequenciaCelulaModel(
+    var frequenciaCelula = FrequenciaCelula(
       dataCelula: dateCelula,
       membrosCelula: membrosFrequencia,
       ofertaCelula: _cOferta.numberValue,
@@ -288,7 +288,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
           _cVisitantes.text.trim().isEmpty ? 0 : int.parse(_cVisitantes.text),
     );
 
-    _bloc.salvarFrequencia(frequenciaCelula).then((_) {
+    _bloc.salvarFrequenciaCelula(frequenciaCelula).then((_) {
       setState(() => loadingSave = false);
       Navigator.pop(context);
     }).catchError((onError) {
@@ -337,7 +337,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
       membrosFrequencia.add(membro);
     });
 
-    var frequenciaCelula = FrequenciaCelulaModel(
+    var frequenciaCelula = FrequenciaCelula(
       dataCelula: dateCelula,
       membrosCelula: membrosFrequencia,
       ofertaCelula: _cOferta.numberValue,
@@ -349,7 +349,7 @@ class _FrequenciaCelulaFormState extends State<FrequenciaCelulaForm> {
 
     frequenciaModel.frequenciaCelula[indexFrequencia] = frequenciaCelula;
 
-    _bloc.editarFrequencia(frequenciaModel.frequenciaCelula).then((_) {
+    _bloc.editarFrequenciaCelula(frequenciaModel.frequenciaCelula).then((_) {
       setState(() => loadingSave = false);
       _showMessage('Frequencia alterada com sucesso');
     }).catchError((onError) {
