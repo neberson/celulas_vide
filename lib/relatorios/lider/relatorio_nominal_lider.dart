@@ -56,7 +56,6 @@ class _RelatorioNominalLiderState extends State<RelatorioNominalLider> {
         key: scaffoldKey,
         appBar: AppBar(
           title: Text('Relatório membros da Célula'),
-          backgroundColor: Theme.of(context).accentColor,
           bottom: TabBar(
             tabs: [
               Tab(

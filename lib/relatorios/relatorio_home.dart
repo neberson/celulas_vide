@@ -48,29 +48,30 @@ class _RelatorioHomeState extends State<RelatorioHome> {
         child: Column(
           children: [
             Container(
+              alignment: Alignment.topLeft,
               margin: EdgeInsets.only(top: 16, bottom: 16),
-              child: Center(
-                child: Text(
-                  'Selecione um modelo',
-                  style: TextStyle(fontSize: 22),
-                ),
+              child: Text(
+                'Selecione um modelo',
+                style: TextStyle(fontSize: 22),
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height,
               child: GridView(
                 physics: NeverScrollableScrollPhysics(),
-                //crossAxisCount: encargo == 'Discipulador' ? 3 : 2,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: encargo == 'Discipulador' ? 3 : 2 ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
                 children: [
                   _itemTypeReport('Cadastro de Célula', Icons.person_add,
                       _onClickCadastroCelula),
-                  _itemTypeReport('Nominal membros da Célula',
-                      Icons.supervisor_account, _onClickRelatorioNominal),
+                  if (encargo == 'Lider')
+                    _itemTypeReport('Nominal membros da Célula',
+                        Icons.supervisor_account, _onClickRelatorioNominal),
                   _itemTypeReport('Frequência', Icons.format_list_numbered,
                       _onClickRelatorioFrequencia),
-                  _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
-                      _onClickReportOffers),
+                  if (encargo == 'Lider')
+                    _itemTypeReport('Ofertas da Célula', Icons.monetization_on,
+                        _onClickReportOffers),
                   if (encargo == 'Discipulador')
                     _itemTypeReport('Projeção\nMensal',
                         FontAwesomeIcons.calendarAlt, _onClickProjecaoMensal),
@@ -93,9 +94,8 @@ class _RelatorioHomeState extends State<RelatorioHome> {
     return Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withAlpha(90),
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: Theme.of(context).primaryColor.withAlpha(90),
+          borderRadius: BorderRadius.circular(10)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -114,7 +114,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.black),
+            style: TextStyle(color: Colors.black),
           ),
         ],
       ),
@@ -282,8 +282,8 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                             text.isEmpty ? 'Informe a data inicial' : null,
                         decoration: InputDecoration(
                             labelText: 'Data inicial',
-                            labelStyle:
-                                TextStyle(color: Theme.of(context).primaryColor),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColor),
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 2.0),
@@ -305,8 +305,8 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                             text.isEmpty ? 'Informe a data final' : null,
                         decoration: InputDecoration(
                             labelText: 'Data Final',
-                            labelStyle:
-                                TextStyle(color: Theme.of(context).primaryColor),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColor),
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 2.0),

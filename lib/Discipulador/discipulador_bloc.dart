@@ -12,7 +12,7 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var doc = await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .get();
 
@@ -23,8 +23,8 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     var docMembros = await Firestore.instance
-        .collection('Celula')
-        .where('Usuario.encargo', isEqualTo: 'Lider')
+        .collection('Celulas')
+        .where('usuario.encargo', isEqualTo: 'Lider')
         .where('conviteRealizado.idUsuario', isEqualTo: currentUser.uid)
         .getDocuments();
 
@@ -46,9 +46,9 @@ class DiscipuladorBloc {
       final String url = await task.ref.getDownloadURL();
 
       Firestore.instance
-          .collection('Celula')
+          .collection('Celulas')
           .document(userCurrent.uid)
-          .updateData({'Usuario.urlImagem': url}).then((_) => null);
+          .updateData({'usuario.urlImagem': url}).then((_) => null);
 
       return url;
     } else
@@ -59,13 +59,13 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({
-      'Usuario.nome': usuario.nome,
-      'Usuario.pastorRede': usuario.pastorRede,
-      'Usuario.pastorIgreja': usuario.pastorIgreja,
-      'Usuario.igreja': usuario.igreja
+      'usuario.nome': usuario.nome,
+      'usuario.pastorRede': usuario.pastorRede,
+      'usuario.pastorIgreja': usuario.pastorIgreja,
+      'usuario.igreja': usuario.igreja
     });
   }
 
@@ -74,7 +74,7 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({
       'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
@@ -82,7 +82,7 @@ class DiscipuladorBloc {
     });
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(idNewConvite)
         .updateData({
       'conviteRealizado.status': 1,
@@ -95,7 +95,7 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({
       'convitesRecebidos': convitesLider.map((e) => e.toMap()).toList(),
@@ -113,7 +113,7 @@ class DiscipuladorBloc {
     var currentUser = await getCurrentUserFirebase();
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(currentUser.uid)
         .updateData({
       'convitesRecebidos': convitesRecebidos.map((e) => e.toMap()).toList(),
@@ -121,7 +121,7 @@ class DiscipuladorBloc {
     });
 
     await Firestore.instance
-        .collection('Celula')
+        .collection('Celulas')
         .document(idUsuario)
         .updateData({'conviteRealizado': null});
   }

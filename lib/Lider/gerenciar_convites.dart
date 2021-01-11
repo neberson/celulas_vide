@@ -5,6 +5,7 @@ import 'package:celulas_vide/widgets/dialog_base.dart';
 import 'package:celulas_vide/widgets/dialog_decision.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
+import 'package:celulas_vide/widgets/state_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,7 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
   bool loadingSave = false;
 
   Celula celula;
+  var error;
 
   var style = TextStyle(fontSize: 18, color: Colors.white);
 
@@ -46,6 +48,13 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
             title: 'Convite recusado',
           );
       });
+    }).catchError((onError) {
+      print('error getting celula: ${onError.toString()}');
+
+      error =
+          'Não foi possível obter as informações da célula, tente novamnete';
+
+      setState(() => isLoading = false);
     });
     super.initState();
   }
@@ -54,12 +63,97 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).accentColor,
       appBar: AppBar(
         title: Text('Gerenciar convite'),
-        backgroundColor: Theme.of(context).accentColor,
       ),
-      body: isLoading ? loadingProgress(colorElement: Colors.white) : _body(),
+      body: isLoading
+          ? loadingProgress()
+          : error != null
+              ? stateError(context, error)
+              : _body(),
+    );
+  }
+
+  _body() {
+    if (celula.dadosCelula == null) return _dadosCelulaEmpty();
+
+    if (celula.conviteRealizado != null &&
+        (celula.conviteRealizado.status == 0 ||
+            celula.conviteRealizado.status == 1)) return _conviteRealizado();
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+              child: Text(
+                'Olá! Informe o e-mail do seu discipulador para se conectar.',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: TextFormField(
+              controller: _cEmail,
+              validator: (String text) =>
+                  text.trim().isEmpty ? 'Informe o e-mail' : null,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: "E-mail",
+                hintText: 'Digite o e-mail',
+                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
+          ),
+          _button('Convidar', _onClickEnviarConvite)
+        ],
+      ),
+    );
+  }
+
+  _dadosCelulaEmpty() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Center(
+          child: Container(
+            height: 80,
+            width: 100,
+            margin: EdgeInsets.only(bottom: 32, top: 16,),
+            child: CircleAvatar(
+              backgroundColor: Colors.black12,
+              child: Icon(
+                Icons.error,
+                size: 30,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            margin: marginFieldMiddle,
+            child: Text(
+              "Ops...",
+              style: Theme.of(context).textTheme.subtitle1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            margin: marginFieldMiddle,
+            child: Text('Complete o cadastro da célula antes de se vincular a um discipulador.',
+              style: Theme.of(context).textTheme.bodyText2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -79,11 +173,11 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
           SizedBox(height: 10),
           Text(
             'Convidado: ${celula.conviteRealizado.nomeIntegrante}',
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(fontSize: 16),
           ),
           Text(
               'Data do convite: ${DateFormat('dd/MM/yyyy').format(celula.conviteRealizado.status == 0 ? celula.conviteRealizado.createdAt : celula.conviteRealizado.updatedAt)}',
-              style: TextStyle(color: Colors.white, fontSize: 16)),
+              style: TextStyle(fontSize: 16)),
           _button(
               celula.conviteRealizado.status == 0
                   ? 'Desfazer convite'
@@ -91,64 +185,6 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
               celula.conviteRealizado.status == 0
                   ? _onClickDesfazer
                   : _onClickDesvincular)
-        ],
-      ),
-    );
-  }
-
-  _body() {
-    if (celula.conviteRealizado != null &&
-        (celula.conviteRealizado.status == 0 ||
-            celula.conviteRealizado.status == 1)) return _conviteRealizado();
-
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-              child: Text(
-                'Olá! Informe o e-mail do seu discipulador para se conectar.',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-            child: TextFormField(
-              controller: _cEmail,
-              validator: (String text) =>
-                  text.trim().isEmpty ? 'Informe o e-mail' : null,
-              cursorColor: Colors.white,
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(
-                color: Colors.white,
-                decorationColor: Colors.white,
-              ),
-              decoration: InputDecoration(
-                labelText: "E-mail",
-                hintText: 'Digite o e-mail',
-                errorStyle: TextStyle(color: Colors.white),
-                hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                labelStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-              ),
-            ),
-          ),
-          _button('Convidar', _onClickEnviarConvite)
         ],
       ),
     );
@@ -175,7 +211,7 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
                   )
                 : Text(
                     label,
-                    style: TextStyle(color: Colors.white70, fontSize: 20),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
             onPressed: onPressed,
           ),
@@ -209,10 +245,9 @@ class _GerenciarConvitePageState extends State<GerenciarConvitePage> {
         colorIcon: Colors.red);
 
     if (result != null) {
-
       if (!await isConnected())
         _showMessage('Sem conexão com internet', isError: true);
-      else{
+      else {
         setState(() => loadingSave = true);
 
         liderBloc.desfazerConvite(celula.conviteRealizado).then((_) {
