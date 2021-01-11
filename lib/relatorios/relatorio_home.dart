@@ -261,7 +261,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                     FaIcon(
                       FontAwesomeIcons.calendarCheck,
                       size: 40,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
                       height: 7,
@@ -283,7 +283,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                         decoration: InputDecoration(
                             labelText: 'Data inicial',
                             labelStyle:
-                                TextStyle(color: Theme.of(context).accentColor),
+                                TextStyle(color: Theme.of(context).primaryColor),
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 2.0),
@@ -306,7 +306,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                         decoration: InputDecoration(
                             labelText: 'Data Final',
                             labelStyle:
-                                TextStyle(color: Theme.of(context).accentColor),
+                                TextStyle(color: Theme.of(context).primaryColor),
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 2.0),
@@ -327,14 +327,14 @@ class _RelatorioHomeState extends State<RelatorioHome> {
                         child: Text(
                           'Sair',
                           style: TextStyle(
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                         onPressed: () => Navigator.pop(context)),
                   ),
                   Container(
                     child: FlatButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           'Gerar',
                           style: TextStyle(color: Colors.white),
