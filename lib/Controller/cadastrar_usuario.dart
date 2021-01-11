@@ -9,20 +9,6 @@ class CadastroUsuarioBloc {
   Future<String> novoUsuario(
       Usuario user, String password, String confirmPassword) async {
     String _authValidation;
-    if (user.nome.isEmpty) {
-      _authValidation = "Preencha o campo Nome!";
-    } else if (user.email.isEmpty) {
-      _authValidation = "Preencha o campo E-mail!";
-    } else if (password.isEmpty) {
-      _authValidation = "Preencha o campo Senha, com mais de 6 caracteres!";
-    } else if (confirmPassword.isEmpty) {
-      _authValidation =
-          "Preencha o campo Confirmar Senha, com a mesma senha do campo Senha!";
-    } else if (confirmPassword != password) {
-      _authValidation = "Confirmar Senha, está diferente do campo Senha";
-    } else if (user.encargo == null) {
-      _authValidation = "Selecione um encargo para prosseguir!";
-    } else {
 
       await auth
           .createUserWithEmailAndPassword(email: user.email, password: password)
@@ -62,8 +48,9 @@ class CadastroUsuarioBloc {
         }
         print("novo usuario: erro" + erro.toString());
       });
-    }
+
 
     return _authValidation;
   }
+
 }

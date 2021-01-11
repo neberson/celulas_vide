@@ -4,11 +4,7 @@ import 'package:celulas_vide/Discipulador/home_discipulador.dart';
 import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
-import 'package:celulas_vide/widgets/textfield_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
-
 import 'Lider/home_lider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -104,9 +100,9 @@ class _LoginPageState extends State<LoginPage>
                       Icons.email,
                       color: Colors.black26,
                     ),
-                    hintText: "Email",
+                    hintText: "Digite seu e-mail",
+                    labelText: 'E-mail',
                     labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                    hintStyle: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
             ),
@@ -145,8 +141,9 @@ class _LoginPageState extends State<LoginPage>
                               color: Color.fromRGBO(81, 37, 103, 1),
                             ),
                     ),
-                    hintText: "Senha",
-                    hintStyle: TextStyle(color: Theme.of(context).primaryColor),
+                    labelText: "Senha",
+                    hintText: 'Digite sua senha',
+                    labelStyle: TextStyle(color: Theme.of(context).primaryColor),
 
                 ),
               ),
