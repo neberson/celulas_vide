@@ -1,6 +1,6 @@
 import 'package:celulas_vide/relatorios/discipulador/relatorio_cadastro_celula.dart';
 import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia.dart';
-import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia_consolidado.dart';
+import 'package:celulas_vide/relatorios/discipulador/relatorio_frequencia_celula_consolidado.dart';
 import 'package:celulas_vide/relatorios/discipulador/relatorio_projecao_mensal.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_cadastro_celula_lider.dart';
 import 'package:celulas_vide/relatorios/lider/relatorio_frequencia_lider.dart';
@@ -128,7 +128,7 @@ class _RelatorioHomeState extends State<RelatorioHome> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RelatorioFrequenciaConsolidado(date)));
+              builder: (context) => RelatorioFrequenciaCelulaConsolidado(date)));
   }
 
   _onClickProjecaoMensal() async {

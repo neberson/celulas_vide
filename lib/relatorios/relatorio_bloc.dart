@@ -52,7 +52,7 @@ class RelatorioBloc {
     return FrequenciaModel.fromMap(doc.data);
   }
 
-  Future getAllFrequenciasByCelulas(List<Celula> listaCelulas) async {
+  Future<List<FrequenciaModel>> getAllFrequenciasByCelulas(List<Celula> listaCelulas) async {
     List<FrequenciaModel> frequencias = [];
 
     for (int i = 0; i < listaCelulas.length; i++) {
@@ -61,7 +61,6 @@ class RelatorioBloc {
           .document(listaCelulas[i].idDocumento)
           .get();
 
-      if(docFrequence.exists && docFrequence.data != null)
         frequencias.add(FrequenciaModel.fromMap(docFrequence.data));
     }
 

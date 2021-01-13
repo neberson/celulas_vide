@@ -4,6 +4,7 @@ class FrequenciaModel {
   String idFrequencia;
   List<FrequenciaCelula> frequenciaCelula;
   List<FrequenciaCulto> frequenciaCulto;
+  ModelReportFrequence modelReportFrequence;
 
   FrequenciaModel(
       {this.frequenciaCelula, this.frequenciaCulto, this.idFrequencia});
@@ -20,6 +21,9 @@ class FrequenciaModel {
     map['frequenciaCulto'].forEach((v) {
       frequenciaCulto.add(new FrequenciaCulto.fromMap(v));
     });
+
+    modelReportFrequence = ModelReportFrequence();
+
   }
 
   Map<String, dynamic> toMap() {
@@ -165,11 +169,14 @@ class ModelReportFrequence {
   int total;
   double totalPercent;
   double totalMediaPeriodo;
+  int celulasMes;
 
-  ModelReportFrequence(
-      {this.totalMB = 0,
-      this.totalFA = 0,
-      this.total = 0,
-      this.totalPercent = 0,
-      this.totalMediaPeriodo = 0});
+  ModelReportFrequence({
+    this.totalMB = 0,
+    this.totalFA = 0,
+    this.total = 0,
+    this.totalPercent = 0,
+    this.totalMediaPeriodo = 0,
+    this.celulasMes = 0,
+  });
 }
