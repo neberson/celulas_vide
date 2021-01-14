@@ -1,6 +1,7 @@
 import 'package:celulas_vide/Model/celula.dart';
 import 'package:celulas_vide/Model/frequencia_model.dart';
 import 'package:celulas_vide/relatorios/relatorio_bloc.dart';
+import 'package:celulas_vide/relatorios/weeks_calculator.dart';
 import 'package:celulas_vide/widgets/empty_state.dart';
 import 'package:celulas_vide/widgets/loading.dart';
 import 'package:celulas_vide/widgets/state_error.dart';
@@ -28,23 +29,30 @@ class _RelatorioFrequenciaCelulaConsolidadoState
   var error;
 
   List<DataRow> rows = [];
+  List<DataColumn> columns;
+
+  final weeksCalculator = WeeksCalculator();
+  int weeksInMonth;
 
   @override
   void initState() {
     relatorioBloc.getCelulasByDiscipulador().then((celulas) {
       listaCelulas = List.from(celulas);
 
-      relatorioBloc.getAllFrequenciasByCelulas(listaCelulas).then((frequencias) {
-
+      relatorioBloc
+          .getAllFrequenciasByCelulas(listaCelulas)
+          .then((frequencias) {
         listaTodasFrequencias = List.from(frequencias);
 
+        weeksInMonth = weeksCalculator.getWeeksFromMonth(dateMonth);
+
+        if (weeksInMonth == 6) weeksInMonth = 5;
+
+        _fetchColumns();
         filterData();
 
         setState(() => isLoading = false);
-
       });
-
-
     }).catchError((onError) {
       print('error getting cadastro de celulas: ${onError.toString()}');
       setState(() {
@@ -57,42 +65,93 @@ class _RelatorioFrequenciaCelulaConsolidadoState
     super.initState();
   }
 
+  _fetchColumns() {
+    columns = [
+      DataColumn(label: Text('')),
+      DataColumn(label: Text('')),
+      DataColumn(label: Text('')),
+      DataColumn(label: Text('')),
+      DataColumn(label: Text('')),
+      DataColumn(label: Text(''))
+    ];
+
+    for (int i = 0; i < weeksInMonth; i++) {
+      columns.add(DataColumn(label: Center(child: Center(child: Text(' ${i + 1} Semana')))));
+    }
+  }
+
   filterData() {
+    List<DataCell> cells = [];
+
+    cells.add(DataCell(Text('Líder')));
+    cells.add(DataCell(Text('Célula')));
+    cells.add(DataCell(Text('Células\nno mês')));
+    cells.add(DataCell(Text('MB')));
+    cells.add(DataCell(Text('FA')));
+    cells.add(DataCell(Text('MB + FA')));
+
+    for (int i = 0; i < weeksInMonth; i++) {
+      cells.add(DataCell(
+        DataTable(
+          columns: [
+            DataColumn(label: Text('MB')),
+            DataColumn(label: Text('FA')),
+            DataColumn(label: Text('MB + FA'))
+          ],
+          rows: [
+            DataRow(cells: [
+              DataCell(Text('1')),
+              DataCell(Text('2')),
+              DataCell(Text('3'))
+            ])
+          ],
+        ),
+      ));
+    }
+
+    var dataRow = DataRow(cells: cells);
+    rows.add(dataRow);
 
     // //fetch widgts to table
-    for(int i=0; i<listaCelulas.length; i++){
-
+    for (int i = 0; i < listaCelulas.length; i++) {
       List<DataCell> cells = [];
 
       cells.add(DataCell(Text(listaCelulas[i].usuario.nome)));
       cells.add(DataCell(Text(listaCelulas[i].usuario.nome)));
 
-      var freq = listaTodasFrequencias.firstWhere((element) => element.idFrequencia == listaCelulas[i].idDocumento);
+      var freq = listaTodasFrequencias.firstWhere(
+          (element) => element.idFrequencia == listaCelulas[i].idDocumento);
 
       //calcula as frequencias da celula especifica
       freq.frequenciaCelula.forEach((element) {
-
-        if(element.dataCelula.month == dateMonth.month) {
+        if (element.dataCelula.month == dateMonth.month) {
           freq.modelReportFrequence.celulasMes++;
 
           element.membrosCelula.forEach((membro) {
-            if(membro.condicaoMembro == 'Membro Batizado')
-              freq.modelReportFrequence.totalMB++;
+            if (membro.condicaoMembro == 'Membro Batizado' &&
+                membro.frequenciaMembro) freq.modelReportFrequence.totalMB++;
 
+            if (membro.condicaoMembro == 'Frenquentador Assiduo' &&
+                membro.frequenciaMembro) freq.modelReportFrequence.totalFA++;
           });
-
         }
-
       });
 
-      cells.add(DataCell(Text(freq.modelReportFrequence.celulasMes.toString())));
+      cells
+          .add(DataCell(Text(freq.modelReportFrequence.celulasMes.toString())));
       cells.add(DataCell(Text(freq.modelReportFrequence.totalMB.toString())));
+      cells.add(DataCell(Text(freq.modelReportFrequence.totalFA.toString())));
+      cells.add(DataCell(Text((freq.modelReportFrequence.totalMB +
+              freq.modelReportFrequence.totalFA)
+          .toString())));
+
+      for (int i = 0; i < weeksInMonth; i++) {
+        cells.add(DataCell(Text('')));
+      }
+
       var dataRow = DataRow(cells: cells);
       rows.add(dataRow);
-
     }
-
-    
   }
 
   @override
@@ -138,12 +197,7 @@ class _RelatorioFrequenciaCelulaConsolidadoState
         color: Theme.of(context).accentColor.withAlpha(60),
         margin: EdgeInsets.only(left: 8, right: 8, top: 16),
         child: DataTable(
-          columns: [
-            DataColumn(label: Text('Líder')),
-            DataColumn(label: Text('Célula')),
-            DataColumn(label: Text('Células\nno mês')),
-            DataColumn(label: Text('MB'))
-          ],
+          columns: columns,
           rows: rows,
         ),
       ),

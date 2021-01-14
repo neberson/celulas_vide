@@ -1,4 +1,4 @@
-class WeesksCalculator {
+class WeeksCalculator {
 
   // final _calc = WeesksCalculator();
   //
@@ -8,6 +8,16 @@ class WeesksCalculator {
   //
   // print('quantas semanas tem este mês: ${_calc.getWeekFromDate(DateTime(date.year, date.month, daysFromMonth))}');
   // print('Em qual semana está esta data: ${_calc.getWeekFromDate(date)}');
+
+  int getWeeksFromMonth(DateTime dateMonth){
+
+    var date = DateTime(DateTime.now().year, dateMonth.month, DateTime.now().day);
+
+    int daysFromMonth = DateTime(DateTime.now().year, date.month + 1, 0).day;
+
+    return getWeekFromDate(DateTime(date.year, date.month, daysFromMonth));
+
+  }
 
   getWeekFromDate(DateTime dateTime) {
     // Current date and time of system
