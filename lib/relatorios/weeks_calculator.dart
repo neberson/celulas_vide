@@ -19,7 +19,7 @@ class WeeksCalculator {
 
   }
 
-  getWeekFromDate(DateTime dateTime) {
+  int getWeekFromDate(DateTime dateTime) {
     // Current date and time of system
     String date = dateTime.toString();
 

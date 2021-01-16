@@ -1,6 +1,6 @@
 
-import 'package:celulas_vide/Discipulador/membros_discipulador.dart';
 import 'package:celulas_vide/Discipulador/convites_page.dart';
+import 'package:celulas_vide/Discipulador/membros_discipulador.dart';
 import 'package:celulas_vide/Discipulador/perfil_discipulador.dart';
 import 'package:celulas_vide/Lider/dados_celula.dart';
 import 'package:celulas_vide/Lider/dados_membro.dart';

@@ -1,10 +1,11 @@
-import 'package:celulas_vide/cadastro_page.dart';
 import 'package:celulas_vide/Controller/login_usuario.dart';
 import 'package:celulas_vide/Discipulador/home_discipulador.dart';
 import 'package:celulas_vide/Model/celula.dart';
+import 'package:celulas_vide/cadastro_page.dart';
 import 'package:celulas_vide/repository/services.dart';
 import 'package:celulas_vide/widgets/margin_setup.dart';
 import 'package:flutter/material.dart';
+
 import 'Lider/home_lider.dart';
 
 class LoginPage extends StatefulWidget {
