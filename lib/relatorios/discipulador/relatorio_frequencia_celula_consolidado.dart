@@ -76,7 +76,8 @@ class _RelatorioFrequenciaCelulaConsolidadoState
     ];
 
     for (int i = 0; i < weeksInMonth; i++) {
-      columns.add(DataColumn(label: Center(child: Center(child: Text(' ${i + 1} Semana')))));
+      columns.add(DataColumn(
+          label: Center(child: Center(child: Text(' ${i + 1}ª Semana')))));
     }
   }
 
@@ -91,33 +92,66 @@ class _RelatorioFrequenciaCelulaConsolidadoState
     cells.add(DataCell(Text('MB + FA')));
 
     for (int i = 0; i < weeksInMonth; i++) {
-      cells.add(DataCell(
-        DataTable(
-          columns: [
-            DataColumn(label: Text('MB')),
-            DataColumn(label: Text('FA')),
-            DataColumn(label: Text('MB + FA'))
-          ],
-          rows: [
-            DataRow(cells: [
-              DataCell(Text('1')),
-              DataCell(Text('2')),
-              DataCell(Text('3'))
-            ])
-          ],
-        ),
-      ));
+      List<DataColumn> columns = [
+        DataColumn(label: Text('MB')),
+        DataColumn(label: Text('FA')),
+        DataColumn(label: Text('MB + FA'))
+      ];
+
+      List<DataRow> rows = [];
+
+      listaCelulas.forEach((celula) {
+        var freq = listaTodasFrequencias.firstWhere(
+            (element) => element.idFrequencia == celula.idDocumento);
+
+        //calcula as frequencias da celula especifica
+        freq.frequenciaCelula.forEach((frequencia) {
+          if (frequencia.dataCelula.month == dateMonth.month) {
+            int semanaDaCelula =
+                weeksCalculator.getWeekFromDate(frequencia.dataCelula);
+            semanaDaCelula--;
+
+            if (semanaDaCelula == i + 1) {
+              frequencia.membrosCelula.forEach((membro) {
+                if (membro.condicaoMembro == 'Membro Batizado' &&
+                    membro.frequenciaMembro)
+                  freq.modelReportFrequence.totalMB++;
+
+                if (membro.condicaoMembro == 'Frenquentador Assiduo' &&
+                    membro.frequenciaMembro)
+                  freq.modelReportFrequence.totalFA++;
+              });
+            }
+          }
+        });
+
+        rows.add(DataRow(cells: [
+          DataCell(Center(child: Text(freq.modelReportFrequence.totalMB.toString()))),
+          DataCell(Center(child: Text(freq.modelReportFrequence.totalFA.toString()))),
+          DataCell(Center(
+            child: Text((freq.modelReportFrequence.totalFA +
+                    freq.modelReportFrequence.totalMB)
+                .toString()),
+          )),
+        ]));
+
+        freq.modelReportFrequence = ModelReportFrequence();
+      });
+
+      DataTable dataTable = DataTable(columns: columns, rows: rows);
+
+      cells.add(DataCell(dataTable));
     }
 
     var dataRow = DataRow(cells: cells);
     rows.add(dataRow);
 
-    // //fetch widgts to table
+    // //fetch widgets to table
     for (int i = 0; i < listaCelulas.length; i++) {
       List<DataCell> cells = [];
 
-      cells.add(DataCell(Text(listaCelulas[i].usuario.nome)));
-      cells.add(DataCell(Text(listaCelulas[i].usuario.nome)));
+      cells.add(DataCell(Center(child: Text(listaCelulas[i].usuario.nome))));
+      cells.add(DataCell(Center(child: Text(listaCelulas[i].dadosCelula.nomeCelula))));
 
       var freq = listaTodasFrequencias.firstWhere(
           (element) => element.idFrequencia == listaCelulas[i].idDocumento);
@@ -137,13 +171,17 @@ class _RelatorioFrequenciaCelulaConsolidadoState
         }
       });
 
-      cells
-          .add(DataCell(Text(freq.modelReportFrequence.celulasMes.toString())));
-      cells.add(DataCell(Text(freq.modelReportFrequence.totalMB.toString())));
-      cells.add(DataCell(Text(freq.modelReportFrequence.totalFA.toString())));
-      cells.add(DataCell(Text((freq.modelReportFrequence.totalMB +
-              freq.modelReportFrequence.totalFA)
-          .toString())));
+      cells.add(DataCell(Center(
+          child: Text(freq.modelReportFrequence.celulasMes.toString()))));
+      cells.add(DataCell(
+          Center(child: Text(freq.modelReportFrequence.totalMB.toString()))));
+      cells.add(DataCell(
+          Center(child: Text(freq.modelReportFrequence.totalFA.toString()))));
+      cells.add(DataCell(Center(
+        child: Text((freq.modelReportFrequence.totalMB +
+                freq.modelReportFrequence.totalFA)
+            .toString()),
+      )));
 
       for (int i = 0; i < weeksInMonth; i++) {
         cells.add(DataCell(Text('')));
@@ -152,6 +190,28 @@ class _RelatorioFrequenciaCelulaConsolidadoState
       var dataRow = DataRow(cells: cells);
       rows.add(dataRow);
     }
+
+    cells = [];
+    cells.add(DataCell(Text('')));
+    cells.add(DataCell(Text('')));
+    cells.add(DataCell(Center(child: Text('Total'))));
+    cells.add(DataCell(Text('')));
+    cells.add(DataCell(Text('')));
+    cells.add(DataCell(Text('')));
+
+    for (int i = 0; i < weeksInMonth; i++) {
+      List<DataColumn> columns = [
+        DataColumn(label: Text('1')),
+        DataColumn(label: Text('2')),
+        DataColumn(label: Text('3'))
+      ];
+
+      DataTable dataTable = DataTable(columns: columns, rows: []);
+
+      cells.add(DataCell(dataTable));
+    }
+
+    rows.add(DataRow(cells: cells));
   }
 
   @override
